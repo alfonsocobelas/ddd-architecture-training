@@ -1,0 +1,31 @@
+import { Injectable } from '@nestjs/common'
+import { EntityNotFoundError } from 'src/modules/shared/errors'
+import { EngineRepository } from '../../domain/engine.repository'
+import { GetEngineInput } from '../dtos/get-engine-input.dto'
+import { GetEngineOutput } from '../dtos/get-engine-output.dto'
+
+@Injectable()
+export class GetEngineUseCase {
+  constructor(
+    private readonly engineRepository: EngineRepository
+  ) {}
+
+  async invoke(input: GetEngineInput): Promise<GetEngineOutput> {
+    const engine = await this.engineRepository.get(input.id)
+
+    if (!engine) {
+      throw new EntityNotFoundError('Engine', input.id)
+    }
+
+    return {
+      id: engine.id,
+      healthScore: engine.healthScore,
+      serialNumber: engine.serialNumber,
+      flyingHoursAccumulated: engine.flyingHoursAccumulated,
+      cyclesSinceLastOverhaul: engine.cyclesSinceLastOverhaul,
+      isInstalled: engine.isInstalled,
+      status: engine.status,
+      aircraftId: engine.aircraftId ?? null
+    }
+  }
+}
