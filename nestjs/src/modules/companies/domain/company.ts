@@ -1,45 +1,34 @@
-import { isValidUuidV7 } from 'src/modules/shared/domain/validators/validateId'
-import { CompanyError } from './company-errors'
-import { CompanyCreateProps, CompanyProps } from './company-types'
-import { COMPANY_CONSTRAINTS as LIMITS } from './company-constants'
+import { AggregateRoot } from 'src/modules/shared/domain/aggregate-root'
+import { CompanyAggregateProps, CompanyPrimitiveProps } from './company-types'
+import { CompanyName } from './value-objects/company-name.vo'
+import { CompanyId } from '../../shared/domain/value-objects/companies/company-id.vo'
 
-export class Company {
-  readonly id: string
-  readonly name: string
-
-  private constructor(props: CompanyProps) {
-    this.id = props.id
-    this.name = props.name
+export class Company extends AggregateRoot {
+  private constructor(
+    readonly id: CompanyId,
+    readonly name: CompanyName
+  ) {
+    super()
   }
 
-  static create(props: CompanyCreateProps): Company {
-    this.validateId(props.id)
-    this.validateName(props.name)
-
-    return new Company(props)
+  static create(props: CompanyAggregateProps): Company {
+    return new Company(
+      props.id,
+      props.name
+    )
   }
 
-  static reconstruct(props: CompanyProps): Company {
-    return new Company(props)
+  static fromPrimitives(props: CompanyPrimitiveProps): Company {
+    return new Company(
+      CompanyId.create(props.id),
+      CompanyName.create(props.name)
+    )
   }
 
-  private static validateId(id: string): void {
-    if (!isValidUuidV7(id)) {
-      throw new CompanyError('Invalid id')
-    }
-  }
-
-  private static validateName(name: string): void {
-    if (!name || !name.trim().length) {
-      throw new CompanyError('Name cannot be empty')
-    }
-
-    if (name.length < LIMITS.NAME.MIN_LENGTH) {
-      throw new CompanyError(`Name must be at least ${LIMITS.NAME.MIN_LENGTH} characters`)
-    }
-
-    if (name.length > LIMITS.NAME.MAX_LENGTH) {
-      throw new CompanyError(`Name must be less than or equal to ${LIMITS.NAME.MAX_LENGTH} characters`)
+  toPrimitives(): CompanyPrimitiveProps {
+    return {
+      id: this.id.value,
+      name: this.name.value
     }
   }
 }

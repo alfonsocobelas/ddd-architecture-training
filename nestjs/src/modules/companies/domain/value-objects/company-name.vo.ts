@@ -3,9 +3,13 @@ import { CompanyError } from '../company-errors'
 import { COMPANY_CONSTRAINTS as LIMITS } from '../company-constants'
 
 export class CompanyName extends StringValueObject {
-  constructor(value: string) {
+  private constructor(value: string) {
     super(value)
     this.ensureIsValid(value)
+  }
+
+  static create(value: string): CompanyName {
+    return new CompanyName(value)
   }
 
   private ensureIsValid(value: string): void {

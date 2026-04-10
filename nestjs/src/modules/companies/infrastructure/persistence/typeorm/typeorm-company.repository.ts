@@ -1,7 +1,9 @@
 import { EntityTarget } from 'typeorm'
 import { Injectable } from '@nestjs/common'
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
+import { CompanyId } from 'src/modules/shared/domain/value-objects/companies/company-id.vo'
+import { CompanyName } from 'src/modules/companies/domain/value-objects/company-name.vo'
 import { TypeOrmRepository } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm.repository'
 import { TypeOrmCriteriaConverter } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm-criteria-converter'
 import { TypeOrmTransactionManager } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm-transaction-manager'
@@ -38,10 +40,10 @@ export class TypeOrmCompanyRepository
     await this.persist(entities)
   }
 
-  async get(companyId: string): Promise<Nullable<Company>> {
+  async get(companyId: CompanyId): Promise<Nullable<Company>> {
     const repository = this.repository()
 
-    const entity = await repository.findOneBy({ id: companyId })
+    const entity = await repository.findOneBy({ id: companyId.value })
 
     if (!entity) {
       return null
@@ -56,18 +58,18 @@ export class TypeOrmCompanyRepository
     return entities.map(entity => CompanyMapper.toDomain(entity))
   }
 
-  async remove(companyId: string): Promise<void> {
+  async remove(companyId: CompanyId): Promise<void> {
     const repository = this.repository()
 
-    await repository.delete({ id: companyId })
+    await repository.delete({ id: companyId.value })
   }
 
-  async exists(name: string): Promise<boolean> {
+  async exists(name: CompanyName): Promise<boolean> {
     const repository = this.repository()
 
     const existEntity = await repository
       .createQueryBuilder('company')
-      .where('company.name = :name', { name })
+      .where('company.name = :name', { name: name.value })
       .select('1')
       .getExists()
 

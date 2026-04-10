@@ -3,6 +3,7 @@ import { EntityNotFoundError } from 'src/modules/shared/errors'
 import { GetCompanyInput } from '../dtos/get-company-input.dto'
 import { GetCompanyOutput } from '../dtos/get-company-output.dto'
 import { CompanyRepository } from '../../domain/company.repository'
+import { CompanyId } from 'src/modules/shared/domain/value-objects/companies/company-id.vo'
 
 @Injectable()
 export class GetCompanyUseCase {
@@ -11,15 +12,13 @@ export class GetCompanyUseCase {
   ) {}
 
   async invoke(input: GetCompanyInput): Promise<GetCompanyOutput> {
-    const company = await this.repository.get(input.id)
+    const companyId = CompanyId.create(input.id)
+    const company = await this.repository.get(companyId)
 
     if (!company) {
       throw new EntityNotFoundError('Company', input.id)
     }
 
-    return {
-      id: company.id,
-      name: company.name
-    }
+    return company.toPrimitives()
   }
 }
