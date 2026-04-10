@@ -1,146 +1,98 @@
-import { normalizeString } from 'src/modules/shared/utils/normalize'
-import { isValidUuidV7 } from 'src/modules/shared/domain/validators/validateId'
-import { AircraftModelStatus } from './aircraft-model-enums'
+import { AggregateRoot } from 'src/modules/shared/domain/aggregate-root'
 import { AircraftModelError } from './aircraft-model-errors'
-import { AircraftModelCreateProps, AircraftModelProps } from './aircraft-model-types'
-import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from './aircraft-model-constants'
+import { AircraftModelStatusEnum } from './aircraft-model-enums'
+import { AircraftModelAggregateProps, AircraftModelPrimitiveProps } from './aircraft-model-types'
+import { AircraftModelId } from './value-objects/aircraft-model-id.vo'
+import { AircraftModelName } from './value-objects/aircraft-model-name.vo'
+import { AircraftModelCode } from './value-objects/aircraft-model-code.vo'
+import { AircraftModelStatus } from './value-objects/aircraft-model-status.vo'
+import { AircraftModelNumEngines } from './value-objects/aircraft-model-num-engines.vo'
+import { AircraftModelManufacturer } from './value-objects/aircraft-model-manufacturer.vo'
+import { AircraftModelPassengerCapacity } from './value-objects/aircraft-model-passenger-capacity.vo'
 
-export class AircraftModel {
-  private _status: AircraftModelStatus
-
-  readonly id: string
-  readonly name: string
-  readonly code: string
-  readonly manufacturer: string
-  readonly passengerCapacity: number
-  readonly numEngines: number
-
-  private constructor(props: AircraftModelProps) {
-    this.id = props.id
-    this.name = props.name
-    this.code = props.code
-    this.manufacturer = props.manufacturer
-    this.passengerCapacity = props.passengerCapacity
-    this.numEngines = props.numEngines
-    this._status = props.status
+export class AircraftModel extends AggregateRoot {
+  private constructor(
+    readonly id: AircraftModelId,
+    readonly name: AircraftModelName,
+    readonly code: AircraftModelCode,
+    readonly manufacturer: AircraftModelManufacturer,
+    readonly passengerCapacity: AircraftModelPassengerCapacity,
+    readonly numEngines: AircraftModelNumEngines,
+    private _status: AircraftModelStatus
+  ) {
+    super()
   }
 
-  //#region ... Getters & Setters ...
+  //#region ... Getters ...
   get status(): AircraftModelStatus {
     return this._status
   }
-
-  set status(value: AircraftModelStatus) {
-    this.validateStatus(value)
-    this._status = value
-  }
   //#endregion
 
-  static create(props: AircraftModelCreateProps): AircraftModel {
-    const code = normalizeString(props.code)
-
-    this.validateId(props.id)
-    this.validateCode(code)
-    this.validateName(props.name)
-    this.validateManufacturer(props.manufacturer)
-    this.validateNumEngines(props.numEngines)
-    this.validatePassengerCapacity(props.passengerCapacity)
-
-    return new AircraftModel({
-      ...props,
-      code,
-      status: AircraftModelStatus.DRAFT
-    })
+  static create(props: AircraftModelAggregateProps): AircraftModel {
+    return new AircraftModel(
+      props.id,
+      props.name,
+      props.code,
+      props.manufacturer,
+      props.passengerCapacity,
+      props.numEngines,
+      AircraftModelStatus.draft()
+    )
   }
 
-  static reconstruct(props: AircraftModelProps): AircraftModel {
-    return new AircraftModel(props)
+  static fromPrimitives(props: AircraftModelPrimitiveProps): AircraftModel {
+    return new AircraftModel(
+      AircraftModelId.create(props.id),
+      AircraftModelName.create(props.name),
+      AircraftModelCode.create(props.code),
+      AircraftModelManufacturer.create(props.manufacturer),
+      AircraftModelPassengerCapacity.create(props.passengerCapacity),
+      AircraftModelNumEngines.create(props.numEngines),
+      AircraftModelStatus.create(props.status)
+    )
   }
 
+  toPrimitives(): AircraftModelPrimitiveProps {
+    return {
+      id: this.id.value,
+      name: this.name.value,
+      code: this.code.value,
+      manufacturer: this.manufacturer.value,
+      passengerCapacity: this.passengerCapacity.value,
+      numEngines: this.numEngines.value,
+      status: this.status.value
+    }
+  }
+
+  // invariants
   ensureCanBeRemoved(totalAircraftCount: number): void {
     if (totalAircraftCount > 0) {
       throw new AircraftModelError('Cannot remove model with associated aircraft')
     }
   }
 
-  private static validateId(id: string): void {
-    if (!isValidUuidV7(id)) {
-      throw new AircraftModelError('Invalid id')
+  activate(): void {
+    if (!this._status.isDraft() && !this._status.isWithdrawn()) {
+      throw new AircraftModelError('Only draft or withdrawn models can be activated')
     }
+
+    this._status = AircraftModelStatus.create(AircraftModelStatusEnum.OPERATIONAL)
   }
 
-  private static validateName(name: string): void {
-    if (!name || !name.trim().length) {
-      throw new AircraftModelError('Name cannot be empty')
+  withdraw(): void {
+    if (!this._status.isOperational()) {
+      throw new AircraftModelError('Only operational models can be withdrawn')
     }
 
-    if (name.length < LIMITS.NAME.MIN_LENGTH) {
-      throw new AircraftModelError(`Name must be at least ${LIMITS.NAME.MIN_LENGTH} characters`)
-    }
-
-    if (name.length > LIMITS.NAME.MAX_LENGTH) {
-      throw new AircraftModelError(`Name must be less than or equal to ${LIMITS.NAME.MAX_LENGTH} characters`)
-    }
+    this._status = AircraftModelStatus.create(AircraftModelStatusEnum.WITHDRAW)
   }
 
-  private static validateCode(code: string): void {
-    if (!code || !code.length) {
-      throw new AircraftModelError('Code cannot be empty')
-    }
-    if (code.length < LIMITS.CODE.MIN_LENGTH) {
-      throw new AircraftModelError(`Code must be at least ${LIMITS.CODE.MIN_LENGTH} characters`)
+  decommission(): void {
+    if (!this._status.isOperational()) {
+      throw new AircraftModelError('Only operational models can be decommissioned')
     }
 
-    if (code.length > LIMITS.CODE.MAX_LENGTH) {
-      throw new AircraftModelError(`Code must be less than or equal to ${LIMITS.CODE.MAX_LENGTH} characters`)
-    }
-  }
-
-  private static validateManufacturer(manufacturer: string): void {
-    if (!manufacturer || !manufacturer.trim().length) {
-      throw new AircraftModelError('Manufacturer cannot be empty')
-    }
-
-    if (manufacturer.length < LIMITS.MANUFACTURER.MIN_LENGTH) {
-      throw new AircraftModelError(`Manufacturer must be at least ${LIMITS.MANUFACTURER.MIN_LENGTH} characters`)
-    }
-
-    if (manufacturer.length > LIMITS.MANUFACTURER.MAX_LENGTH) {
-      throw new AircraftModelError(`Manufacturer must be less than or equal to ${LIMITS.MANUFACTURER.MAX_LENGTH} characters`)
-    }
-  }
-
-  private static validateNumEngines(numEngines: number): void {
-    if (isNaN(numEngines) || !Number.isInteger(numEngines)) {
-      throw new AircraftModelError('Number of engines must be an integer')
-    }
-
-    if (numEngines < LIMITS.ENGINES.MIN) {
-      throw new AircraftModelError(`Number of engines must be greater than or equal to ${LIMITS.ENGINES.MIN}`)
-    }
-
-    if (numEngines > LIMITS.ENGINES.MAX) {
-      throw new AircraftModelError(`Number of engines must be less than or equal to ${LIMITS.ENGINES.MAX}`)
-    }
-  }
-
-  private static validatePassengerCapacity(passengerCapacity: number): void {
-    if (isNaN(passengerCapacity) || !Number.isInteger(passengerCapacity)) {
-      throw new AircraftModelError('Passenger capacity must be an integer')
-    }
-
-    if (passengerCapacity < LIMITS.PASSENGERS.MIN) {
-      throw new AircraftModelError(`Passenger capacity must be greater than or equal to ${LIMITS.PASSENGERS.MIN}`)
-    }
-
-    if (passengerCapacity > LIMITS.PASSENGERS.MAX) {
-      throw new AircraftModelError(`Passenger capacity must be less than or equal to ${LIMITS.PASSENGERS.MAX}`)
-    }
-  }
-
-  private validateStatus(value: AircraftModelStatus): void {
-    if (!(value in AircraftModelStatus)) {
-      throw new AircraftModelError('Invalid status')
-    }
+    this._status = AircraftModelStatus.create(AircraftModelStatusEnum.DECOMMISSIONED)
   }
 }

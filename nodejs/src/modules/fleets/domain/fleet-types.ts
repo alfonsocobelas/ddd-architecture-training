@@ -1,4 +1,4 @@
-import { FleetStatus, FleetType, OperationRegion } from './fleet-enums'
+import { FleetStatus, FleetType, FleetOperationRegion } from './fleet-enums'
 
 export type FleetCreateProps = Omit<FleetProps, 'status' | 'createdAt' | 'updatedAt' | 'deletedAt'>
 
@@ -8,7 +8,7 @@ export interface FleetProps {
   companyId: string
   name: string
   type: FleetType
-  operationRegion: OperationRegion
+  operationRegion: FleetOperationRegion
   maintenanceBudget: number
   status: FleetStatus
 }

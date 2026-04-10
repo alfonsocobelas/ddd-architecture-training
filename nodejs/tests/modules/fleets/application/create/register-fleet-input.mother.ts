@@ -1,6 +1,6 @@
 import { v7 as uuidv7 } from 'uuid'
 import { RegisterFleetInput } from 'src/modules/fleets/application/create/register-fleet-input.dto'
-import { FleetType, OperationRegion } from 'src/modules/fleets/domain/fleet-enums'
+import { FleetType, FleetOperationRegion } from 'src/modules/fleets/domain/fleet-enums'
 import { FLEET_CONSTRAINTS as LIMITS } from 'src/modules/fleets/domain/fleet-constants'
 import { randomString } from '../../../shared/utils/random-string'
 import { randomNumber } from '../../../shared/utils/random-number'
@@ -15,7 +15,7 @@ export class RegisterFleetInputMother {
       name: randomString(LIMITS.NAME.MIN_LENGTH, LIMITS.NAME.MAX_LENGTH),
       maintenanceBudget: randomNumber(LIMITS.MAINTENANCE_BUDGET.MIN, LIMITS.MAINTENANCE_BUDGET.MAX),
       type: randomEnumValue(FleetType).toString(),
-      operationRegion: randomEnumValue(OperationRegion).toString(),
+      operationRegion: randomEnumValue(FleetOperationRegion).toString(),
       ...overrides
     }
   }

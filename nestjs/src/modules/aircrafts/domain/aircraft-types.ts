@@ -1,22 +1,6 @@
-import { EngineProps } from 'src/modules/engines/domain/engine-types'
-import { AircraftModelProps } from 'src/modules/aircraft-models/domain/aircraft-model-types'
-import { AircraftStatus } from './aircraft-enums'
-
-type AircraftModelRequirement = Pick<AircraftModelProps, 'id' | 'name' | 'numEngines'>
-type AircraftEngineRequirement = Pick<EngineProps, 'id' | 'healthScore'>
-export type AircraftCreateProps = Pick<AircraftProps, 'id' | 'modelId' | 'tailNumber'>
-
-export interface AircraftProps {
-  id: string
-  fleetId?: string
-  modelId: string
-  engineIds: string[]
-  tailNumber: string
-  totalFlightHours: number
-  fuelLevelPercentage: number
-  isActive: boolean
-  status: AircraftStatus
-}
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
+import { AircraftModelId } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
+import { AircraftTailNumber } from './value-objects/aircraft-tail-number.vo'
 
 export interface AircraftPrimitiveProps {
   id: string
@@ -30,7 +14,8 @@ export interface AircraftPrimitiveProps {
   status: string
 }
 
-export interface AircraftReadModel extends AircraftProps {
-  model: AircraftModelRequirement
-  engines: AircraftEngineRequirement[]
+export interface AircraftAggregateProps {
+  id: AircraftId
+  modelId: AircraftModelId
+  tailNumber: AircraftTailNumber
 }

@@ -1,4 +1,4 @@
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 
 interface BaseSearchOutput<T> {
   readonly items: T[];

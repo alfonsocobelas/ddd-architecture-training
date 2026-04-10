@@ -5,9 +5,9 @@ import { Criteria } from 'src/modules/shared/domain/query/criteria'
 import { FilterField } from 'src/modules/shared/domain/query/filter-field'
 import { FilterValue } from 'src/modules/shared/domain/query/filter-value'
 import { FilterOperator, Operator } from 'src/modules/shared/domain/query/filter-operator'
-import { AircraftStatus } from '../aircraft-enums'
+import { AircraftStatusEnum } from '../aircraft-enums'
 
-export class AircraftsInMaintenanceSpecification extends Criteria {
+class AircraftsInMaintenanceSpecification extends Criteria {
   constructor() {
     super(
       {
@@ -15,10 +15,16 @@ export class AircraftsInMaintenanceSpecification extends Criteria {
           new Filter(
             new FilterField('status'),
             FilterOperator.fromValue(Operator.EQUAL),
-            new FilterValue(AircraftStatus.MAINTENANCE)
+            new FilterValue(AircraftStatusEnum.MAINTENANCE)
           )
         ])
       }
     )
   }
+
+  static inMaintenance(): AircraftsInMaintenanceSpecification {
+    return new AircraftsInMaintenanceSpecification()
+  }
 }
+
+export const inMaintenance = AircraftsInMaintenanceSpecification.inMaintenance

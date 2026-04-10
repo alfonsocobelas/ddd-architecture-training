@@ -1,4 +1,4 @@
-export enum OperationRegion {
+export enum FleetOperationRegion {
   AMER = 'AMER',
   EMEA = 'EMEA',
   APAC = 'APAC'

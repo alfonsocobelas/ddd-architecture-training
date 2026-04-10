@@ -1,5 +1,5 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Check, Index } from 'typeorm'
-import { AircraftModelStatus } from '../../../domain/aircraft-model-enums'
+import { AircraftModelStatusEnum } from '../../../domain/aircraft-model-enums'
 import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from '../../../domain/aircraft-model-constants'
 
 @Entity({ name: 'aircraft_models', schema: 'fleet' })
@@ -29,8 +29,8 @@ export class AircraftModelEntity {
   @Column('int')
     numEngines!: number
 
-  @Column('enum', { enum: AircraftModelStatus })
-    status!: AircraftModelStatus
+  @Column('enum', { enum: AircraftModelStatusEnum })
+    status!: AircraftModelStatusEnum
 
   @CreateDateColumn({ type: 'timestamptz' })
     createdAt!: Date

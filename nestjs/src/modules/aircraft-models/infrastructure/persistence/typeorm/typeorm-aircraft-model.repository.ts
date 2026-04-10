@@ -1,6 +1,6 @@
 import { EntityTarget } from 'typeorm'
 import { Injectable } from '@nestjs/common'
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 import { TypeOrmRepository } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm.repository'
 import { TypeOrmCriteriaConverter } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm-criteria-converter'
 import { TypeOrmTransactionManager } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm-transaction-manager'
@@ -8,6 +8,8 @@ import { AircraftModelEntity } from './typeorm-aircraft-model.entity'
 import { AircraftModelMapper } from './typeorm-aircraft-model.mapper'
 import { AircraftModel } from '../../../domain/aircraft-model'
 import { AircraftModelRepository } from '../../../domain/aircraft-model.repository'
+import { AircraftModelId } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
+import { AircraftModelCode } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-code.vo'
 
 @Injectable()
 export class TypeOrmAircraftModelRepository
@@ -37,14 +39,14 @@ export class TypeOrmAircraftModelRepository
     await this.persist(entities)
   }
 
-  async remove(modelId: string): Promise<void> {
+  async remove(modelId: AircraftModelId): Promise<void> {
     const repository = this.repository()
-    await repository.delete(modelId)
+    await repository.delete(modelId.value)
   }
 
-  async get(modelId: string): Promise<Nullable<AircraftModel>> {
+  async get(modelId: AircraftModelId): Promise<Nullable<AircraftModel>> {
     const repository = this.repository()
-    const entity = await repository.findOneBy({ id: modelId })
+    const entity = await repository.findOneBy({ id: modelId.value })
 
     if (!entity) {
       return null
@@ -60,12 +62,12 @@ export class TypeOrmAircraftModelRepository
     return entities.map(entity => AircraftModelMapper.toDomain(entity))
   }
 
-  async exists(code: string): Promise<boolean> {
+  async exists(code: AircraftModelCode): Promise<boolean> {
     const repository = this.repository()
 
     const existEntity = await repository
       .createQueryBuilder('model')
-      .where('model.code = :code', { code })
+      .where('model.code = :code', { code: code.value })
       .select('1')
       .getExists()
 

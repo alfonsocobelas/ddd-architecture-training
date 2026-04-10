@@ -3,7 +3,7 @@ import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.reposi
 import { RegisterFleetInput } from './register-fleet-input.dto'
 import { Fleet } from '../../domain/fleet'
 import { FleetRepository } from '../../domain/fleet.repository'
-import { FleetType, OperationRegion } from '../../domain/fleet-enums'
+import { FleetType, FleetOperationRegion } from '../../domain/fleet-enums'
 import { FleetWithNameSpecification } from '../../domain/specifications/fleet-with-name.specification'
 
 export default class RegisterFleetUseCase {
@@ -41,7 +41,7 @@ export default class RegisterFleetUseCase {
       aircraftIds: input.aircraftIds,
       companyId: input.companyId,
       name: input.name,
-      operationRegion: input.operationRegion as OperationRegion,
+      operationRegion: input.operationRegion as FleetOperationRegion,
       type: input.type as FleetType,
       maintenanceBudget: input.maintenanceBudget
     })

@@ -1,0 +1,22 @@
+import { v7 as uuidv7, validate as uuidValidate, version as uuidVersion } from 'uuid'
+import { ValueObject } from './value-object'
+import { InvalidArgumentError } from '../../errors'
+
+export class UuidV7ValueObject extends ValueObject<string> {
+  constructor(value: string) {
+    UuidV7ValueObject.ensureIsValidUuidV7(value)
+    super(value)
+  }
+
+  static random(): UuidV7ValueObject {
+    return new UuidV7ValueObject(uuidv7())
+  }
+
+  private static ensureIsValidUuidV7(value: string): void {
+    const isUuidV7 = uuidValidate(value) && uuidVersion(value) === 7
+
+    if (!isUuidV7) {
+      throw new InvalidArgumentError(`[${this.constructor.name}] Invalid UUID: ${value}`)
+    }
+  }
+}

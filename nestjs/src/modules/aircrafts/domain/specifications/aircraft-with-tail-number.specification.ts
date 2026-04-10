@@ -4,17 +4,24 @@ import { Criteria } from 'src/modules/shared/domain/query/criteria'
 import { FilterField } from 'src/modules/shared/domain/query/filter-field'
 import { FilterValue } from 'src/modules/shared/domain/query/filter-value'
 import { FilterOperator, Operator } from 'src/modules/shared/domain/query/filter-operator'
+import { AircraftTailNumber } from '../value-objects/aircraft-tail-number.vo'
 
-export class AircraftWithTailNumberSpecification extends Criteria {
-  constructor(tailNumber: string) {
+class AircraftWithTailNumberSpecification extends Criteria {
+  constructor(tailNumber: AircraftTailNumber) {
     super({
       filters: new Filters([
         new Filter(
           new FilterField('tailNumber'),
           FilterOperator.fromValue(Operator.EQUAL),
-          new FilterValue(tailNumber)
+          new FilterValue(tailNumber.value)
         )
       ])
     })
   }
+
+  static withTailNumber(tailNumber: AircraftTailNumber): AircraftWithTailNumberSpecification {
+    return new AircraftWithTailNumberSpecification(tailNumber)
+  }
 }
+
+export const withTailNumber = AircraftWithTailNumberSpecification.withTailNumber

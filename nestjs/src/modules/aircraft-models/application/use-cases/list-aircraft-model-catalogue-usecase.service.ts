@@ -17,14 +17,6 @@ export class ListAircraftModelCatalogueUseCase {
       return EMPTY_AIRCRAFT_MODEL_CATALOGUE
     }
 
-    return models.map(model => ({
-      id: model.id,
-      name: model.name,
-      code: model.code,
-      manufacturer: model.manufacturer,
-      passengerCapacity: model.passengerCapacity,
-      numEngines: model.numEngines,
-      status: model.status
-    }))
+    return models.map(model => model.toPrimitives())
   }
 }

@@ -1,4 +1,4 @@
-export enum AircraftStatus {
+export enum AircraftStatusEnum {
   DRAFT = 'DRAFT',
   ACTIVE = 'ACTIVE',
   MAINTENANCE = 'MAINTENANCE',
@@ -7,3 +7,4 @@ export enum AircraftStatus {
   WRITTEN_OFF = 'WRITTEN_OFF', // pérdida total o retiro forzoso
   SCRAPPED = 'SCRAPPED' // desguace o reciclaje
 }
+export const AircraftStatusValues = Object.values(AircraftStatusEnum)

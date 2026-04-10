@@ -1,8 +1,5 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn, OneToMany, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Check, Index } from 'typeorm'
-import { EngineEntity } from 'src/modules/engines/infrastructure/persistence/typeorm/typeorm-engine.entity'
-import { FleetEntity } from 'src/modules/fleets/infrastructure/persistence/typeorm/typeorm-fleet.entity'
-import { AircraftModelEntity } from 'src/modules/aircraft-models/infrastructure/persistence/typeorm/typeorm-aircraft-model.entity'
-import { AircraftStatus } from '../../../domain/aircraft-enums'
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Check, Index } from 'typeorm'
+import { AircraftStatusEnum } from '../../../domain/aircraft-enums'
 import { AIRCRAFT_CONSTRAINTS as LIMITS } from '../../../domain/aircraft-constants'
 
 @Entity({ name: 'aircrafts', schema: 'fleet' })
@@ -36,8 +33,8 @@ export class AircraftEntity {
   @Column('bool')
     isActive!: boolean
 
-  @Column('enum', { enum: AircraftStatus })
-    status!: AircraftStatus
+  @Column('enum', { enum: AircraftStatusEnum })
+    status!: AircraftStatusEnum
 
   // --- AUDIT FIELDS --- //
   @CreateDateColumn({ type: 'timestamptz' })
@@ -48,16 +45,4 @@ export class AircraftEntity {
 
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
     deletedAt?: Date
-
-  // --- JOINS RELATIONS --- //
-  @ManyToOne(() => AircraftModelEntity)
-  @JoinColumn({ name: 'modelId' })
-    model!: AircraftModelEntity
-
-  @OneToMany(() => EngineEntity, (engine) => engine.aircraft)
-    engines!: EngineEntity[]
-
-  @ManyToOne(() => FleetEntity)
-  @JoinColumn({ name: 'fleetId' })
-    fleet!: FleetEntity
 }

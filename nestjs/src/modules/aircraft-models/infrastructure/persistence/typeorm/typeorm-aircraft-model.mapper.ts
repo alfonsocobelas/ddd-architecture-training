@@ -2,28 +2,29 @@
 import { AircraftModelEntity } from './typeorm-aircraft-model.entity'
 import { AircraftModel } from '../../../domain/aircraft-model'
 
-export const AircraftModelMapper = {
-  toDomain(entity: AircraftModelEntity): AircraftModel {
-    return AircraftModel.reconstruct({
+export abstract class AircraftModelMapper {
+  static toDomain(entity: AircraftModelEntity): AircraftModel {
+    return AircraftModel.fromPrimitives({
       id: entity.id,
       name: entity.name,
       code: entity.code,
-      manufacturer: entity.manufacturer,
-      passengerCapacity: entity.passengerCapacity,
+      status: entity.status,
       numEngines: entity.numEngines,
-      status: entity.status
+      manufacturer: entity.manufacturer,
+      passengerCapacity: entity.passengerCapacity
     })
-  },
+  }
 
-  toPersistence(domain: AircraftModel): AircraftModelEntity {
+  static toPersistence(domain: AircraftModel): AircraftModelEntity {
     const entity = new AircraftModelEntity()
-    entity.id = domain.id
-    entity.name = domain.name
-    entity.code = domain.code
-    entity.manufacturer = domain.manufacturer
-    entity.passengerCapacity = domain.passengerCapacity
-    entity.numEngines = domain.numEngines
-    entity.status = domain.status
+
+    entity.id = domain.id.value
+    entity.name = domain.name.value
+    entity.code = domain.code.value
+    entity.status = domain.status.value
+    entity.numEngines = domain.numEngines.value
+    entity.manufacturer = domain.manufacturer.value
+    entity.passengerCapacity = domain.passengerCapacity.value
 
     return entity
   }
