@@ -1,10 +1,10 @@
-export enum OperationRegion {
+export enum FleetFleetOperationRegionEnum {
   AMER = 'AMER',
   EMEA = 'EMEA',
   APAC = 'APAC'
 }
 
-export enum FleetType {
+export enum FleetTypeEnum {
   CARGO = 'CARGO',
   PASSENGER = 'PASSENGER',
   MILITARY = 'MILITARY',
@@ -12,9 +12,13 @@ export enum FleetType {
   SPECIALIZED = 'SPECIALIZED'
 }
 
-export enum FleetStatus {
+export enum FleetStatusEnum {
   DRAFT = 'DRAFT',
   OPERATIVE = 'OPERATIVE',
   RETIRED = 'RETIRED',
   SCRAPPED = 'SCRAPPED'
 }
+
+export const FleetFleetOperationRegionValues = Object.values(FleetFleetOperationRegionEnum)
+export const FleetTypeValues = Object.values(FleetTypeEnum)
+export const FleetStatusValues = Object.values(FleetStatusEnum)

@@ -1,12 +1,13 @@
 import { EntityTarget } from 'typeorm'
 import { Injectable } from '@nestjs/common'
-import { Nullable } from 'src/modules/shared/nullable'
+import { Fleet } from 'src/modules/fleets/domain/fleet'
+import { FleetId } from 'src/modules/fleets/domain/value-objects/fleet-id.vo'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
+import { FleetRepository } from 'src/modules/fleets/domain/fleet.repository'
 import { TypeOrmRepository } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm.repository'
 import { TypeOrmCriteriaConverter } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm-criteria-converter'
 import { TypeOrmTransactionManager } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm-transaction-manager'
-import { Fleet } from 'src/modules/fleets/domain/fleet'
-import { FleetRepository } from 'src/modules/fleets/domain/fleet.repository'
 import { FleetEntity } from './typeorm-fleet.entity'
 import { FleetMapper } from './typeorm-fleet.mapper'
 
@@ -38,9 +39,9 @@ export class TypeOrmFleetRepository
     await this.persist(entities)
   }
 
-  async get(fleetId: string): Promise<Nullable<Fleet>> {
+  async get(fleetId: FleetId): Promise<Nullable<Fleet>> {
     const repository = this.repository()
-    const entity = await repository.findOneBy({ id: fleetId })
+    const entity = await repository.findOneBy({ id: fleetId.value })
 
     if (!entity) {
       return null

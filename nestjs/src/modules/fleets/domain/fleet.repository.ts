@@ -1,10 +1,11 @@
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
+import { FleetId } from './value-objects/fleet-id.vo'
 import { Fleet } from './fleet'
 
 export abstract class FleetRepository {
   abstract register(fleet: Fleet): Promise<void>
-  abstract get(fleetId: string): Promise<Nullable<Fleet>>
+  abstract get(fleetId: FleetId): Promise<Nullable<Fleet>>
   abstract save(fleets: Fleet | Fleet[]): Promise<void>
   abstract matching(criteria: Criteria): Promise<Fleet[]>
   abstract exists(criteria: Criteria): Promise<boolean>

@@ -1,6 +1,5 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn, Index, Check } from 'typeorm'
-import { OperationRegion, FleetType, FleetStatus } from 'src/modules/fleets/domain/fleet-enums'
-import { CompanyEntity } from 'src/modules/companies/infrastructure/persistence/typeorm/typeorm-company.entity'
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Index, Check } from 'typeorm'
+import { FleetFleetOperationRegionEnum, FleetStatusEnum, FleetTypeEnum } from 'src/modules/fleets/domain/fleet-enums'
 import { FLEET_CONSTRAINTS as LIMITS } from '../../../domain/fleet-constants'
 
 @Entity({ name: 'fleets', schema: 'operations' })
@@ -20,17 +19,17 @@ export class FleetEntity {
   @Column('varchar', { length: LIMITS.NAME.MAX_LENGTH, unique: true })
     name!: string
 
-  @Column('enum', { enum: OperationRegion })
-    operationRegion!: OperationRegion
+  @Column('enum', { enum: FleetFleetOperationRegionEnum })
+    operationRegion!: FleetFleetOperationRegionEnum
 
-  @Column('enum', { enum: FleetType })
-    type!: FleetType
+  @Column('enum', { enum: FleetTypeEnum })
+    type!: FleetTypeEnum
 
   @Column('float')
     maintenanceBudget!: number
 
-  @Column('enum', { enum: FleetStatus })
-    status!: FleetStatus
+  @Column('enum', { enum: FleetStatusEnum })
+    status!: FleetStatusEnum
 
   // --- AUDIT FIELDS --- //
   @CreateDateColumn({ type: 'timestamptz' })
@@ -41,9 +40,4 @@ export class FleetEntity {
 
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
     deletedAt?: Date
-
-  // --- JOINS RELATIONS --- //
-  @ManyToOne(() => CompanyEntity)
-  @JoinColumn({ name: 'companyId' })
-    company!: CompanyEntity
 }

@@ -3,12 +3,16 @@ import { FleetError } from '../fleet-errors'
 import { FLEET_CONSTRAINTS as LIMITS } from '../fleet-constants'
 
 export class FleetMaintenanceBudget extends IntegerValueObject {
-  constructor(value: number) {
+  private constructor(value: number) {
     super(value)
-    this.ensureIsValid(value)
   }
 
-  private ensureIsValid(value: number): void {
+  static create(value: number): FleetMaintenanceBudget {
+    this.validate(value)
+    return new FleetMaintenanceBudget(value)
+  }
+
+  private static validate(value: number): void {
     if (value < LIMITS.MAINTENANCE_BUDGET.MIN) {
       throw new FleetError(`Maintenance budget must be at least ${LIMITS.MAINTENANCE_BUDGET.MIN}`)
     }

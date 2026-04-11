@@ -1,6 +1,6 @@
-import { FleetProps } from '../../domain/fleet-types'
+import { FleetPrimitiveProps } from '../../domain/fleet-types'
 
-type FleetAllowedFields = keyof FleetProps
+type FleetAllowedFields = keyof FleetPrimitiveProps
 
 const FLEET_ALLOWED_FILTERS: Array<FleetAllowedFields> = [
   'id',

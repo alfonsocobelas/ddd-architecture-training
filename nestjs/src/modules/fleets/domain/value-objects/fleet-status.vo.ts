@@ -1,8 +1,28 @@
 import { EnumValueObject } from 'src/modules/shared/domain/value-objects/enum-value-object'
-import { FleetStatusValues } from '../fleet-enums'
+import { FleetStatusEnum, FleetStatusValues } from '../fleet-enums'
 
-export class FleetStatus extends EnumValueObject<string> {
-  constructor(value: string) {
+export class FleetStatus extends EnumValueObject<FleetStatusEnum> {
+  private constructor(value: FleetStatusEnum) {
     super(value, FleetStatusValues)
+  }
+
+  static create(value: string): FleetStatus {
+    return new FleetStatus(value as FleetStatusEnum)
+  }
+
+  isDraft(): boolean {
+    return this.value === FleetStatusEnum.DRAFT
+  }
+
+  isRetired(): boolean {
+    return this.value === FleetStatusEnum.RETIRED
+  }
+
+  static draft(): FleetStatus {
+    return new FleetStatus(FleetStatusEnum.DRAFT)
+  }
+
+  static retired(): FleetStatus {
+    return new FleetStatus(FleetStatusEnum.RETIRED)
   }
 }

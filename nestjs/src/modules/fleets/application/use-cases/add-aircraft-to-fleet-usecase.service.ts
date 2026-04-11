@@ -3,6 +3,8 @@ import { EntityNotFoundError } from 'src/modules/shared/errors'
 import { FleetRepository } from 'src/modules/fleets/domain/fleet.repository'
 import { AircraftRepository } from '../../../aircrafts/domain/aircraft.repository'
 import { AddAircraftToFleetInput } from '../dtos/add-aircraft-to-fleet-input.dto'
+import { FleetId } from '../../domain/value-objects/fleet-id.vo'
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 
 @Injectable()
 export class AddAircraftToFleetUsecase {
@@ -12,21 +14,24 @@ export class AddAircraftToFleetUsecase {
   ) {}
 
   async invoke(input: AddAircraftToFleetInput): Promise<void> {
+    const fleetId = FleetId.create(input.fleetId)
+    const aircraftId = AircraftId.create(input.aircraftId)
+
     const [fleet, aircraft] = await Promise.all([
-      this.fleetRepository.get(input.fleetId),
-      this.aircraftRepository.get(input.aircraftId)
+      this.fleetRepository.get(fleetId),
+      this.aircraftRepository.get(aircraftId)
     ])
 
     if (!fleet) {
-      throw new EntityNotFoundError('Fleet', input.fleetId)
+      throw new EntityNotFoundError('Fleet', fleetId.value)
     }
 
     if (!aircraft) {
-      throw new EntityNotFoundError('Aircraft', input.aircraftId)
+      throw new EntityNotFoundError('Aircraft', aircraftId.value)
     }
 
-    aircraft.addToFleet(input.fleetId)
-    fleet.addAircraft(input.aircraftId)
+    aircraft.addToFleet(fleetId)
+    fleet.addAircraft(aircraftId)
 
     await Promise.all([
       this.aircraftRepository.save(aircraft),

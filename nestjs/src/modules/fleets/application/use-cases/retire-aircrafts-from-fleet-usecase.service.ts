@@ -3,6 +3,8 @@ import { EntityNotFoundError, InvalidArgumentError } from 'src/modules/shared/er
 import { FleetRepository } from 'src/modules/fleets/domain/fleet.repository'
 import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
 import { RetireAircraftsFromFleetInput } from '../dtos/retire-aircrafts-from-fleet-input.dto'
+import { FleetId } from '../../domain/value-objects/fleet-id.vo'
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 
 @Injectable()
 export class RetireAircraftsFromFleetUsecase {
@@ -12,7 +14,8 @@ export class RetireAircraftsFromFleetUsecase {
   ) {}
 
   async invoke(input: RetireAircraftsFromFleetInput): Promise<void> {
-    const { fleetId, aircraftIds } = input
+    const fleetId = FleetId.create(input.fleetId)
+    const aircraftIds = input.aircraftIds.map(id => AircraftId.create(id))
 
     const [fleet, aircrafts] = await Promise.all([
       this.fleetRepository.get(fleetId),
@@ -20,7 +23,7 @@ export class RetireAircraftsFromFleetUsecase {
     ])
 
     if (!fleet) {
-      throw new EntityNotFoundError('Fleet', fleetId)
+      throw new EntityNotFoundError('Fleet', input.fleetId)
     }
 
     if (!aircrafts.length) {
@@ -31,6 +34,7 @@ export class RetireAircraftsFromFleetUsecase {
       throw new InvalidArgumentError('Some aircraft IDs were not found')
     }
 
+    // todo: mover al aggregado
     for (const aircraft of aircrafts) {
       aircraft.retireFromFleet(fleetId)
       fleet.retireAircraft(aircraft.id)

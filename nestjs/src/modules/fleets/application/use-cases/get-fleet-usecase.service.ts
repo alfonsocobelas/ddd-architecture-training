@@ -3,6 +3,7 @@ import { EntityNotFoundError } from 'src/modules/shared/errors'
 import { FleetRepository } from '../../domain/fleet.repository'
 import { GetFleetOutput } from '../dtos/get-fleet-output.dto'
 import { GetFleetInput } from '../dtos/get-fleet-input.dto'
+import { FleetId } from '../../domain/value-objects/fleet-id.vo'
 
 @Injectable()
 export class GetFleetUseCase {
@@ -11,21 +12,13 @@ export class GetFleetUseCase {
   ) {}
 
   async invoke(input: GetFleetInput): Promise<GetFleetOutput> {
-    const fleet = await this.fleetRepository.get(input.id)
+    const fleetId = FleetId.create(input.id)
 
+    const fleet = await this.fleetRepository.get(fleetId)
     if (!fleet) {
-      throw new EntityNotFoundError('Fleet', input.id)
+      throw new EntityNotFoundError('Fleet', fleetId.value)
     }
 
-    return {
-      id: fleet.id,
-      aircraftIds: fleet.aircraftIds,
-      companyId: fleet.companyId,
-      name: fleet.name,
-      operationRegion: fleet.operationRegion,
-      type: fleet.type,
-      maintenanceBudget: fleet.maintenanceBudget,
-      status: fleet.status
-    }
+    return fleet.toPrimitives()
   }
 }

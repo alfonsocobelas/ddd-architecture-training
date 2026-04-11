@@ -3,12 +3,16 @@ import { FleetError } from '../fleet-errors'
 import { FLEET_CONSTRAINTS as LIMITS } from '../fleet-constants'
 
 export class FleetName extends StringValueObject {
-  constructor(value: string) {
+  private constructor(value: string) {
     super(value)
-    this.ensureIsValid(value)
   }
 
-  private ensureIsValid(value: string): void {
+  static create(value: string): FleetName {
+    this.validate(value)
+    return new FleetName(value)
+  }
+
+  private static validate(value: string): void {
     if (value.length < LIMITS.NAME.MIN_LENGTH) {
       throw new FleetError(`Name must be at least ${LIMITS.NAME.MIN_LENGTH} characters`)
     }

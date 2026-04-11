@@ -1,9 +1,13 @@
 import { EnumValueObject } from 'src/modules/shared/domain/value-objects/enum-value-object'
 import { FleetTypeEnum, FleetTypeValues } from '../fleet-enums'
 
-export class FleetType extends EnumValueObject<string> {
-  constructor(value: string) {
+export class FleetType extends EnumValueObject<FleetTypeEnum> {
+  private constructor(value: FleetTypeEnum) {
     super(value, FleetTypeValues)
+  }
+
+  static create(value: string): FleetType {
+    return new FleetType(value as FleetTypeEnum)
   }
 
   isCargo(): boolean {

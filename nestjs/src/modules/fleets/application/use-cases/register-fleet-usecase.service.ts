@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { AlreadyExistsError, InvalidArgumentError } from 'src/modules/shared/errors'
 import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
+import { AlreadyExistsError, InvalidArgumentError } from 'src/modules/shared/errors'
 import { RegisterFleetInput } from '../dtos/register-fleet-input.dto'
 import { Fleet } from '../../domain/fleet'
+import { withName } from '../../domain/specifications/fleet-with-name.specification'
 import { FleetRepository } from '../../domain/fleet.repository'
-import { FleetType, OperationRegion } from '../../domain/fleet-enums'
-import { FleetWithNameSpecification } from '../../domain/specifications/fleet-with-name.specification'
+import { FleetInputMapper } from '../../domain/fleet-factory'
 
 @Injectable()
 export class RegisterFleetUseCase {
@@ -15,15 +15,16 @@ export class RegisterFleetUseCase {
   ) {}
 
   async invoke(input: RegisterFleetInput): Promise<void> {
-    const { aircraftIds, name } = input
+    const props = FleetInputMapper.toDomain(input)
+    const aircraftIds = props.aircraftIds.toArray
 
     const [aircrafts, fleetExists] = await Promise.all([
       this.aircraftRepository.find(aircraftIds),
-      this.fleetRepository.exists(new FleetWithNameSpecification(name))
+      this.fleetRepository.exists(withName(props.name))
     ])
 
     if (fleetExists) {
-      throw new AlreadyExistsError('Fleet', 'name', name)
+      throw new AlreadyExistsError('Fleet', 'name', props.name.value)
     }
 
     if (!aircrafts.length) {
@@ -35,18 +36,10 @@ export class RegisterFleetUseCase {
     }
 
     for (const aircraft of aircrafts) {
-      aircraft.addToFleet(input.id)
+      aircraft.addToFleet(props.id)
     }
 
-    const fleet = Fleet.create({
-      id: input.id,
-      aircraftIds: input.aircraftIds,
-      companyId: input.companyId,
-      name: input.name,
-      operationRegion: input.operationRegion as OperationRegion,
-      type: input.type as FleetType,
-      maintenanceBudget: input.maintenanceBudget
-    })
+    const fleet = Fleet.create(props)
 
     await Promise.all([
       await this.fleetRepository.register(fleet),
