@@ -11,12 +11,12 @@ export class AircraftsActivesOfModelSpecification extends Criteria {
       filters: new Filters([
         new Filter(
           new FilterField('status'),
-          FilterOperator.fromValue(Operator.EQUAL),
+          FilterOperator.create(Operator.EQUAL),
           new FilterValue('ACTIVE')
         ),
         new Filter(
           new FilterField('modelId'),
-          FilterOperator.fromValue(Operator.EQUAL),
+          FilterOperator.create(Operator.EQUAL),
           new FilterValue(modelId)
         )
       ])

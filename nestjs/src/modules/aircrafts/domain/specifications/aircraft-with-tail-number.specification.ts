@@ -12,7 +12,7 @@ class AircraftWithTailNumberSpecification extends Criteria {
       filters: new Filters([
         new Filter(
           new FilterField('tailNumber'),
-          FilterOperator.fromValue(Operator.EQUAL),
+          FilterOperator.create(Operator.EQUAL),
           new FilterValue(tailNumber.value)
         )
       ])

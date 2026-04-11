@@ -14,7 +14,7 @@ class AircraftsInMaintenanceSpecification extends Criteria {
         filters: new Filters([
           new Filter(
             new FilterField('status'),
-            FilterOperator.fromValue(Operator.EQUAL),
+            FilterOperator.create(Operator.EQUAL),
             new FilterValue(AircraftStatusEnum.MAINTENANCE)
           )
         ])

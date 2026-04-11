@@ -12,7 +12,7 @@ export class FleetWithNameSpecification extends Criteria {
       filters: new Filters([
         new Filter(
           new FilterField('name'),
-          FilterOperator.fromValue(Operator.EQUAL),
+          FilterOperator.create(Operator.EQUAL),
           new FilterValue(name.value)
         )
       ])

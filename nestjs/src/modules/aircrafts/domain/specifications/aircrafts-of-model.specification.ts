@@ -12,7 +12,7 @@ class AircraftsOfModelSpecification extends Criteria {
       filters: new Filters([
         new Filter(
           new FilterField('modelId'),
-          FilterOperator.fromValue(Operator.EQUAL),
+          FilterOperator.create(Operator.EQUAL),
           new FilterValue(modelId.value)
         )
       ])
