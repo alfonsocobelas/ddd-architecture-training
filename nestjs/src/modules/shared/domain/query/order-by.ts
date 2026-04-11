@@ -6,4 +6,8 @@ export class OrderBy {
       throw new InvalidArgumentError('OrderBy value cannot be empty')
     }
   }
+
+  static create(value: string): OrderBy {
+    return new OrderBy(value)
+  }
 }

@@ -14,8 +14,14 @@ export abstract class ValueObjectList<
   abstract add(item: T): Self
   abstract remove(item: T): Self
 
+  // immutable array of the items
   get items(): ReadonlyArray<T> {
     return this._items
+  }
+
+  // mutable array copy of the items
+  get toArray(): T[] {
+    return [...this._items]
   }
 
   get values(): Array<T['value']> {

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { GetAircraftModelInput } from '../dtos/get-aircraft-model-input.dto'
 import { GetAircraftModelOutput } from '../dtos/get-aircraft-model-output.dto'
-import { AircraftModelId } from '../../domain/value-objects/aircraft-model-id.vo'
 import { AircraftModelRepository } from '../../domain/aircraft-model.repository'
+import { AircraftModelInputMapper } from '../../domain/aircraft-model-factory'
 import { EntityNotFoundError } from '../../../shared/errors'
 
 @Injectable()
@@ -12,11 +12,11 @@ export class GetAircraftModelUseCase {
   ) {}
 
   async invoke(input: GetAircraftModelInput): Promise<GetAircraftModelOutput> {
-    const modelId = AircraftModelId.create(input.id)
-    const model = await this.repository.get(modelId)
+    const { id: modelId } = AircraftModelInputMapper.toDomain(input)
 
+    const model = await this.repository.get(modelId)
     if (!model) {
-      throw new EntityNotFoundError('AircraftModel', input.id)
+      throw new EntityNotFoundError('AircraftModel', modelId.value)
     }
 
     return model.toPrimitives()

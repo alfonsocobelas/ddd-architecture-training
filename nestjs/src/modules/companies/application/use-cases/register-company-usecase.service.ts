@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { AlreadyExistsError } from 'src/modules/shared/errors'
 import { RegisterCompanyInput } from '../dtos/register-company-input.dto'
-import { CompanyRepository } from '../../domain/company.repository'
 import { Company } from '../../domain/company'
-import { CompanyId } from 'src/modules/shared/domain/value-objects/companies/company-id.vo'
-import { CompanyName } from '../../domain/value-objects/company-name.vo'
+import { CompanyRepository } from '../../domain/company.repository'
+import { CompanyInputMapper } from '../../domain/company-factory'
 
 @Injectable()
 export class RegisterCompanyUseCase {
@@ -13,18 +12,14 @@ export class RegisterCompanyUseCase {
   ) {}
 
   async invoke(input: RegisterCompanyInput): Promise<void> {
-    const companyName = CompanyName.create(input.name)
-    const companyExists = await this.repository.exists(companyName)
+    const props = CompanyInputMapper.toDomain(input)
 
+    const companyExists = await this.repository.exists(props.name)
     if (companyExists) {
-      throw new AlreadyExistsError('Company', 'name', input.name)
+      throw new AlreadyExistsError('Company', 'name', props.name.value)
     }
 
-    const company = Company.create({
-      id: CompanyId.create(input.id),
-      name: CompanyName.create(input.name)
-    })
-
+    const company = Company.create(props)
     await this.repository.register(company)
   }
 }

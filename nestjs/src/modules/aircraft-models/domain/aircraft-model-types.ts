@@ -1,4 +1,3 @@
-
 import { AircraftModelId } from './value-objects/aircraft-model-id.vo'
 import { AircraftModelName } from './value-objects/aircraft-model-name.vo'
 import { AircraftModelCode } from './value-objects/aircraft-model-code.vo'

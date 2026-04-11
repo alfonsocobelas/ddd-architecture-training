@@ -27,14 +27,7 @@ export class SearchAircraftsUseCase {
       page: input.page,
       pageSize: input.pageSize,
       totalPages: getTotalPages({ pageSize: input.pageSize, total }),
-      items: aircrafts.map(aircraft => ({
-        id: aircraft.id,
-        modelId: aircraft.modelId,
-        tailNumber: aircraft.tailNumber,
-        totalFlightHours: aircraft.totalFlightHours,
-        fuelLevelPercentage: aircraft.fuelLevelPercentage,
-        status: aircraft.status
-      }))
+      items: aircrafts.map(aircraft => aircraft.toPrimitives())
     }
   }
 }

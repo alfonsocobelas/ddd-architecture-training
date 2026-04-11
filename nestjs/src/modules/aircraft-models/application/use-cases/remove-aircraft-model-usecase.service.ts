@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { EntityNotFoundError } from 'src/modules/shared/errors'
-import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
 import { aircraftsOfModel } from 'src/modules/aircrafts/domain/specifications/aircrafts-of-model.specification'
+import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
+import { EntityNotFoundError } from 'src/modules/shared/errors'
 import { RemoveAircraftModelInput } from '../dtos/remove-aircraft-model-input.dto'
 import { AircraftModelRepository } from '../../domain/aircraft-model.repository'
-import { AircraftModelId } from '../../domain/value-objects/aircraft-model-id.vo'
+import { AircraftModelInputMapper } from '../../domain/aircraft-model-factory'
 
 @Injectable()
 export class RemoveAircraftModelUseCase {
@@ -14,7 +14,7 @@ export class RemoveAircraftModelUseCase {
   ) {}
 
   async invoke(input: RemoveAircraftModelInput): Promise<void> {
-    const modelId = AircraftModelId.create(input.id)
+    const { id: modelId } = AircraftModelInputMapper.toDomain(input)
 
     const [model, aircraftCount] = await Promise.all([
       this.modelRepository.get(modelId),
@@ -22,10 +22,10 @@ export class RemoveAircraftModelUseCase {
     ])
 
     if (!model) {
-      throw new EntityNotFoundError('AircraftModel', input.id)
+      throw new EntityNotFoundError('AircraftModel', modelId.value)
     }
 
     model.ensureCanBeRemoved(aircraftCount)
-    await this.modelRepository.remove(model.id)
+    await this.modelRepository.remove(modelId)
   }
 }

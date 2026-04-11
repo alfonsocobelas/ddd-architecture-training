@@ -1,4 +1,5 @@
 import { InvalidArgumentError } from 'src/modules/shared/errors'
+import { EnumValueObject } from '../value-objects/enum-value-object'
 
 export enum Operator {
   EQUAL = 'eq',
@@ -16,10 +17,12 @@ const OPERATOR_MAP = new Map<string, Operator>(
   Object.values(Operator).map((val) => [val, val])
 )
 
-export class FilterOperator {
-  constructor(readonly value: Operator) {}
+export class FilterOperator extends EnumValueObject<Operator> {
+  constructor(value: Operator) {
+    super(value, Object.values(Operator))
+  }
 
-  static fromValue(value: string): FilterOperator {
+  static create(value: string): FilterOperator {
     const op = OPERATOR_MAP.get(value)
 
     if (!op) {

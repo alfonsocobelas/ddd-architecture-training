@@ -1,3 +1,4 @@
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { EntityNotFoundError } from 'src/modules/shared/errors'
 import { RemoveAircraftInput } from '../dtos/remove-aircraft-input.dto'
 import { AircraftRepository } from '../../domain/aircraft.repository'
@@ -8,10 +9,11 @@ export class RemoveAircraftUseCase {
   ) {}
 
   async invoke(input: RemoveAircraftInput): Promise<void> {
-    const aircraft = await this.aircraftRepository.get(input.id)
+    const aircraftId = AircraftId.create(input.id)
 
+    const aircraft = await this.aircraftRepository.get(aircraftId)
     if (!aircraft) {
-      throw new EntityNotFoundError('Aircraft', input.id)
+      throw new EntityNotFoundError('Aircraft', aircraftId.value)
     }
 
     await this.aircraftRepository.remove(aircraft)

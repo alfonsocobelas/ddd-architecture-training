@@ -20,8 +20,8 @@ export class Order {
     }
 
     return new Order(
-      new OrderBy(orderBy),
-      OrderType.fromValue(orderType)
+      OrderBy.create(orderBy),
+      OrderType.create(orderType)
     )
   }
 }

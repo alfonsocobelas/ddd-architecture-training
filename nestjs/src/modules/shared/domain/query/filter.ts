@@ -23,13 +23,10 @@ export class Filter {
       throw new InvalidArgumentError('Invalid filter values')
     }
 
-    // todo: añadir validacion de campos permitidos en la cals de filterField?
-    // para no tener que hacer el criteriavalidator que hace un foreach
-    // el unico problema es que no que los campos permitidos no podrian ser dinamico
     return new Filter(
-      new FilterField(field),
-      FilterOperator.fromValue(operator),
-      new FilterValue(filterValue)
+      FilterField.create(field),
+      FilterOperator.create(operator),
+      FilterValue.create(filterValue)
     )
   }
 }

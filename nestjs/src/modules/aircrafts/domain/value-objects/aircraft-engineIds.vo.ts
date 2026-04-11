@@ -16,6 +16,10 @@ export class AircraftEngineIds extends ValueObjectList<EngineId, AircraftEngineI
     return new AircraftEngineIds([])
   }
 
+  isEmpty(): boolean {
+    return this._items.length === 0
+  }
+
   isFull(max: AircraftModelNumEngines): boolean {
     return this.length >= max.value
   }

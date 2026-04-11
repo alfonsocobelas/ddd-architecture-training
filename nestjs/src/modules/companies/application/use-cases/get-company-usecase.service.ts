@@ -13,10 +13,10 @@ export class GetCompanyUseCase {
 
   async invoke(input: GetCompanyInput): Promise<GetCompanyOutput> {
     const companyId = CompanyId.create(input.id)
-    const company = await this.repository.get(companyId)
 
+    const company = await this.repository.get(companyId)
     if (!company) {
-      throw new EntityNotFoundError('Company', input.id)
+      throw new EntityNotFoundError('Company', companyId.value)
     }
 
     return company.toPrimitives()

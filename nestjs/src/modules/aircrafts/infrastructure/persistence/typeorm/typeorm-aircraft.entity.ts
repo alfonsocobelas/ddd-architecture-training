@@ -1,4 +1,5 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Check, Index } from 'typeorm'
+import { Nullable } from 'src/modules/shared/types'
 import { AircraftStatusEnum } from '../../../domain/aircraft-enums'
 import { AIRCRAFT_CONSTRAINTS as LIMITS } from '../../../domain/aircraft-constants'
 
@@ -13,7 +14,7 @@ export class AircraftEntity {
     id!: string
 
   @Column('uuid', { nullable: true })
-    fleetId!: string | null
+    fleetId!: Nullable<string>
 
   @Column('uuid')
     modelId!: string

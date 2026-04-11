@@ -16,7 +16,7 @@ export class OrderType {
     }
   }
 
-  static fromValue(value: string): OrderType {
+  static create(value: string): OrderType {
     const orderType = ORDER_TYPE_MAP.get(value)
 
     if (!orderType) {

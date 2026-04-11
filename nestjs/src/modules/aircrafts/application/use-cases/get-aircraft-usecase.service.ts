@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common'
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
+import { EngineRepository } from 'src/modules/engines/domain/engine.repository'
 import { EntityNotFoundError } from 'src/modules/shared/errors'
+import { AircraftModelRepository } from 'src/modules/aircraft-models/domain/aircraft-model.repository'
 import { GetAircraftInput } from '../dtos/get-aircraft-input.dto'
 import { GetAircraftOutput } from '../dtos/get-aircraft-output.dto'
 import { AircraftRepository } from '../../domain/aircraft.repository'
@@ -7,34 +10,47 @@ import { AircraftRepository } from '../../domain/aircraft.repository'
 @Injectable()
 export class GetAircraftUseCase {
   constructor(
-    private readonly repository: AircraftRepository
+    private readonly aircraftRepository: AircraftRepository,
+    private readonly aircraftModelRepository: AircraftModelRepository,
+    private readonly engineRepository: EngineRepository
   ) {}
 
   async invoke(input: GetAircraftInput): Promise<GetAircraftOutput> {
-    const aircraft = await this.repository.getTechnicalSheet(input.id)
+    const aircraftId = AircraftId.create(input.id)
 
+    const aircraft = await this.aircraftRepository.get(aircraftId)
     if (!aircraft) {
-      throw new EntityNotFoundError('Aircraft', input.id)
+      throw new EntityNotFoundError('Aircraft', aircraftId.value)
+    }
+
+    const model = await this.aircraftModelRepository.get(aircraft.modelId)
+    if (!model) {
+      throw new EntityNotFoundError('AircraftModel', aircraft.modelId.value)
+    }
+
+    let engines
+    if (!aircraft.engineIds.isEmpty()) {
+      engines = await this.engineRepository.find(aircraft.engineIds.toArray)
     }
 
     return {
-      id: aircraft.id,
-      modelId: aircraft.modelId,
-      tailNumber: aircraft.tailNumber,
-      fleetId: aircraft.fleetId,
-      engineIds: aircraft.engineIds,
-      isActive: aircraft.isActive,
-      status: aircraft.status,
-      totalFlightHours: aircraft.totalFlightHours,
-      fuelLevelPercentage: aircraft.fuelLevelPercentage,
+      id: aircraft.id.value,
+      modelId: aircraft.modelId.value,
+      tailNumber: aircraft.tailNumber.value,
+      fleetId: aircraft.fleetId?.value,
+      engineIds: aircraft.engineIds?.values,
+      isActive: aircraft.isActive.value,
+      status: aircraft.status.value,
+      totalFlightHours: aircraft.totalFlightHours.value,
+      fuelLevelPercentage: aircraft.fuelLevelPercentage.value,
       model: {
-        id: aircraft.model.id,
-        name: aircraft.model.name,
-        numEngines: aircraft.model.numEngines
+        id: model.id.value,
+        name: model.name.value,
+        numEngines: model.numEngines.value
       },
-      engines: aircraft.engines.map(engine => ({
-        id: engine.id,
-        healthScore: engine.healthScore
+      engines: engines?.map(engine => ({
+        id: engine.id.value,
+        healthScore: engine.healthScore.value
       }))
     }
   }

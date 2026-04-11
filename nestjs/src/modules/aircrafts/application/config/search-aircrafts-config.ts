@@ -1,6 +1,6 @@
-import { AircraftProps } from '../../domain/aircraft-types'
+import { AircraftPrimitiveProps } from '../../domain/aircraft-types'
 
-type AircraftAllowedFields = keyof AircraftProps | 'model.name' // aditional field of related entity, to test nested fields filtering
+type AircraftAllowedFields = keyof AircraftPrimitiveProps | 'model.name' // aditional field of related entity, to test nested fields filtering
 
 const AIRCRAFT_ALLOWED_FILTERS: Array<AircraftAllowedFields> = [
   'id',
