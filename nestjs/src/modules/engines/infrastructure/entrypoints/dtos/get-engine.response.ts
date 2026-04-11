@@ -1,4 +1,5 @@
-import { Expose } from 'class-transformer'
+import { Expose, Transform } from 'class-transformer'
+import { Nullable } from 'src/modules/shared/types'
 
 export class GetEngineResponse {
   @Expose() id!: string
@@ -8,7 +9,7 @@ export class GetEngineResponse {
   @Expose() cyclesSinceLastOverhaul!: number
   @Expose() isInstalled!: boolean
   @Expose() status!: string
-  @Expose() aircraftId!: string | null
+  @Expose() @Transform(({ value }) => value ?? null) aircraftId!: Nullable<string>
 
   constructor(partial: Partial<GetEngineResponse>) {
     Object.assign(this, partial)

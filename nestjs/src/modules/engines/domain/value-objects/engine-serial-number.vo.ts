@@ -1,14 +1,20 @@
 import { StringValueObject } from 'src/modules/shared/domain/value-objects/string-value-object'
-import { EngineError } from '../engine-errors'
+import { normalizeString } from 'src/modules/shared/utils/normalize'
 import { ENGINE_CONSTRAINTS as LIMITS } from '../engine-constants'
+import { EngineError } from '../engine-errors'
 
 export class EngineSerialNumber extends StringValueObject {
-  constructor(value: string) {
+  private constructor(value: string) {
     super(value)
-    this.ensureIsValid(value)
   }
 
-  private ensureIsValid(value: string): void {
+  static create(value: string): EngineSerialNumber {
+    const normalized = normalizeString(value)
+    this.validate(normalized)
+    return new EngineSerialNumber(normalized)
+  }
+
+  private static validate(value: string): void {
     if (value.length < LIMITS.SERIAL_NUMBER.MIN_LENGTH) {
       throw new EngineError(`Serial number must be at least ${LIMITS.SERIAL_NUMBER.MIN_LENGTH} characters`)
     }

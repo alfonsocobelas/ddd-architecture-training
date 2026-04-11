@@ -15,8 +15,8 @@ export class SearchEnginesUseCase {
 
   async invoke(input: CursorSearchInput): Promise<CursorPaginatedOutput<SearchEnginesOutput>> {
     const { allowedFilters, allowedOrders } = searchEnginesConfig
-
     const criteria = Criteria.fromCursor(input, allowedFilters, allowedOrders)
+
     const engines = await this.engineRepository.matching(criteria)
 
     const hasMore = engines.length > input.pageSize
@@ -33,19 +33,12 @@ export class SearchEnginesUseCase {
       }
     }
 
-    const nextCursor = Cursor.encode(lastItem.id, criteria.filters, criteria.orders)
+    const nextCursor = Cursor.encode(lastItem.id.value, criteria.filters, criteria.orders)
 
     return {
       nextCursor,
       hasMore,
-      items: engines.map(engine => ({
-        id: engine.id,
-        serialNumber: engine.serialNumber,
-        healthScore: engine.healthScore,
-        flyingHoursAccumulated: engine.flyingHoursAccumulated,
-        cyclesSinceLastOverhaul: engine.cyclesSinceLastOverhaul,
-        status: engine.status
-      }))
+      items: engines.map(engine => engine.toPrimitives())
     }
   }
 }

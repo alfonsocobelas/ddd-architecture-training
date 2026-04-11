@@ -6,5 +6,5 @@ export interface GetEngineOutput {
     cyclesSinceLastOverhaul: number;
     isInstalled: boolean;
     status: string;
-    aircraftId: string | null;
+    aircraftId?: string;
 }

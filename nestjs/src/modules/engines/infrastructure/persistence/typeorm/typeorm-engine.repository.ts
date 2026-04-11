@@ -1,14 +1,16 @@
-import { EntityTarget } from 'typeorm'
+import { EntityTarget, In } from 'typeorm'
 import { Injectable } from '@nestjs/common'
-import { Nullable } from 'src/modules/shared/nullable'
+import { Engine } from 'src/modules/engines/domain/engine'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
+import { EngineRepository } from 'src/modules/engines/domain/engine.repository'
 import { TypeOrmRepository } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm.repository'
 import { TypeOrmCriteriaConverter } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm-criteria-converter'
 import { TypeOrmTransactionManager } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm-transaction-manager'
-import { Engine } from 'src/modules/engines/domain/engine'
-import { EngineRepository } from 'src/modules/engines/domain/engine.repository'
 import { EngineMapper } from './typeorm-engine.mapper'
 import { EngineEntity } from './typeorm-engine.entity'
+import { EngineId } from 'src/modules/shared/domain/value-objects/engines/engine-id.vo'
+import { EngineSerialNumber } from 'src/modules/engines/domain/value-objects/engine-serial-number.vo'
 
 @Injectable()
 export class TypeOrmEngineRepository
@@ -38,9 +40,9 @@ export class TypeOrmEngineRepository
     await this.persist(entities)
   }
 
-  async get(engineId: string): Promise<Nullable<Engine>> {
+  async get(engineId: EngineId): Promise<Nullable<Engine>> {
     const repository = this.repository()
-    const entity = await repository.findOneBy({ id: engineId })
+    const entity = await repository.findOneBy({ id: engineId.value })
 
     if (!entity) {
       return null
@@ -49,18 +51,27 @@ export class TypeOrmEngineRepository
     return EngineMapper.toDomain(entity)
   }
 
+  async find(engineIds: EngineId[]): Promise<Engine[]> {
+    const repository = this.repository()
+    const ids = engineIds.map(id => id.value)
+
+    const entities = await repository.findBy({ id: In(ids) })
+
+    return entities.map(entity => EngineMapper.toDomain(entity))
+  }
+
   async matching(criteria: Criteria): Promise<Engine[]> {
     const entities = await this.searchByCriteria(criteria)
 
     return entities.map(entity => EngineMapper.toDomain(entity))
   }
 
-  async exists(serialNumber: string): Promise<boolean> {
+  async exists(serialNumber: EngineSerialNumber): Promise<boolean> {
     const repository = this.repository()
 
     const existEntity = await repository
       .createQueryBuilder('engine')
-      .where('engine.serialNumber = :serialNumber', { serialNumber })
+      .where('engine.serialNumber = :serialNumber', { serialNumber: serialNumber.value })
       .select('1')
       .getExists()
 

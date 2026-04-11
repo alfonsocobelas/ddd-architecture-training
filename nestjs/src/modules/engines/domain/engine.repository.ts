@@ -1,11 +1,14 @@
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
+import { EngineId } from 'src/modules/shared/domain/value-objects/engines/engine-id.vo'
+import { EngineSerialNumber } from './value-objects/engine-serial-number.vo'
 import { Engine } from './engine'
 
 export abstract class EngineRepository {
   abstract register(engine: Engine): Promise<void>
   abstract save(engines: Engine | Engine[]): Promise<void>
-  abstract get(engineId: string): Promise<Nullable<Engine>>
-  abstract exists(serialNumber: string): Promise<boolean>
+  abstract get(engineId: EngineId): Promise<Nullable<Engine>>
+  abstract find(engineIds: EngineId[]): Promise<Engine[]>
+  abstract exists(serialNumber: EngineSerialNumber): Promise<boolean>
   abstract matching(criteria: Criteria): Promise<Engine[]>
 }

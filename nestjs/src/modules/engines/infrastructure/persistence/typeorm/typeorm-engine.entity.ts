@@ -1,6 +1,6 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Check, Index } from 'typeorm'
-import { AircraftEntity } from 'src/modules/aircrafts/infrastructure/persistence/typeorm/typeorm-aircraft.entity'
-import { EngineStatus } from 'src/modules/engines/domain/engine-enums'
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Check, Index } from 'typeorm'
+import { Nullable } from 'src/modules/shared/types'
+import { EngineStatusEnum } from 'src/modules/engines/domain/engine-enums'
 import { ENGINE_CONSTRAINTS as LIMITS } from '../../../domain/engine-constants'
 
 @Entity({ name: 'engines', schema: 'fleet' })
@@ -24,14 +24,14 @@ export class EngineEntity {
   @Column('int')
     cyclesSinceLastOverhaul!: number
 
-  @Column('enum', { enum: EngineStatus })
-    status!: EngineStatus
+  @Column('enum', { enum: EngineStatusEnum })
+    status!: EngineStatusEnum
 
   @Column('boolean')
     isInstalled!: boolean
 
   @Column('uuid', { nullable: true })
-    aircraftId!: string | null
+    aircraftId!: Nullable<string>
 
   // --- AUDIT FIELDS --- //
   @CreateDateColumn({ type: 'timestamptz' })
@@ -42,10 +42,5 @@ export class EngineEntity {
 
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
     deletedAt?: Date
-
-  // --- JOINS RELATIONS --- //
-  @ManyToOne(() => AircraftEntity, (aircraft) => aircraft.engines)
-  @JoinColumn({ name: 'aircraftId' })
-    aircraft?: AircraftEntity
 }
 

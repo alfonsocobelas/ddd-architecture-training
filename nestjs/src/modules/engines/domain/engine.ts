@@ -1,130 +1,114 @@
-import { isValidUuidV7 } from 'src/modules/shared/domain/validators/validateId'
-import { normalizeString } from 'src/modules/shared/utils/normalize'
-import { EngineCreateProps, EngineProps } from './engine-types'
-import { EngineStatus } from './engine-enums'
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
+import { AggregateRoot } from 'src/modules/shared/domain/aggregate-root'
 import { EngineError } from './engine-errors'
-import { ENGINE_DEFAULTS as DEFAULT, ENGINE_CONSTRAINTS as LIMITS } from './engine-constants'
+import { ENGINE_CONSTRAINTS as LIMITS } from './engine-constants'
+import { EngineAggregateProps, EnginePrimitiveProps } from './engine-types'
+import { EngineId } from '../../shared/domain/value-objects/engines/engine-id.vo'
+import { EngineStatus } from './value-objects/engine-status.vo'
+import { EngineHealthScore } from './value-objects/engine-health-score.vo'
+import { EngineIsInstalled } from './value-objects/engine-is-installed.vo'
+import { EngineSerialNumber } from './value-objects/engine-serial-number.vo'
+import { EngineFlyingHoursAccumulated } from './value-objects/engine-flying-hours-accumulated.vo'
+import { EngineCyclesSinceLastOverhaul } from './value-objects/engine-cycles-since-last-overhaul.vo'
 
-export class Engine {
-  private _aircraftId?: string
-  private _isInstalled: boolean
-  private _status: EngineStatus
-
-  readonly id: string
-  readonly serialNumber: string
-  readonly healthScore: number
-  readonly flyingHoursAccumulated: number
-  readonly cyclesSinceLastOverhaul: number
-
-  private constructor(props: EngineProps) {
-    this.id = props.id
-    this.serialNumber = props.serialNumber
-    this.healthScore = props.healthScore
-    this.flyingHoursAccumulated = props.flyingHoursAccumulated
-    this.cyclesSinceLastOverhaul = props.cyclesSinceLastOverhaul
-    this._status = props.status
-    this._isInstalled = props.isInstalled
-    this._aircraftId = props.aircraftId
+export class Engine extends AggregateRoot {
+  private constructor(
+    readonly id: EngineId,
+    readonly serialNumber: EngineSerialNumber,
+    readonly healthScore: EngineHealthScore,
+    readonly flyingHoursAccumulated: EngineFlyingHoursAccumulated,
+    readonly cyclesSinceLastOverhaul: EngineCyclesSinceLastOverhaul,
+    private _isInstalled: EngineIsInstalled,
+    private _status: EngineStatus,
+    private _aircraftId?: AircraftId
+  ) {
+    super()
   }
 
-  //#region ... Getters & Setters ...
-  get isInstalled(): boolean {
+  //#region ... Getters ...
+  get isInstalled(): EngineIsInstalled {
     return this._isInstalled
   }
 
-  get aircraftId(): string | undefined {
+  get aircraftId(): AircraftId | undefined {
     return this._aircraftId
   }
 
   get status(): EngineStatus {
     return this._status
   }
-
-  set status(newStatus: EngineStatus) {
-    this.validateStatus(newStatus)
-    this._status = newStatus
-  }
   //#endregion
 
-  static create(props: EngineCreateProps): Engine {
-    const serialNumber = normalizeString(props.serialNumber)
-
-    this.validateId(props.id)
-    this.validateSerialNumber(serialNumber)
-
-    return new Engine({
-      ...props,
-      serialNumber,
-      isInstalled: false,
-      healthScore: LIMITS.HEALTH_SCORE.MAX,
-      flyingHoursAccumulated: DEFAULT.FLYING_HOURS,
-      cyclesSinceLastOverhaul: DEFAULT.CYCLES_SINCE_LAST_OVERHAUL,
-      status: EngineStatus.OPERATIONAL
-    })
+  static create(props: EngineAggregateProps): Engine {
+    return new Engine(
+      props.id,
+      props.serialNumber,
+      EngineHealthScore.max(),
+      EngineFlyingHoursAccumulated.initial(),
+      EngineCyclesSinceLastOverhaul.initial(),
+      EngineIsInstalled.notInstalled(),
+      EngineStatus.operational()
+    )
   }
 
-  static reconstruct(props: EngineProps): Engine {
-    return new Engine(props)
+  static fromPrimitives(props: EnginePrimitiveProps): Engine {
+    return new Engine(
+      EngineId.create(props.id),
+      EngineSerialNumber.create(props.serialNumber),
+      EngineHealthScore.create(props.healthScore),
+      EngineFlyingHoursAccumulated.create(props.flyingHoursAccumulated),
+      EngineCyclesSinceLastOverhaul.create(props.cyclesSinceLastOverhaul),
+      EngineIsInstalled.create(props.isInstalled),
+      EngineStatus.create(props.status),
+      props.aircraftId ? AircraftId.create(props.aircraftId) : undefined
+    )
   }
 
-  installInAircraft(aircraftId: string): void {
+  toPrimitives(): EnginePrimitiveProps {
+    return {
+      id: this.id.value,
+      status: this.status.value,
+      aircraftId: this.aircraftId?.value,
+      isInstalled: this.isInstalled.value,
+      healthScore: this.healthScore.value,
+      serialNumber: this.serialNumber.value,
+      flyingHoursAccumulated: this.flyingHoursAccumulated.value,
+      cyclesSinceLastOverhaul: this.cyclesSinceLastOverhaul.value
+    }
+  }
+
+  installInAircraft(aircraftId: AircraftId): void {
     this.ensureCanBeInstalled()
-    this._isInstalled = true
+    this._isInstalled = EngineIsInstalled.installed()
     this._aircraftId = aircraftId
   }
 
-  removeFromAircraft(aircraftId: string): void {
+  removeFromAircraft(aircraftId: AircraftId): void {
     this.ensureCanBeRemoved(aircraftId)
-    this._isInstalled = false
+    this._isInstalled = EngineIsInstalled.notInstalled()
     this._aircraftId = undefined
   }
 
-  private static validateId(id: string): void {
-    if (!isValidUuidV7(id)) {
-      throw new EngineError('Invalid id')
-    }
-  }
-
-  private static validateSerialNumber(serialNumber: string): void {
-    if (!serialNumber || !serialNumber.trim().length) {
-      throw new EngineError('Serial number cannot be empty')
-    }
-
-    if (serialNumber.length < LIMITS.SERIAL_NUMBER.MIN_LENGTH) {
-      throw new EngineError(`Serial number must be at least ${LIMITS.SERIAL_NUMBER.MIN_LENGTH} characters`)
-    }
-
-    if (serialNumber.length > LIMITS.SERIAL_NUMBER.MAX_LENGTH) {
-      throw new EngineError(`Serial number must be less than or equal to ${LIMITS.SERIAL_NUMBER.MAX_LENGTH} characters`)
-    }
-  }
-
-  private validateStatus(value: string): void {
-    if(!(Object.values(EngineStatus).includes(value as EngineStatus))) {
-      throw new EngineError(`Invalid engine status: ${value}`)
-    }
-  }
-
   private ensureCanBeInstalled(): void {
-    if (this.isInstalled) {
+    if (this.isInstalled.isInstalled()) {
       throw new EngineError(`Engine ${this.id} is already installed on the other aircraft`)
     }
 
-    if (this.status !== EngineStatus.OPERATIONAL) {
+    if (!this.status.isOperational()) {
       throw new EngineError('Only operational engines can be installed')
     }
 
-    if (this.healthScore < LIMITS.HEALTH_SCORE.MIN) {
+    if (this.healthScore.value < LIMITS.HEALTH_SCORE.MIN) {
       throw new EngineError(`Engine health score must be at least ${LIMITS.HEALTH_SCORE.MIN} to be installed`)
     }
   }
 
-  private ensureCanBeRemoved(aircraftId: string): void {
-    if (!this.isInstalled) {
+  private ensureCanBeRemoved(aircraftId: AircraftId): void {
+    if (this.isInstalled.notInstalled()) {
       throw new EngineError(`Engine ${this.id} is not installed on any aircraft`)
     }
 
-    if (this._aircraftId !== aircraftId) {
+    if (!this._aircraftId?.equals(aircraftId)) {
       throw new EngineError(`Engine ${this.id} is installed on a different aircraft`)
     }
   }
