@@ -1,5 +1,3 @@
-import { Nullable } from 'src/modules/shared/nullable'
-
 export interface GetIssueOutput {
   id: string
   code: string
@@ -7,6 +5,6 @@ export interface GetIssueOutput {
   severity: string
   requiresGrounding: boolean
   partCategory: string
-  aircraftId: Nullable<string>
-  engineId: Nullable<string>
+  aircraftId?: string
+  engineId?: string
 }

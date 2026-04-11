@@ -33,21 +33,12 @@ export class SearchIssuesUseCase {
       }
     }
 
-    const nextCursor = Cursor.encode(lastItem.id, criteria.filters, criteria.orders)
+    const nextCursor = Cursor.encode(lastItem.id.value, criteria.filters, criteria.orders)
 
     return {
       nextCursor,
       hasMore,
-      items: issues.map(issue => ({
-        id: issue.id,
-        code: issue.code,
-        description: issue.description,
-        severity: issue.severity,
-        requiresGrounding: issue.requiresGrounding,
-        partCategory: issue.partCategory,
-        aircraftId: issue.aircraftId,
-        engineId: issue.engineId
-      }))
+      items: issues.map(issue => issue.toPrimitives())
     }
   }
 }

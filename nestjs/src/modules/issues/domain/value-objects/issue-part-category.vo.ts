@@ -2,13 +2,17 @@ import { EnumValueObject } from 'src/modules/shared/domain/value-objects/enum-va
 import { IssuePartCategoryEnum, IssuePartCategoryValue } from '../issue-enums'
 import { IssueError } from '../issue-errors'
 
-export class IssuePartCategory extends EnumValueObject<string> {
-  constructor(value: string, aircraftId?: string, engineId?: string) {
+export class IssuePartCategory extends EnumValueObject<IssuePartCategoryEnum> {
+  private constructor(value: IssuePartCategoryEnum) {
     super(value, IssuePartCategoryValue)
-    this.ensureCategoryIsValid(value, aircraftId, engineId)
   }
 
-  private ensureCategoryIsValid(value: string, aircraftId?: string, engineId?: string): void {
+  static create(value: string, aircraftId?: string, engineId?: string): IssuePartCategory {
+    this.validate(value, aircraftId, engineId)
+    return new IssuePartCategory(value as IssuePartCategoryEnum)
+  }
+
+  private static validate(value: string, aircraftId?: string, engineId?: string): void {
     if ((value === IssuePartCategoryEnum.AVIONICS || value === IssuePartCategoryEnum.FUSELAGE) && !aircraftId) {
       throw new IssueError('aircraftId is required when partCategory is Aircraft')
     }

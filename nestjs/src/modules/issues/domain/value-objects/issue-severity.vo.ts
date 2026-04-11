@@ -1,9 +1,13 @@
 import { EnumValueObject } from 'src/modules/shared/domain/value-objects/enum-value-object'
 import { IssueSeverityLevelEnum, IssueSeverityLevelValue } from '../issue-enums'
 
-export class IssueSeverityLevel extends EnumValueObject<string> {
-  constructor(value: string) {
+export class IssueSeverityLevel extends EnumValueObject<IssueSeverityLevelEnum> {
+  private constructor(value: IssueSeverityLevelEnum) {
     super(value, IssueSeverityLevelValue)
+  }
+
+  static create(value: string): IssueSeverityLevel {
+    return new IssueSeverityLevel(value as IssueSeverityLevelEnum)
   }
 
   isLow(): boolean {

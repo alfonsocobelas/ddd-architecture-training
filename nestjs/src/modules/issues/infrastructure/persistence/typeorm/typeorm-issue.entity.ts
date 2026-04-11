@@ -1,7 +1,8 @@
 import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn, Check, Index } from 'typeorm'
-import { AircraftEntity } from 'src/modules/aircrafts/infrastructure/persistence/typeorm/typeorm-aircraft.entity'
+import { Nullable } from 'src/modules/shared/types'
 import { EngineEntity } from 'src/modules/engines/infrastructure/persistence/typeorm/typeorm-engine.entity'
-import { IssueSeverityLevel, IssuePartCategory } from 'src/modules/issues/domain/issue-enums'
+import { AircraftEntity } from 'src/modules/aircrafts/infrastructure/persistence/typeorm/typeorm-aircraft.entity'
+import { IssuePartCategoryEnum, IssueSeverityLevelEnum } from 'src/modules/issues/domain/issue-enums'
 import { ISSUE_CONSTRAINTS as LIMITS } from '../../../domain/issue-constants'
 
 @Entity({ name: 'issues', schema: 'maintenance' })
@@ -17,22 +18,22 @@ export class IssueEntity {
     code!: string
 
   @Column('uuid', { nullable: true })
-    aircraftId!: string | null
+    aircraftId!: Nullable<string>
 
   @Column('uuid', { nullable: true })
-    engineId!: string | null
+    engineId!: Nullable<string>
 
   @Column('varchar', { length: LIMITS.DESCRIPTION.MAX_LENGTH })
     description!: string
 
-  @Column({ type: 'enum', enum: IssueSeverityLevel })
-    severity!: IssueSeverityLevel
+  @Column({ type: 'enum', enum: IssueSeverityLevelEnum })
+    severity!: IssueSeverityLevelEnum
 
   @Column({ type: 'boolean', default: false })
     requiresGrounding!: boolean
 
-  @Column({ type: 'enum', enum: IssuePartCategory })
-    partCategory!: IssuePartCategory
+  @Column({ type: 'enum', enum: IssuePartCategoryEnum })
+    partCategory!: IssuePartCategoryEnum
 
   // --- AUDIT FIELDS --- //
   @CreateDateColumn({ type: 'timestamptz' })

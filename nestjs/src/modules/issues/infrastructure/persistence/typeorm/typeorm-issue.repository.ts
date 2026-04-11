@@ -1,6 +1,6 @@
 import { EntityTarget } from 'typeorm'
 import { Injectable } from '@nestjs/common'
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
 import { TypeOrmRepository } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm.repository'
 import { TypeOrmCriteriaConverter } from 'src/modules/shared/infrastructure/persistence/typeorm/typeorm-criteria-converter'
@@ -9,6 +9,7 @@ import { Issue } from 'src/modules/issues/domain/issue'
 import { IssueRepository } from 'src/modules/issues/domain/issue.repository'
 import { IssueEntity } from './typeorm-issue.entity'
 import { IssueMapper } from './typeorm-issue.mapper'
+import { IssueId } from 'src/modules/issues/domain/value-objects/issue-id.vo'
 
 @Injectable()
 export class TypeOrmIssueRepository
@@ -30,9 +31,9 @@ export class TypeOrmIssueRepository
     await repository.insert(entity)
   }
 
-  async get(issueId: string): Promise<Nullable<Issue>> {
+  async get(issueId: IssueId): Promise<Nullable<Issue>> {
     const repository = this.repository()
-    const entity = await repository.findOneBy({ id: issueId })
+    const entity = await repository.findOneBy({ id: issueId.value })
 
     if (!entity) {
       return null

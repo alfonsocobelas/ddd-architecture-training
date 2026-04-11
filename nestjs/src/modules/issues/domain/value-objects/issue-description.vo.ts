@@ -3,12 +3,16 @@ import { IssueError } from '../issue-errors'
 import { ISSUE_CONSTRAINTS as LIMITS } from '../issue-constants'
 
 export class IssueDescription extends StringValueObject {
-  constructor(value: string) {
+  private constructor(value: string) {
     super(value)
-    this.ensureIsValid(value)
   }
 
-  private ensureIsValid(value: string): void {
+  static create(value: string): IssueDescription {
+    this.validate(value)
+    return new IssueDescription(value)
+  }
+
+  private static validate(value: string): void {
     if (value.length < LIMITS.DESCRIPTION.MIN_LENGTH) {
       throw new IssueError(`Description must be at least ${LIMITS.DESCRIPTION.MIN_LENGTH} characters`)
     }

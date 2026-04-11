@@ -1,4 +1,4 @@
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 import { Expose, Type } from 'class-transformer'
 
 class IssueItem {

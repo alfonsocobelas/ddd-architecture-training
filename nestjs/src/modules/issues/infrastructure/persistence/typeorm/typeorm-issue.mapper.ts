@@ -1,30 +1,31 @@
 import { Issue } from 'src/modules/issues/domain/issue'
 import { IssueEntity } from './typeorm-issue.entity'
 
-export const IssueMapper = {
-  toDomain(entity: IssueEntity): Issue {
-    return Issue.reconstruct({
+export class IssueMapper {
+  static toDomain(entity: IssueEntity): Issue {
+    return Issue.fromPrimitives({
       id: entity.id,
       code: entity.code,
-      description: entity.description,
       severity: entity.severity,
-      requiresGrounding: entity.requiresGrounding,
-      partCategory: entity.partCategory,
+      engineId: entity.engineId ?? undefined,
       aircraftId: entity.aircraftId ?? undefined,
-      engineId: entity.engineId ?? undefined
+      description: entity.description,
+      partCategory: entity.partCategory,
+      requiresGrounding: entity.requiresGrounding
     })
-  },
+  }
 
-  toPersistence(domain: Issue): IssueEntity {
+  static toPersistence(domain: Issue): IssueEntity {
     const entity = new IssueEntity()
-    entity.id = domain.id
-    entity.code = domain.code
-    entity.description = domain.description
-    entity.severity = domain.severity
-    entity.requiresGrounding = domain.requiresGrounding
-    entity.partCategory = domain.partCategory
-    entity.aircraftId = domain.aircraftId ?? null
-    entity.engineId = domain.engineId ?? null
+
+    entity.id = domain.id.value
+    entity.code = domain.code.value
+    entity.severity = domain.severity.value
+    entity.engineId = domain.engineId?.value ?? null
+    entity.aircraftId = domain.aircraftId?.value ?? null
+    entity.description = domain.description.value
+    entity.partCategory = domain.partCategory.value
+    entity.requiresGrounding = domain.requiresGrounding.value
 
     return entity
   }

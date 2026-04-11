@@ -3,6 +3,7 @@ import { EntityNotFoundError } from 'src/modules/shared/errors'
 import { GetIssueInput } from '../dtos/get-issue-input.dto'
 import { GetIssueOutput } from '../dtos/get-issue-output.dto'
 import { IssueRepository } from '../../domain/issue.repository'
+import { IssueId } from '../../domain/value-objects/issue-id.vo'
 
 @Injectable()
 export class GetIssueUseCase {
@@ -11,21 +12,13 @@ export class GetIssueUseCase {
   ) {}
 
   async invoke(input: GetIssueInput): Promise<GetIssueOutput> {
-    const issue = await this.issueRepository.get(input.id)
+    const issueId = IssueId.create(input.id)
+    const issue = await this.issueRepository.get(issueId)
 
     if (!issue) {
       throw new EntityNotFoundError('Issue', input.id)
     }
 
-    return {
-      id: issue.id,
-      code: issue.code,
-      description: issue.description,
-      severity: issue.severity,
-      requiresGrounding: issue.requiresGrounding,
-      partCategory: issue.partCategory,
-      aircraftId: issue.aircraftId ?? null,
-      engineId: issue.engineId ?? null
-    }
+    return issue.toPrimitives()
   }
 }
