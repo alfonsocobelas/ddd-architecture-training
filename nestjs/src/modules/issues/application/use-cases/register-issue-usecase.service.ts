@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { EngineId } from 'src/modules/shared/domain/value-objects/engines/engine-id.vo'
 import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { AlreadyExistsError } from 'src/modules/shared/errors'
@@ -17,7 +18,8 @@ import { IssueRequiresGrounding } from '../../domain/value-objects/issue-require
 @Injectable()
 export class RegisterIssueUseCase {
   constructor(
-    private readonly repository: IssueRepository
+    private readonly repository: IssueRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: RegisterIssueInput): Promise<void> {
@@ -41,5 +43,6 @@ export class RegisterIssueUseCase {
     })
 
     await this.repository.register(issue)
+    await this.eventBus.publish(issue.pullDomainEvents())
   }
 }

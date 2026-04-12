@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { EntityNotFoundError } from 'src/modules/shared/errors'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
+import { EntityNotFoundError } from 'src/modules/shared/errors'
 import { AircraftModelRepository } from 'src/modules/aircraft-models/domain/aircraft-model.repository'
 import { EngineRepository } from 'src/modules/engines/domain/engine.repository'
 import { InstallEngineInAircraftInput } from '../dtos/install-engine-in-aircraft-input.dto'
@@ -14,7 +15,8 @@ export class InstallEngineInAircraftUsecase {
     private readonly engineRepository: EngineRepository,
     private readonly aircraftRepository: AircraftRepository,
     private readonly aircraftModelRepository: AircraftModelRepository,
-    private readonly txManager: TransactionManager
+    private readonly txManager: TransactionManager,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: InstallEngineInAircraftInput): Promise<void> {
@@ -46,5 +48,7 @@ export class InstallEngineInAircraftUsecase {
       await this.aircraftRepository.save(aircraft)
       await this.engineRepository.save(engine)
     })
+
+    await this.eventBus.publish([...aircraft.pullDomainEvents(), ...engine.pullDomainEvents()])
   }
 }

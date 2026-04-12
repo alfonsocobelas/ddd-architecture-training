@@ -8,6 +8,7 @@ import { IssueDescription } from './value-objects/issue-description.vo'
 import { IssuePartCategory } from './value-objects/issue-part-category.vo'
 import { IssueSeverityLevel } from './value-objects/issue-severity.vo'
 import { IssueRequiresGrounding } from './value-objects/issue-requires-grounding.vo'
+import { IssueRegisteredDomainEvent } from './events/issue-registered.event'
 
 export class Issue extends AggregateRoot {
   private constructor(
@@ -24,7 +25,7 @@ export class Issue extends AggregateRoot {
   }
 
   static create(props: IssueAggregateProps): Issue {
-    return new Issue(
+    const issue = new Issue(
       props.id,
       props.code,
       props.description,
@@ -34,6 +35,19 @@ export class Issue extends AggregateRoot {
       props.aircraftId,
       props.engineId
     )
+
+    issue.record(new IssueRegisteredDomainEvent({
+      aggregateId: issue.id.value,
+      code: issue.code.value,
+      description: issue.description.value,
+      severity: issue.severity.value,
+      requiresGrounding: issue.requiresGrounding.value,
+      partCategory: issue.partCategory.value,
+      aircraftId: issue.aircraftId?.value,
+      engineId: issue.engineId?.value
+    }))
+
+    return issue
   }
 
   static fromPrimitives(props: IssuePrimitiveProps): Issue {

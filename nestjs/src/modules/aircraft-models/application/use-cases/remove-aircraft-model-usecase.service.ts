@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { aircraftsOfModel } from 'src/modules/aircrafts/domain/specifications/aircrafts-of-model.specification'
 import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
 import { EntityNotFoundError } from 'src/modules/shared/errors'
@@ -10,7 +11,8 @@ import { AircraftModelInputMapper } from '../../domain/aircraft-model-factory'
 export class RemoveAircraftModelUseCase {
   constructor(
     private readonly modelRepository: AircraftModelRepository,
-    private readonly aircraftRepository: AircraftRepository
+    private readonly aircraftRepository: AircraftRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: RemoveAircraftModelInput): Promise<void> {
@@ -25,7 +27,9 @@ export class RemoveAircraftModelUseCase {
       throw new EntityNotFoundError('AircraftModel', modelId.value)
     }
 
-    model.ensureCanBeRemoved(aircraftCount)
+    model.remove(aircraftCount)
+
     await this.modelRepository.remove(modelId)
+    await this.eventBus.publish(model.pullDomainEvents())
   }
 }

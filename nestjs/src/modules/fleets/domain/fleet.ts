@@ -10,6 +10,10 @@ import { FleetStatus } from './value-objects/fleet-status.vo'
 import { FleetAircraftIds } from './value-objects/fleet-aircraftIds.vo'
 import { FleetMaintenanceBudget } from './value-objects/fleet-maintenance-budget.vo'
 import { FleetFleetOperationRegion } from './value-objects/fleet-operation-region.vo'
+import { FleetRetiredDomainEvent } from './events/fleet-retired.event'
+import { FleetRegisteredDomainEvent } from './events/fleet-registered.event'
+import { FleetAircraftAddedDomainEvent } from './events/fleet-aricraft-added.event'
+import { FleetAircraftRetiredDomainEvent } from './events/fleet-aircraft-retired.event'
 
 export class Fleet extends AggregateRoot {
   private constructor(
@@ -36,7 +40,7 @@ export class Fleet extends AggregateRoot {
   //#endregion
 
   static create(props: FleetAggregateProps): Fleet {
-    return new Fleet(
+    const fleet = new Fleet(
       props.id,
       props.companyId,
       props.name,
@@ -46,6 +50,19 @@ export class Fleet extends AggregateRoot {
       props.aircraftIds,
       FleetStatus.draft()
     )
+
+    fleet.record(new FleetRegisteredDomainEvent({
+      aggregateId: fleet.id.value,
+      companyId: fleet.companyId.value,
+      name: fleet.name.value,
+      type: fleet.type.value,
+      operationRegion: fleet.operationRegion.value,
+      maintenanceBudget: fleet.maintenanceBudget.value,
+      aircraftIds: fleet.aircraftIds.values,
+      status: fleet.status.value
+    }))
+
+    return fleet
   }
 
   static fromPrimitives(props: FleetPrimitiveProps): Fleet {
@@ -77,16 +94,33 @@ export class Fleet extends AggregateRoot {
   addAircraft(aircraftId: AircraftId): void {
     this.ensureAircraftIsNotPartOfFleet(aircraftId)
     this._aircraftIds = this._aircraftIds.add(aircraftId)
+
+    this.record(new FleetAircraftAddedDomainEvent({
+      aggregateId: this.id.value,
+      aircraftId: aircraftId.value
+    }))
   }
 
   retireAircraft(aircraftId: AircraftId): void {
     this.ensureAircraftIsPartOfFleet(aircraftId)
     this._aircraftIds = this._aircraftIds.remove(aircraftId)
+
+    this.record(new FleetAircraftRetiredDomainEvent({
+      aggregateId: this.id.value,
+      aircraftId: aircraftId.value
+    }))
   }
 
   prepareForRetire(): void {
     this.ensureCanBeRetired()
     this._status = FleetStatus.retired()
+
+    this.record(new FleetRetiredDomainEvent({
+      aggregateId: this.id.value,
+      name: this.name.value,
+      companyId: this.companyId.value,
+      aircraftIds: this._aircraftIds.values
+    }))
   }
 
   private ensureAircraftIsNotPartOfFleet(aircraftId: AircraftId): void {

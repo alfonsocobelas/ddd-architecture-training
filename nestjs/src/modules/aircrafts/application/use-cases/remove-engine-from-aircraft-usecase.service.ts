@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common'
-import { EntityNotFoundError } from 'src/modules/shared/errors'
-import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
-import { EngineRepository } from 'src/modules/engines/domain/engine.repository'
-import { RemoveEngineFromAircraftInput } from '../dtos/remove-engine-from-aircraft-input.dto'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { EngineId } from 'src/modules/shared/domain/value-objects/engines/engine-id.vo'
 import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
+import { EngineRepository } from 'src/modules/engines/domain/engine.repository'
+import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
+import { EntityNotFoundError } from 'src/modules/shared/errors'
+import { RemoveEngineFromAircraftInput } from '../dtos/remove-engine-from-aircraft-input.dto'
 
 @Injectable()
 export class RemoveEngineFromAircraftUsecase {
   constructor(
     private readonly engineRepository: EngineRepository,
-    private readonly aircraftRepository: AircraftRepository
+    private readonly aircraftRepository: AircraftRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: RemoveEngineFromAircraftInput): Promise<void> {
@@ -37,5 +39,7 @@ export class RemoveEngineFromAircraftUsecase {
       this.aircraftRepository.save(aircraft),
       this.engineRepository.save(engine)
     ])
+
+    await this.eventBus.publish([...aircraft.pullDomainEvents(), ...engine.pullDomainEvents()])
   }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { AlreadyExistsError } from 'src/modules/shared/errors'
 import { RegisterAircraftModelInput } from '../dtos/register-aircraft-model-input.dto'
 import { AircraftModel } from '../../domain/aircraft-model'
@@ -8,7 +9,8 @@ import { AircraftModelRepository } from '../../domain/aircraft-model.repository'
 @Injectable()
 export class RegisterAircraftModelUseCase {
   constructor(
-    private readonly repository: AircraftModelRepository
+    private readonly repository: AircraftModelRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: RegisterAircraftModelInput): Promise<void> {
@@ -20,6 +22,8 @@ export class RegisterAircraftModelUseCase {
     }
 
     const aircraftModel = AircraftModel.create(props)
+
     await this.repository.register(aircraftModel)
+    await this.eventBus.publish(aircraftModel.pullDomainEvents())
   }
 }

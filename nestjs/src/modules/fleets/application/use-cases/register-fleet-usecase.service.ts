@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
 import { AlreadyExistsError, InvalidArgumentError } from 'src/modules/shared/errors'
 import { RegisterFleetInput } from '../dtos/register-fleet-input.dto'
@@ -11,7 +12,8 @@ import { FleetInputMapper } from '../../domain/fleet-factory'
 export class RegisterFleetUseCase {
   constructor(
     private readonly fleetRepository: FleetRepository,
-    private readonly aircraftRepository: AircraftRepository
+    private readonly aircraftRepository: AircraftRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: RegisterFleetInput): Promise<void> {
@@ -42,8 +44,13 @@ export class RegisterFleetUseCase {
     const fleet = Fleet.create(props)
 
     await Promise.all([
-      await this.fleetRepository.register(fleet),
-      await this.aircraftRepository.save(aircrafts)
+      this.fleetRepository.register(fleet),
+      this.aircraftRepository.save(aircrafts)
+    ])
+
+    await this.eventBus.publish([
+      ...fleet.pullDomainEvents(),
+      ...aircrafts.flatMap(aircraft => aircraft.pullDomainEvents())
     ])
   }
 }

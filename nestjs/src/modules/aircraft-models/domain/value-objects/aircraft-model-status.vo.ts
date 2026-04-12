@@ -14,6 +14,18 @@ export class AircraftModelStatus extends EnumValueObject<AircraftModelStatusEnum
     return new AircraftModelStatus(AircraftModelStatusEnum.DRAFT)
   }
 
+  static operational(): AircraftModelStatus {
+    return new AircraftModelStatus(AircraftModelStatusEnum.OPERATIONAL)
+  }
+
+  static decommissioned(): AircraftModelStatus {
+    return new AircraftModelStatus(AircraftModelStatusEnum.DECOMMISSIONED)
+  }
+
+  static withdraw(): AircraftModelStatus {
+    return new AircraftModelStatus(AircraftModelStatusEnum.WITHDRAW)
+  }
+
   isDraft(): boolean {
     return this.value === AircraftModelStatusEnum.DRAFT
   }

@@ -1,6 +1,5 @@
 import { AggregateRoot } from 'src/modules/shared/domain/aggregate-root'
 import { AircraftModelError } from './aircraft-model-errors'
-import { AircraftModelStatusEnum } from './aircraft-model-enums'
 import { AircraftModelAggregateProps, AircraftModelPrimitiveProps } from './aircraft-model-types'
 import { AircraftModelId } from './value-objects/aircraft-model-id.vo'
 import { AircraftModelName } from './value-objects/aircraft-model-name.vo'
@@ -9,6 +8,8 @@ import { AircraftModelStatus } from './value-objects/aircraft-model-status.vo'
 import { AircraftModelNumEngines } from './value-objects/aircraft-model-num-engines.vo'
 import { AircraftModelManufacturer } from './value-objects/aircraft-model-manufacturer.vo'
 import { AircraftModelPassengerCapacity } from './value-objects/aircraft-model-passenger-capacity.vo'
+import { AircraftModelRemovedDomainEvent } from './events/aircraft-model-removed.event'
+import { AircraftModelRegisteredDomainEvent } from './events/aircraft-model-registered.event'
 
 export class AircraftModel extends AggregateRoot {
   private constructor(
@@ -30,7 +31,7 @@ export class AircraftModel extends AggregateRoot {
   //#endregion
 
   static create(props: AircraftModelAggregateProps): AircraftModel {
-    return new AircraftModel(
+    const aircraftModel = new AircraftModel(
       props.id,
       props.name,
       props.code,
@@ -39,6 +40,18 @@ export class AircraftModel extends AggregateRoot {
       props.numEngines,
       AircraftModelStatus.draft()
     )
+
+    aircraftModel.record(new AircraftModelRegisteredDomainEvent({
+      aggregateId: aircraftModel.id.value,
+      name: aircraftModel.name.value,
+      code: aircraftModel.code.value,
+      manufacturer: aircraftModel.manufacturer.value,
+      passengerCapacity: aircraftModel.passengerCapacity.value,
+      numEngines: aircraftModel.numEngines.value,
+      status: aircraftModel.status.value
+    }))
+
+    return aircraftModel
   }
 
   static fromPrimitives(props: AircraftModelPrimitiveProps): AircraftModel {
@@ -65,34 +78,54 @@ export class AircraftModel extends AggregateRoot {
     }
   }
 
+  remove(aircraftCount: number): void {
+    this.ensureCanBeRemoved(aircraftCount)
+
+    this.record(new AircraftModelRemovedDomainEvent({
+      aggregateId: this.id.value,
+      name: this.name.value,
+      code: this.code.value,
+      manufacturer: this.manufacturer.value
+    }))
+  }
+
+  activate(): void {
+    this.ensureCanBeActivated()
+    this._status = AircraftModelStatus.operational()
+  }
+
+  withdraw(): void {
+    this.ensureCanBeWithdrawn()
+    this._status = AircraftModelStatus.withdraw()
+  }
+
+  decommission(): void {
+    this.ensureCanBeDecommissioned()
+    this._status = AircraftModelStatus.decommissioned()
+  }
+
   // invariants
-  ensureCanBeRemoved(totalAircraftCount: number): void {
+  private ensureCanBeRemoved(totalAircraftCount: number): void {
     if (totalAircraftCount > 0) {
       throw new AircraftModelError('Cannot remove model with associated aircraft')
     }
   }
 
-  activate(): void {
+  private ensureCanBeActivated(): void {
     if (!this._status.isDraft() && !this._status.isWithdrawn()) {
       throw new AircraftModelError('Only draft or withdrawn models can be activated')
     }
-
-    this._status = AircraftModelStatus.create(AircraftModelStatusEnum.OPERATIONAL)
   }
 
-  withdraw(): void {
+  private ensureCanBeWithdrawn(): void {
     if (!this._status.isOperational()) {
       throw new AircraftModelError('Only operational models can be withdrawn')
     }
-
-    this._status = AircraftModelStatus.create(AircraftModelStatusEnum.WITHDRAW)
   }
 
-  decommission(): void {
+  private ensureCanBeDecommissioned(): void {
     if (!this._status.isOperational()) {
       throw new AircraftModelError('Only operational models can be decommissioned')
     }
-
-    this._status = AircraftModelStatus.create(AircraftModelStatusEnum.DECOMMISSIONED)
   }
 }

@@ -12,6 +12,12 @@ import { AircraftEngineIds } from './value-objects/aircraft-engineIds.vo'
 import { AircraftTailNumber } from './value-objects/aircraft-tail-number.vo'
 import { AircraftTotalFlightHours } from './value-objects/aircraft-total-flight-hours.vo'
 import { AircraftFuelLevelPercentage } from './value-objects/aircraft-fuel-level-percentage.vo'
+import { AircraftRemovedDomainEvent } from './events/aircraft-removed.event'
+import { AircraftRegisteredDomainEvent } from './events/aircraft-registered.event'
+import { AircraftAddedToFleetDomainEvent } from './events/aircraft-added-to-fleet.event'
+import { AircraftEngineRemovedDomainEvent } from './events/aircraft-engine-removed.event'
+import { AircraftEngineInstalledDomainEvent } from './events/aircraft-engine-installed.event'
+import { AircraftRetiredFromFleetDomainEvent } from './events/aircraft-retired-from-fleet.event'
 
 export class Aircraft extends AggregateRoot {
   private constructor(
@@ -55,7 +61,7 @@ export class Aircraft extends AggregateRoot {
   //#endregion
 
   static create(props: AircraftAggregateProps): Aircraft {
-    return new Aircraft(
+    const aircraft = new Aircraft(
       props.id,
       props.modelId,
       props.tailNumber,
@@ -65,6 +71,19 @@ export class Aircraft extends AggregateRoot {
       AircraftTotalFlightHours.min(),
       AircraftFuelLevelPercentage.min()
     )
+
+    aircraft.record(new AircraftRegisteredDomainEvent({
+      aggregateId: aircraft.id.value,
+      modelId: aircraft.modelId.value,
+      tailNumber: aircraft.tailNumber.value,
+      engineIds: aircraft.engineIds.values,
+      status: aircraft.status.value,
+      isActive: aircraft.isActive.value,
+      totalFlightHours: aircraft.totalFlightHours.value,
+      fuelLevelPercentage: aircraft.fuelLevelPercentage.value
+    }))
+
+    return aircraft
   }
 
   static fromPrimitives(props: AircraftPrimitiveProps): Aircraft {
@@ -96,24 +115,54 @@ export class Aircraft extends AggregateRoot {
     }
   }
 
+  remove(): void {
+    this.record(new AircraftRemovedDomainEvent({
+      aggregateId: this.id.value,
+      modelId: this.modelId.value,
+      tailNumber: this.tailNumber.value,
+      engineIds: this._engineIds.values,
+      fleetId: this._fleetId?.value
+    }))
+  }
+
   installEngine(engineId: EngineId, numEngines: AircraftModelNumEngines): void {
     this.ensureEngineCanBeInstalled(engineId, numEngines)
     this._engineIds = this._engineIds.add(engineId)
+
+    this.record(new AircraftEngineInstalledDomainEvent({
+      aggregateId: this.id.value,
+      engineId: engineId.value
+    }))
   }
 
   removeEngine(engineId: EngineId): void {
     this.ensureEngineCanBeRemoved(engineId)
     this._engineIds = this._engineIds.remove(engineId)
+
+    this.record(new AircraftEngineRemovedDomainEvent({
+      aggregateId: this.id.value,
+      engineId: engineId.value
+    }))
   }
 
   addToFleet(fleetId: FleetId): void {
     this.ensureCanAddToFleet()
     this._fleetId = fleetId
+
+    this.record(new AircraftAddedToFleetDomainEvent({
+      aggregateId: this.id.value,
+      fleetId: fleetId.value
+    }))
   }
 
   retireFromFleet(fleetId: FleetId): void {
     this.ensureCanRetireFromFleet(fleetId)
     this._fleetId = undefined
+
+    this.record(new AircraftRetiredFromFleetDomainEvent({
+      aggregateId: this.id.value,
+      fleetId: fleetId.value
+    }))
   }
 
   private ensureEngineCanBeInstalled(engineId: EngineId, numEngines: AircraftModelNumEngines): void {

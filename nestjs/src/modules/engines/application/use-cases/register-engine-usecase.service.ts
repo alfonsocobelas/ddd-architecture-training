@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { AlreadyExistsError } from 'src/modules/shared/errors'
 import { RegisterEngineInput } from '../dtos/register-engine-input.dto'
 import { Engine } from '../../domain/engine'
@@ -8,7 +9,8 @@ import { EngineInputMapper } from '../../domain/engine-factory'
 @Injectable()
 export class RegisterEngineUseCase {
   constructor(
-    private readonly engineRepository: EngineRepository
+    private readonly engineRepository: EngineRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: RegisterEngineInput): Promise<void> {
@@ -20,6 +22,8 @@ export class RegisterEngineUseCase {
     }
 
     const engine = Engine.create(props)
+
     await this.engineRepository.register(engine)
+    await this.eventBus.publish(engine.pullDomainEvents())
   }
 }

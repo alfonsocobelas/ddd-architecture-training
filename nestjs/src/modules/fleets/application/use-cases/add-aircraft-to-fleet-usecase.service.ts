@@ -10,7 +10,8 @@ import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/ai
 export class AddAircraftToFleetUsecase {
   constructor(
     private readonly fleetRepository: FleetRepository,
-    private readonly aircraftRepository: AircraftRepository
+    private readonly aircraftRepository: AircraftRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: AddAircraftToFleetInput): Promise<void> {
@@ -37,5 +38,7 @@ export class AddAircraftToFleetUsecase {
       this.aircraftRepository.save(aircraft),
       this.fleetRepository.save(fleet)
     ])
+
+    await this.eventBus.publish([...aircraft.pullDomainEvents(), ...fleet.pullDomainEvents()])
   }
 }

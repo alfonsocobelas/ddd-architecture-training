@@ -10,6 +10,9 @@ import { EngineIsInstalled } from './value-objects/engine-is-installed.vo'
 import { EngineSerialNumber } from './value-objects/engine-serial-number.vo'
 import { EngineFlyingHoursAccumulated } from './value-objects/engine-flying-hours-accumulated.vo'
 import { EngineCyclesSinceLastOverhaul } from './value-objects/engine-cycles-since-last-overhaul.vo'
+import { EngineRegisteredDomainEvent } from './events/engine-registered.event'
+import { EngineInstalledInAircraftDomainEvent } from './events/engine-installed-in-aircraft.event'
+import { EngineRemovedFromAircraftDomainEvent } from './events/engine-removed-from-aircraft.event'
 
 export class Engine extends AggregateRoot {
   private constructor(
@@ -40,7 +43,7 @@ export class Engine extends AggregateRoot {
   //#endregion
 
   static create(props: EngineAggregateProps): Engine {
-    return new Engine(
+    const engine = new Engine(
       props.id,
       props.serialNumber,
       EngineHealthScore.max(),
@@ -49,6 +52,18 @@ export class Engine extends AggregateRoot {
       EngineIsInstalled.notInstalled(),
       EngineStatus.operational()
     )
+
+    engine.record(new EngineRegisteredDomainEvent({
+      aggregateId: engine.id.value,
+      serialNumber: engine.serialNumber.value,
+      healthScore: engine.healthScore.value,
+      flyingHoursAccumulated: engine.flyingHoursAccumulated.value,
+      cyclesSinceLastOverhaul: engine.cyclesSinceLastOverhaul.value,
+      isInstalled: engine.isInstalled.value,
+      status: engine.status.value
+    }))
+
+    return engine
   }
 
   static fromPrimitives(props: EnginePrimitiveProps): Engine {
@@ -81,12 +96,22 @@ export class Engine extends AggregateRoot {
     this.ensureCanBeInstalled()
     this._isInstalled = EngineIsInstalled.installed()
     this._aircraftId = aircraftId
+
+    this.record(new EngineInstalledInAircraftDomainEvent({
+      aggregateId: this.id.value,
+      aircraftId: aircraftId.value
+    }))
   }
 
   removeFromAircraft(aircraftId: AircraftId): void {
     this.ensureCanBeRemoved(aircraftId)
     this._isInstalled = EngineIsInstalled.notInstalled()
     this._aircraftId = undefined
+
+    this.record(new EngineRemovedFromAircraftDomainEvent({
+      aggregateId: this.id.value,
+      aircraftId: aircraftId.value
+    }))
   }
 
   private ensureCanBeInstalled(): void {

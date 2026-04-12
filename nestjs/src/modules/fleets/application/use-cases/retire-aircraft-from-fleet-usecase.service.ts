@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { FleetRepository } from 'src/modules/fleets/domain/fleet.repository'
 import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
@@ -10,7 +11,8 @@ import { FleetId } from '../../domain/value-objects/fleet-id.vo'
 export class RetireAircraftFromFleetUsecase {
   constructor(
     private readonly fleetRepository: FleetRepository,
-    private readonly aircraftRepository: AircraftRepository
+    private readonly aircraftRepository: AircraftRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: RetireAircraftFromFleetInput): Promise<void> {
@@ -37,5 +39,7 @@ export class RetireAircraftFromFleetUsecase {
       this.aircraftRepository.save(aircraft),
       this.fleetRepository.save(fleet)
     ])
+
+    await this.eventBus.publish([...aircraft.pullDomainEvents(), ...fleet.pullDomainEvents()])
   }
 }

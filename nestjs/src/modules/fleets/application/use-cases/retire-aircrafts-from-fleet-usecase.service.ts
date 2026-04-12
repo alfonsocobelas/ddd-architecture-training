@@ -1,16 +1,18 @@
 import { Injectable } from '@nestjs/common'
-import { EntityNotFoundError, InvalidArgumentError } from 'src/modules/shared/errors'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { FleetRepository } from 'src/modules/fleets/domain/fleet.repository'
 import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
+import { EntityNotFoundError, InvalidArgumentError } from 'src/modules/shared/errors'
 import { RetireAircraftsFromFleetInput } from '../dtos/retire-aircrafts-from-fleet-input.dto'
 import { FleetId } from '../../domain/value-objects/fleet-id.vo'
-import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 
 @Injectable()
 export class RetireAircraftsFromFleetUsecase {
   constructor(
     private readonly fleetRepository: FleetRepository,
-    private readonly aircraftRepository: AircraftRepository
+    private readonly aircraftRepository: AircraftRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: RetireAircraftsFromFleetInput): Promise<void> {
@@ -43,6 +45,11 @@ export class RetireAircraftsFromFleetUsecase {
     await Promise.all([
       this.aircraftRepository.save(aircrafts),
       this.fleetRepository.save(fleet)
+    ])
+
+    await this.eventBus.publish([
+      ...fleet.pullDomainEvents(),
+      ...aircrafts.flatMap(aircraft => aircraft.pullDomainEvents())
     ])
   }
 }

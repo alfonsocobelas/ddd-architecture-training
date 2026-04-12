@@ -1,3 +1,4 @@
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { EntityNotFoundError } from 'src/modules/shared/errors'
 import { RemoveAircraftInput } from '../dtos/remove-aircraft-input.dto'
@@ -5,7 +6,8 @@ import { AircraftRepository } from '../../domain/aircraft.repository'
 
 export class RemoveAircraftUseCase {
   constructor(
-    private readonly aircraftRepository: AircraftRepository
+    private readonly aircraftRepository: AircraftRepository,
+    private readonly eventBus: EventBus
   ) {}
 
   async invoke(input: RemoveAircraftInput): Promise<void> {
@@ -16,6 +18,9 @@ export class RemoveAircraftUseCase {
       throw new EntityNotFoundError('Aircraft', aircraftId.value)
     }
 
+    aircraft.remove()
+
     await this.aircraftRepository.remove(aircraft)
+    await this.eventBus.publish(aircraft.pullDomainEvents())
   }
 }
