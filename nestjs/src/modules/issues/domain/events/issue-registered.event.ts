@@ -43,4 +43,8 @@ export class IssueRegisteredDomainEvent extends DomainEvent {
     this.aircraftId = aircraftId
     this.engineId = engineId
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }

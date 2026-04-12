@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common'
-import { EntityNotFoundError } from 'src/modules/shared/errors'
+import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { FleetRepository } from 'src/modules/fleets/domain/fleet.repository'
+import { EntityNotFoundError } from 'src/modules/shared/errors'
 import { AircraftRepository } from '../../../aircrafts/domain/aircraft.repository'
 import { AddAircraftToFleetInput } from '../dtos/add-aircraft-to-fleet-input.dto'
 import { FleetId } from '../../domain/value-objects/fleet-id.vo'
-import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 
 @Injectable()
 export class AddAircraftToFleetUsecase {

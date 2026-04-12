@@ -3,7 +3,7 @@ import { Nullable } from 'src/modules/shared/types'
 import { EngineStatusEnum } from 'src/modules/engines/domain/engine-enums'
 import { ENGINE_CONSTRAINTS as LIMITS } from '../../../domain/engine-constants'
 
-@Entity({ name: 'engines', schema: 'fleet' })
+@Entity({ name: 'engines', schema: 'operations' })
 @Check(`"healthScore" >= ${LIMITS.HEALTH_SCORE.MIN} AND "healthScore" <= ${LIMITS.HEALTH_SCORE.MAX}`)
 @Check(`char_length("serialNumber") >= ${LIMITS.SERIAL_NUMBER.MIN_LENGTH} AND char_length("serialNumber") <= ${LIMITS.SERIAL_NUMBER.MAX_LENGTH}`)
 @Index('IDX_ENGINE_SERIAL_NUMBER', ['serialNumber'], { unique: true })

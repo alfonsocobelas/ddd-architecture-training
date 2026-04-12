@@ -8,12 +8,16 @@ import { GetAircraftModelUseCase } from './application/use-cases/get-aircraft-mo
 import { RemoveAircraftModelUseCase } from './application/use-cases/remove-aircraft-model-usecase.service'
 import { RegisterAircraftModelUseCase } from './application/use-cases/register-aircraft-model-usecase.service'
 import { ListAircraftModelCatalogueUseCase } from './application/use-cases/list-aircraft-model-catalogue-usecase.service'
-import { AircraftModelsController } from './infrastructure/entrypoints/aircraft-models.controller'
 import { AircraftModelRepository } from './domain/aircraft-model.repository'
+import { AircraftModelsController } from './infrastructure/entrypoints/aircraft-models.controller'
 import { TypeOrmAircraftModelRepository } from './infrastructure/persistence/typeorm/typeorm-aircraft-model.repository'
+import { EventBusModule } from '../shared/infrastructure/event-bus/event-bus.module'
 
 @Module({
-  imports: [forwardRef(() => AircraftsModule)],
+  imports: [
+    forwardRef(() => AircraftsModule),
+    EventBusModule
+  ],
   controllers: [AircraftModelsController],
   providers: [
     // Handlers
@@ -31,6 +35,7 @@ import { TypeOrmAircraftModelRepository } from './infrastructure/persistence/typ
       provide: AircraftModelRepository,
       useClass: TypeOrmAircraftModelRepository
     }
+    // Subscribers
   ],
   exports: [AircraftModelRepository]
 })

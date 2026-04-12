@@ -2,7 +2,7 @@ import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, Dele
 import { AircraftModelStatusEnum } from '../../../domain/aircraft-model-enums'
 import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from '../../../domain/aircraft-model-constants'
 
-@Entity({ name: 'aircraft_models', schema: 'fleet' })
+@Entity({ name: 'aircraft_models', schema: 'operations' })
 @Check(`"name" IS NOT NULL AND LENGTH("name") >= ${LIMITS.NAME.MIN_LENGTH} AND LENGTH("name") <= ${LIMITS.NAME.MAX_LENGTH}`)
 @Check(`"code" IS NOT NULL AND LENGTH("code") >= ${LIMITS.CODE.MIN_LENGTH} AND LENGTH("code") <= ${LIMITS.CODE.MAX_LENGTH}`)
 @Check(`"manufacturer" IS NOT NULL AND LENGTH("manufacturer") >= ${LIMITS.MANUFACTURER.MIN_LENGTH} AND LENGTH("manufacturer") <= ${LIMITS.MANUFACTURER.MAX_LENGTH}`)

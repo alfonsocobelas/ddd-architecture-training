@@ -1,16 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UuidV7ValueObject } from '../value-objects/uuidv7-value-object'
 
-// export type DomainEventClass = {
-//   EVENT_NAME: string
-//   fromPrimitives(params: {
-//     aggregateId: string
-//     eventId: string
-//     occurredOn: Date
-//     attributes: DomainEventAttributes
-//   }): DomainEvent
-// }
+type DomainEventAttributes = any
 
-// type DomainEventAttributes = any
+export type DomainEventClass = {
+  EVENT_NAME: string
+  fromPrimitives(params: {
+    aggregateId: string
+    eventId: string
+    occurredOn: Date
+    attributes: DomainEventAttributes
+  }): DomainEvent
+}
 
 export abstract class DomainEvent {
   static EVENT_NAME: string
@@ -28,12 +29,12 @@ export abstract class DomainEvent {
     this.aggregateId = aggregateId
   }
 
-  // public abstract toPrimitives(): DomainEventAttributes
+  public abstract toPrimitives(): DomainEventAttributes
 
-  // static fromPrimitives: (params: {
-  //   aggregateId: string
-  //   eventId: string
-  //   occurredOn: Date
-  //   attributes: DomainEventAttributes
-  // }) => DomainEvent
+  static fromPrimitives: (params: {
+    aggregateId: string
+    eventId: string
+    occurredOn: Date
+    attributes: DomainEventAttributes
+  }) => DomainEvent
 }

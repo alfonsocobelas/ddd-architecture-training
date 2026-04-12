@@ -1,7 +1,7 @@
 import { DomainEvent } from './domain-event'
-// import { DomainEventSubscribers } from '../../infrastructure/event-bus/domain-event.subscribers'
+import { DomainEventSubscribers } from './domain-event-subscribers'
 
-export interface EventBus {
-  publish(events: Array<DomainEvent>): Promise<void>
-  // addSubscribers(subscribers: DomainEventSubscribers): void
+export abstract class EventBus {
+  abstract publish(events: Array<DomainEvent>): Promise<void>
+  abstract addSubscribers(subscribers: DomainEventSubscribers): void
 }

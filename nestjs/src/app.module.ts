@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { CoreConfigModule } from './modules/shared/infrastructure/config/config.module'
 import { PersistenceModule } from './modules/shared/infrastructure/persistence/persistence.module'
 import { RateLimitModule } from './modules/shared/infrastructure/rate-limit/rate-limit.module'
+import { EventBusModule } from './modules/shared/infrastructure/event-bus/event-bus.module'
 import { AircraftModelsModule } from './modules/aircraft-models/aircraft-models.module'
 import { AircraftsModule } from './modules/aircrafts/aircrafts.module'
 import { CompaniesModule } from './modules/companies/companies.module'
@@ -15,6 +16,7 @@ import { IssuesModule } from './modules/issues/issues.module'
     CoreConfigModule,
     PersistenceModule,
     RateLimitModule,
+    EventBusModule,
     // modules
     AircraftModelsModule,
     AircraftsModule,

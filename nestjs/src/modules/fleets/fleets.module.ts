@@ -15,9 +15,13 @@ import { SearchFleetsUseCase } from './application/use-cases/search-fleets-useca
 import { FleetRepository } from './domain/fleet.repository'
 import { FleetsController } from './infrastructure/entrypoints/fleets.controller'
 import { TypeOrmFleetRepository } from './infrastructure/persistence/typeorm/typeorm-fleet.repository'
+import { EventBusModule } from '../shared/infrastructure/event-bus/event-bus.module'
 
 @Module({
-  imports: [AircraftsModule],
+  imports: [
+    AircraftsModule,
+    EventBusModule
+  ],
   controllers: [FleetsController],
   providers: [
     // Handlers
@@ -39,6 +43,7 @@ import { TypeOrmFleetRepository } from './infrastructure/persistence/typeorm/typ
       provide: FleetRepository,
       useClass: TypeOrmFleetRepository
     }
+    // Subscribers
   ],
   exports: [FleetRepository]
 })

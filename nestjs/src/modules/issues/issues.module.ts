@@ -8,8 +8,10 @@ import { SearchIssuesUseCase } from './application/use-cases/search-issues-useca
 import { IssueRepository } from './domain/issue.repository'
 import { IssuesController } from './infrastructure/entrypoints/issues.controller'
 import { TypeOrmIssueRepository } from './infrastructure/persistence/typeorm/typeorm-issue.repository'
+import { EventBusModule } from '../shared/infrastructure/event-bus/event-bus.module'
 
 @Module({
+  imports: [EventBusModule],
   controllers: [IssuesController],
   providers: [
     // Handlers
@@ -25,6 +27,7 @@ import { TypeOrmIssueRepository } from './infrastructure/persistence/typeorm/typ
       provide: IssueRepository,
       useClass: TypeOrmIssueRepository
     }
+    // Subscribers
   ],
   exports: [IssueRepository]
 })
