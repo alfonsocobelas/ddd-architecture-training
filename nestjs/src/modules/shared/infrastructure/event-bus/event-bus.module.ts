@@ -3,7 +3,6 @@ import { DiscoveryModule } from '@nestjs/core'
 import { EventEmitterModule } from '@nestjs/event-emitter'
 import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
 import { InMemoryAsyncEventBus } from 'src/modules/shared/infrastructure/event-bus/in-memory/in-memory-async-event-bus'
-import { AircraftIssueCreatedSubscriber } from 'src/modules/aircrafts/application/subscribers/issue-created.subscriber'
 import { EventBusSubscriberConfigurer } from './domain-event-subscribers-configurer'
 
 @Global()
@@ -21,8 +20,7 @@ import { EventBusSubscriberConfigurer } from './domain-event-subscribers-configu
     {
       provide: EventBus,
       useExisting: InMemoryAsyncEventBus
-    },
-    AircraftIssueCreatedSubscriber
+    }
   ],
   exports: [EventBus]
 })

@@ -27,4 +27,8 @@ export class AircraftRemovedDomainEvent extends DomainEvent {
     this.modelId = modelId
     this.tailNumber = tailNumber
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }

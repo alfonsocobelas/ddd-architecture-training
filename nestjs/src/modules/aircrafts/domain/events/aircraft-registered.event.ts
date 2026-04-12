@@ -43,4 +43,8 @@ export class AircraftRegisteredDomainEvent extends DomainEvent {
     this.totalFlightHours = totalFlightHours
     this.fuelLevelPercentage = fuelLevelPercentage
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }

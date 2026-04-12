@@ -27,4 +27,8 @@ export class FleetRetiredDomainEvent extends DomainEvent {
     this.companyId = companyId
     this.aircraftIds = aircraftIds
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }

@@ -27,4 +27,8 @@ export class AircraftModelRemovedDomainEvent extends DomainEvent {
     this.code = code
     this.manufacturer = manufacturer
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }

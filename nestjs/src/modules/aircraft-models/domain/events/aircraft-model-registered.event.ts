@@ -39,4 +39,8 @@ export class AircraftModelRegisteredDomainEvent extends DomainEvent {
     this.numEngines = numEngines
     this.status = status
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }

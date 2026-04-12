@@ -19,4 +19,8 @@ export class AircraftEngineRemovedDomainEvent extends DomainEvent {
     super({ eventName: AircraftEngineRemovedDomainEvent.EVENT_NAME, eventId, occurredOn, aggregateId })
     this.engineId = engineId
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }

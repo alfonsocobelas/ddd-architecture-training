@@ -19,4 +19,8 @@ export class FleetAircraftAddedDomainEvent extends DomainEvent {
     super({ eventName: FleetAircraftAddedDomainEvent.EVENT_NAME, eventId, occurredOn, aggregateId })
     this.aircraftId = aircraftId
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }
