@@ -19,16 +19,16 @@ export class EnginesController {
 
   @Post()
   register(@Body() body: RegisterEngineDto): Promise<void> {
-    return this.registerEngineHandler.run(body)
+    return this.registerEngineHandler.handle(body)
   }
 
   @Get(':id')
   get(@Param('id', ParseUUIDv7Pipe) id: string): Promise<GetEngineResponse> {
-    return this.getEngineHandler.run(id)
+    return this.getEngineHandler.handle(id)
   }
 
   @Get()
   search(@Query(new ParseCriteriaPipe()) query: PaginateCursorDto): Promise<SearchEnginesResponse> {
-    return this.searchEnginesHandler.run(query)
+    return this.searchEnginesHandler.handle(query)
   }
 }

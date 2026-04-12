@@ -8,7 +8,7 @@ export class RegisterAircraftModelHandler {
     private readonly useCase: RegisterAircraftModelUseCase
   ) {}
 
-  async run(dto: RegisterAircraftModelDto): Promise<void> {
+  async handle(dto: RegisterAircraftModelDto): Promise<void> {
     await this.useCase.invoke(dto)
   }
 }

@@ -7,7 +7,7 @@ export class RemoveCompanyHandler {
     private readonly useCase: RemoveCompanyUseCase
   ) {}
 
-  async run(id: string): Promise<void> {
+  async handle(id: string): Promise<void> {
     await this.useCase.invoke({ id })
   }
 }

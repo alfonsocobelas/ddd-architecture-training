@@ -9,7 +9,7 @@ export class SearchEnginesHandler {
     private readonly useCase: SearchEnginesUseCase
   ) {}
 
-  async run(dto: PaginateCursorDto): Promise<SearchEnginesResponse> {
+  async handle(dto: PaginateCursorDto): Promise<SearchEnginesResponse> {
     const output = await this.useCase.invoke(dto)
 
     return new SearchEnginesResponse(output)

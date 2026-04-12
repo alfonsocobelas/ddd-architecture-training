@@ -8,7 +8,7 @@ export class RetireAircraftsFromFleetHandler {
     private readonly useCase: RetireAircraftsFromFleetUsecase
   ) {}
 
-  async run(input: RetireAircraftsFromFleetInput): Promise<void> {
+  async handle(input: RetireAircraftsFromFleetInput): Promise<void> {
     await this.useCase.invoke(input)
   }
 }

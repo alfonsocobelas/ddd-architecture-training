@@ -19,16 +19,16 @@ export class FleetsController {
 
   @Post()
   register(@Body() body: RegisterFleetDto): Promise<void> {
-    return this.registerFleetHandler.run(body)
+    return this.registerFleetHandler.handle(body)
   }
 
   @Get(':id')
   get(@Param('id', ParseUUIDv7Pipe) id: string): Promise<GetFleetResponse> {
-    return this.getFleetHandler.run(id)
+    return this.getFleetHandler.handle(id)
   }
 
   @Get()
   search(@Query(new ParseCriteriaPipe()) query: PaginateOffsetDto): Promise<SearchFleetsResponse> {
-    return this.searchFleetsHandler.run(query)
+    return this.searchFleetsHandler.handle(query)
   }
 }

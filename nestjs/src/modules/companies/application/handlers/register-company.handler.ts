@@ -8,7 +8,7 @@ export class RegisterCompanyHandler {
     private readonly useCase: RegisterCompanyUseCase
   ) {}
 
-  async run(dto: RegisterCompanyDto): Promise<void> {
+  async handle(dto: RegisterCompanyDto): Promise<void> {
     await this.useCase.invoke(dto)
   }
 }

@@ -8,7 +8,7 @@ export class FindAircraftsInMaintenanceHandler {
     private readonly useCase: FindAircraftsInMaintenanceUseCase
   ) {}
 
-  async run(): Promise<FindAircraftsInMaintenanceResponse[]> {
+  async handle(): Promise<FindAircraftsInMaintenanceResponse[]> {
     const output = await this.useCase.invoke()
 
     return output.map(item => new FindAircraftsInMaintenanceResponse(item))

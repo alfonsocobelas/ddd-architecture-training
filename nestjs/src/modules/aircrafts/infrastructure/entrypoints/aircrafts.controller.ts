@@ -28,22 +28,22 @@ export class AircraftsController {
 
   @Post()
   register(@Body() body: RegisterAircraftDto): Promise<void> {
-    return this.registerAircraftHandler.run(body)
+    return this.registerAircraftHandler.handle(body)
   }
 
   @Get('maintenance')
   findInMaintenance(): Promise<FindAircraftsInMaintenanceResponse[]> {
-    return this.findAircraftsInMaintenanceHandler.run()
+    return this.findAircraftsInMaintenanceHandler.handle()
   }
 
   @Get()
   search(@Query(new ParseCriteriaPipe()) query: PaginateOffsetDto): Promise<SearchAircraftsResponse> {
-    return this.searchAircraftsHandler.run(query)
+    return this.searchAircraftsHandler.handle(query)
   }
 
   @Get(':id')
   get(@Param('id', ParseUUIDv7Pipe) id: string): Promise<GetAircraftResponse> {
-    return this.getAircraftHandler.run(id)
+    return this.getAircraftHandler.handle(id)
   }
 
   @Post(':aircraftId/engines/:engineId/install')
@@ -51,7 +51,7 @@ export class AircraftsController {
     @Param('aircraftId', ParseUUIDv7Pipe) aircraftId: string,
     @Param('engineId', ParseUUIDv7Pipe) engineId: string
   ): Promise<void> {
-    return this.installEngineInAircraftHandler.run(aircraftId, engineId)
+    return this.installEngineInAircraftHandler.handle(aircraftId, engineId)
   }
 
   @Post(':aircraftId/engines/:engineId/uninstall')
@@ -59,11 +59,11 @@ export class AircraftsController {
     @Param('aircraftId', ParseUUIDv7Pipe) aircraftId: string,
     @Param('engineId', ParseUUIDv7Pipe) engineId: string
   ): Promise<void> {
-    return this.removeEngineFromAircraftHandler.run(aircraftId, engineId)
+    return this.removeEngineFromAircraftHandler.handle(aircraftId, engineId)
   }
 
   @Delete(':id')
   remove(@Param('id', ParseUUIDv7Pipe) id: string): Promise<void> {
-    return this.removeAircraftHandler.run(id)
+    return this.removeAircraftHandler.handle(id)
   }
 }

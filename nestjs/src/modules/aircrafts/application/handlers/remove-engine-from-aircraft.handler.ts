@@ -7,7 +7,7 @@ export class RemoveEngineFromAircraftHandler {
     private readonly useCase: RemoveEngineFromAircraftUsecase
   ) {}
 
-  async run(aircraftId: string, engineId: string): Promise<void> {
+  async handle(aircraftId: string, engineId: string): Promise<void> {
     await this.useCase.invoke({ aircraftId, engineId })
   }
 }

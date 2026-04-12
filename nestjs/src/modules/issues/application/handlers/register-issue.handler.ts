@@ -8,7 +8,7 @@ export class RegisterIssueHandler {
     private readonly useCase: RegisterIssueUseCase
   ) {}
 
-  async run(input: RegisterIssueInput): Promise<void> {
+  async handle(input: RegisterIssueInput): Promise<void> {
     await this.useCase.invoke(input)
   }
 }

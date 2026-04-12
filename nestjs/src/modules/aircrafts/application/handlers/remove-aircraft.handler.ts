@@ -7,7 +7,7 @@ export class RemoveAircraftHandler {
     private readonly useCase: RemoveAircraftUseCase
   ) {}
 
-  async run(id: string): Promise<void> {
+  async handle(id: string): Promise<void> {
     await this.useCase.invoke({ id })
   }
 }

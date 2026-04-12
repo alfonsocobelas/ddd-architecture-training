@@ -8,7 +8,7 @@ export class GetIssueHandler {
     private readonly useCase: GetIssueUseCase
   ) {}
 
-  async run(id: string): Promise<GetIssueResponse> {
+  async handle(id: string): Promise<GetIssueResponse> {
     const output = await this.useCase.invoke({ id })
 
     return new GetIssueResponse(output)

@@ -7,7 +7,7 @@ export class InstallEngineInAircraftHandler {
     private readonly useCase: InstallEngineInAircraftUsecase
   ) {}
 
-  async run(aircraftId: string, engineId: string): Promise<void> {
+  async handle(aircraftId: string, engineId: string): Promise<void> {
     await this.useCase.invoke({ aircraftId, engineId })
   }
 }

@@ -8,7 +8,7 @@ export class AddAircraftToFleetHandler {
     private readonly useCase: AddAircraftToFleetUsecase
   ) {}
 
-  async run(dto: AddAircraftToFleetDto): Promise<void> {
+  async handle(dto: AddAircraftToFleetDto): Promise<void> {
     await this.useCase.invoke(dto)
   }
 }

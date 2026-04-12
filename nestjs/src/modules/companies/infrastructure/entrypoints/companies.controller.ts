@@ -16,16 +16,16 @@ export class CompaniesController {
 
   @Post()
   register(@Body() body: RegisterCompanyDto): Promise<void> {
-    return this.registerCompanyHandler.run(body)
+    return this.registerCompanyHandler.handle(body)
   }
 
   @Get(':id')
   get(@Param('id', ParseUUIDv7Pipe) id: string): Promise<GetCompanyResponse> {
-    return this.getCompanyHandler.run(id)
+    return this.getCompanyHandler.handle(id)
   }
 
   @Delete(':id')
   remove(@Param('id', ParseUUIDv7Pipe) id: string): Promise<void> {
-    return this.removeCompanyHandler.run(id)
+    return this.removeCompanyHandler.handle(id)
   }
 }

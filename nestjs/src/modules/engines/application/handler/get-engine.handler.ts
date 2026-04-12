@@ -8,7 +8,7 @@ export class GetEngineHandler {
     private readonly useCase: GetEngineUseCase
   ) {}
 
-  async run(id: string): Promise<GetEngineResponse> {
+  async handle(id: string): Promise<GetEngineResponse> {
     const output = await this.useCase.invoke({ id })
 
     return new GetEngineResponse(output)

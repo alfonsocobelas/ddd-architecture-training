@@ -8,7 +8,7 @@ export class GetCompanyHandler {
     private readonly useCase: GetCompanyUseCase
   ) {}
 
-  async run(id: string): Promise<GetCompanyResponse> {
+  async handle(id: string): Promise<GetCompanyResponse> {
     const output = await this.useCase.invoke({ id })
 
     return new GetCompanyResponse(output)

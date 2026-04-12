@@ -9,7 +9,7 @@ export class SearchAircraftsHandler {
     private readonly useCase: SearchAircraftsUseCase
   ) {}
 
-  async run(dto: PaginateOffsetDto): Promise<SearchAircraftsResponse> {
+  async handle(dto: PaginateOffsetDto): Promise<SearchAircraftsResponse> {
     const output = await this.useCase.invoke(dto)
 
     return new SearchAircraftsResponse(output)

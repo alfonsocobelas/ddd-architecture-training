@@ -8,7 +8,7 @@ export class RegisterEngineHandler {
     private readonly useCase: RegisterEngineUseCase
   ) {}
 
-  async run(dto: RegisterEngineDto): Promise<void> {
+  async handle(dto: RegisterEngineDto): Promise<void> {
     await this.useCase.invoke(dto)
   }
 }

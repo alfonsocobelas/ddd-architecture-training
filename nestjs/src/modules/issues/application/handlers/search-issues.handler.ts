@@ -9,7 +9,7 @@ export class SearchIssuesHandler {
     private readonly useCase: SearchIssuesUseCase
   ) {}
 
-  async run(dto: PaginateCursorDto): Promise<SearchIssuesResponse> {
+  async handle(dto: PaginateCursorDto): Promise<SearchIssuesResponse> {
     const output = await this.useCase.invoke(dto)
 
     return new SearchIssuesResponse(output)

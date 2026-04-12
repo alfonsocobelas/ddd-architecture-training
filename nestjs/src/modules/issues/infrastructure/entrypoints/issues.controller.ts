@@ -19,16 +19,16 @@ export class IssuesController {
 
   @Post()
   register(@Body() body: RegisterIssueDto): Promise<void> {
-    return this.registerIssueHandler.run(body)
+    return this.registerIssueHandler.handle(body)
   }
 
   @Get()
   search(@Query(new ParseCriteriaPipe()) query: PaginateCursorDto): Promise<SearchIssuesResponse> {
-    return this.searchIssuesHandler.run(query)
+    return this.searchIssuesHandler.handle(query)
   }
 
   @Get(':id')
   get(@Param('id', ParseUUIDv7Pipe) id: string): Promise<GetIssueResponse> {
-    return this.getIssueHandler.run(id)
+    return this.getIssueHandler.handle(id)
   }
 }

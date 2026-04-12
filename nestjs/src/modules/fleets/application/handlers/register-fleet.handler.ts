@@ -8,7 +8,7 @@ export class RegisterFleetHandler {
     private readonly useCase: RegisterFleetUseCase
   ) {}
 
-  async run(dto: RegisterFleetDto): Promise<void> {
+  async handle(dto: RegisterFleetDto): Promise<void> {
     await this.useCase.invoke(dto)
   }
 }

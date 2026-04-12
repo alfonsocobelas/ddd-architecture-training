@@ -8,7 +8,7 @@ export class GetAircraftHandler {
     private readonly useCase: GetAircraftUseCase
   ) {}
 
-  async run(id: string): Promise<GetAircraftResponse> {
+  async handle(id: string): Promise<GetAircraftResponse> {
     const output = await this.useCase.invoke({ id })
 
     return new GetAircraftResponse(output)

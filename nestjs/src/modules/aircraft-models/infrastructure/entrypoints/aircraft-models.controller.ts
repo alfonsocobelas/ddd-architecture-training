@@ -19,21 +19,21 @@ export class AircraftModelsController {
 
   @Post()
   register(@Body() body: RegisterAircraftModelDto): Promise<void> {
-    return this.registerAircraftModelHandler.run(body)
+    return this.registerAircraftModelHandler.handle(body)
   }
 
   @Get('catalogue')
   listCatalogue(): Promise<ListAircraftModelCatalogueResponse[]> {
-    return this.listAircraftModelCatalogueHandler.run()
+    return this.listAircraftModelCatalogueHandler.handle()
   }
 
   @Get(':id')
   get(@Param('id', ParseUUIDv7Pipe) id: string): Promise<GetAircraftModelResponse> {
-    return this.getAircraftModelHandler.run(id)
+    return this.getAircraftModelHandler.handle(id)
   }
 
   @Delete(':id')
   remove(@Param('id', ParseUUIDv7Pipe) id: string): Promise<void> {
-    return this.removeAircraftModelHandler.run(id)
+    return this.removeAircraftModelHandler.handle(id)
   }
 }

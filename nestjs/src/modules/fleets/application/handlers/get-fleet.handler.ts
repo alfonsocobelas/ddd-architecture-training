@@ -8,7 +8,7 @@ export class GetFleetHandler {
     private readonly useCase: GetFleetUseCase
   ) {}
 
-  async run(id: string): Promise<GetFleetResponse> {
+  async handle(id: string): Promise<GetFleetResponse> {
     const output = await this.useCase.invoke({ id })
 
     return new GetFleetResponse(output)

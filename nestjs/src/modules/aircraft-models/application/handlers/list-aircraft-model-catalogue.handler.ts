@@ -8,7 +8,7 @@ export class ListAircraftModelCatalogueHandler {
     private readonly useCase: ListAircraftModelCatalogueUseCase
   ) {}
 
-  async run(): Promise<ListAircraftModelCatalogueResponse[]> {
+  async handle(): Promise<ListAircraftModelCatalogueResponse[]> {
     const output = await this.useCase.invoke()
 
     return output.map(item => new ListAircraftModelCatalogueResponse(item))
