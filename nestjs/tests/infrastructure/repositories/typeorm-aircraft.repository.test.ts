@@ -1,10 +1,12 @@
-import { v7 as uuidv7 } from 'uuid'
 import { TypeOrmAircraftRepository } from 'src/modules/aircrafts/infrastructure/persistence/typeorm/typeorm-aircraft.repository'
 import { AircraftsOfModelSpecification } from 'src/modules/aircrafts/domain/specifications/aircrafts-of-model.specification'
 import { AircraftWithTailNumberSpecification } from 'src/modules/aircrafts/domain/specifications/aircraft-with-tail-number.specification'
 import { AircraftBuilder } from '../../modules/aircrafts/domain/aircraft.builder'
-import { moduleFixture } from '../../jest.setup.integration'
+import { AircraftIdMother } from '../../modules/shared/domain/mothers/aircraftId.mother'
+import { AircraftModelIdMother } from '../../modules/aircraft-models/domain/value-objects/aircraft-model-id.mother'
+import { AircraftTailNumberMother } from '../../modules/aircrafts/domain/value-objects/aircraft-tail-number.mother'
 import { setupAircraftModel } from './helpers/setup-aircraft-model'
+import { moduleFixture } from '../../jest.setup.integration'
 
 let repository: TypeOrmAircraftRepository
 let modelId: string
@@ -39,7 +41,7 @@ describe('AircraftRepository (integration tests)', () => {
       const updatedFlightHours = 150
 
       const updatedAircraft = AircraftBuilder.anAircraft()
-        .withId(aircraft.id)
+        .withId(aircraft.id.value)
         .withModelId(modelId)
         .withFuelLevel(updatedFuelLevel)
         .withFlightHours(updatedFlightHours)
@@ -75,41 +77,10 @@ describe('AircraftRepository (integration tests)', () => {
     })
 
     it('should return null if aircraft does not exist', async () => {
-      const nonExistingId = uuidv7()
+      const nonExistingId = AircraftIdMother.random()
       const foundAircraft = await repository.get(nonExistingId)
 
       expect(foundAircraft).toBeNull()
-    })
-  })
-
-  describe('getTechnicalSheet method', () => {
-    it('should return the technical sheet of an aircraft by its id', async () => {
-      const aircraft = AircraftBuilder.anAircraft().withModelId(modelId).build()
-
-      await repository.register(aircraft)
-      const technicalSheet = await repository.getTechnicalSheet(aircraft.id)
-
-      expect(technicalSheet).toEqual(
-        expect.objectContaining({
-          id: aircraft.id,
-          modelId: aircraft.modelId,
-          tailNumber: aircraft.tailNumber,
-          totalFlightHours: aircraft.totalFlightHours,
-          fuelLevelPercentage: aircraft.fuelLevelPercentage,
-          status: aircraft.status,
-          model: expect.objectContaining({
-            id: modelId
-          }),
-          engines: expect.any(Array)
-        })
-      )
-    })
-
-    it('should return null if aircraft does not exist', async () => {
-      const nonExistingId = uuidv7()
-      const technicalSheet = await repository.getTechnicalSheet(nonExistingId)
-
-      expect(technicalSheet).toBeNull()
     })
   })
 
@@ -125,7 +96,7 @@ describe('AircraftRepository (integration tests)', () => {
     })
 
     it('should return false if no aircraft matching the criteria exists', async () => {
-      const nonExistingTailNumber = 'NONEXISTINGTAIL'
+      const nonExistingTailNumber = AircraftTailNumberMother.random()
       const criteria = new AircraftWithTailNumberSpecification(nonExistingTailNumber)
       const exists = await repository.exists(criteria)
 
@@ -141,14 +112,14 @@ describe('AircraftRepository (integration tests)', () => {
       await repository.register(aircraft1)
       await repository.register(aircraft2)
 
-      const criteria = new AircraftsOfModelSpecification(modelId)
+      const criteria = new AircraftsOfModelSpecification(AircraftModelIdMother.create(modelId))
       const count = await repository.count(criteria)
 
       expect(count).toBe(2)
     })
 
     it('should return 0 if no aircraft matching the criteria exists', async () => {
-      const nonExistingModelId = uuidv7()
+      const nonExistingModelId = AircraftModelIdMother.random()
       const criteria = new AircraftsOfModelSpecification(nonExistingModelId)
       const count = await repository.count(criteria)
 
@@ -164,7 +135,7 @@ describe('AircraftRepository (integration tests)', () => {
       await repository.register(aircraft1)
       await repository.register(aircraft2)
 
-      const criteria = new AircraftsOfModelSpecification(modelId)
+      const criteria = new AircraftsOfModelSpecification(AircraftModelIdMother.create(modelId))
       const matchingAircrafts = await repository.matching(criteria)
 
       expect(matchingAircrafts).toHaveLength(2)
@@ -172,7 +143,7 @@ describe('AircraftRepository (integration tests)', () => {
     })
 
     it('should return an empty list if no aircraft matching the criteria exists', async () => {
-      const nonExistingModelId = uuidv7()
+      const nonExistingModelId = AircraftModelIdMother.random()
       const criteria = new AircraftsOfModelSpecification(nonExistingModelId)
       const matchingAircrafts = await repository.matching(criteria)
 
@@ -195,37 +166,12 @@ describe('AircraftRepository (integration tests)', () => {
     })
 
     it('should return an empty list if no aircraft with the given ids exist', async () => {
-      const nonExistingId1 = uuidv7()
-      const nonExistingId2 = uuidv7()
+      const nonExistingId1 = AircraftIdMother.random()
+      const nonExistingId2 = AircraftIdMother.random()
 
       const foundAircrafts = await repository.find([nonExistingId1, nonExistingId2])
 
       expect(foundAircrafts).toHaveLength(0)
-    })
-  })
-
-  describe('findTechnicalSheets method', () => {
-    it('should return a list of aircraft technical sheets for the given ids', async () => {
-      const aircraft1 = AircraftBuilder.anAircraft().withModelId(modelId).build()
-      const aircraft2 = AircraftBuilder.anAircraft().withModelId(modelId).build()
-
-      await repository.register(aircraft1)
-      await repository.register(aircraft2)
-
-      const foundTechnicalSheets = await repository.findTechnicalSheets([aircraft1.id, aircraft2.id])
-
-      expect(foundTechnicalSheets).toHaveLength(2)
-      expect(foundTechnicalSheets[0].id).toBe(aircraft1.id)
-      expect(foundTechnicalSheets[1].id).toBe(aircraft2.id)
-    })
-
-    it('should return an empty list if no aircraft with the given ids exist', async () => {
-      const nonExistingId1 = uuidv7()
-      const nonExistingId2 = uuidv7()
-
-      const foundTechnicalSheets = await repository.findTechnicalSheets([nonExistingId1, nonExistingId2])
-
-      expect(foundTechnicalSheets).toHaveLength(0)
     })
   })
 })

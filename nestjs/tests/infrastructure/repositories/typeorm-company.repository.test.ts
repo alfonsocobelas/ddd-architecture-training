@@ -1,7 +1,8 @@
-import { v7 as uuidv7 } from 'uuid'
 import { TypeOrmCompanyRepository } from 'src/modules/companies/infrastructure/persistence/typeorm/typeorm-company.repository'
 import { CompanyMother } from '../../modules/companies/domain/company.mother'
 import { CompanyBuilder } from '../../modules/companies/domain/company.builder'
+import { CompanyIdMother } from '../../modules/companies/domain/value-objects/company-id.mother'
+import { CompanyNameMother } from '../../modules/companies/domain/value-objects/company-name.mother'
 import { moduleFixture } from '../../jest.setup.integration'
 
 let repository: TypeOrmCompanyRepository
@@ -30,7 +31,7 @@ describe('CompanyRepository (integration tests)', () => {
     })
 
     it('should return null if company does not exist', async () => {
-      const nonExistingId = uuidv7()
+      const nonExistingId = CompanyIdMother.random()
       const foundCompany = await repository.get(nonExistingId)
       expect(foundCompany).toBeNull()
     })
@@ -47,7 +48,8 @@ describe('CompanyRepository (integration tests)', () => {
     })
 
     it('should return false if no company with the given name exists', async () => {
-      const exists = await repository.exists('NonExistingCompanyName')
+      const nonExistingCompanyName = CompanyNameMother.random()
+      const exists = await repository.exists(nonExistingCompanyName)
 
       expect(exists).toBe(false)
     })
@@ -60,7 +62,7 @@ describe('CompanyRepository (integration tests)', () => {
       await repository.register(company)
 
       // Update some properties of the company
-      const updatedCompany = CompanyBuilder.aCompany().withId(company.id).withName('New Company Name').build()
+      const updatedCompany = CompanyBuilder.aCompany().withId(company.id.value).withName('New Company Name').build()
 
       await repository.save(updatedCompany)
 
@@ -78,9 +80,8 @@ describe('CompanyRepository (integration tests)', () => {
       await repository.register(company2)
 
       // Update some properties of the companies
-      const updatedCompany1 = CompanyBuilder.aCompany().withId(company1.id).withName('Updated Company 1').build()
-
-      const updatedCompany2 = CompanyBuilder.aCompany().withId(company2.id).withName('Updated Company 2').build()
+      const updatedCompany1 = CompanyBuilder.aCompany().withId(company1.id.value).withName('Updated Company 1').build()
+      const updatedCompany2 = CompanyBuilder.aCompany().withId(company2.id.value).withName('Updated Company 2').build()
 
       await repository.save([updatedCompany1, updatedCompany2])
 

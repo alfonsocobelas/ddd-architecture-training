@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataSource, EntityManager, EntityMetadata } from 'typeorm'
 import { Injectable, OnModuleInit } from '@nestjs/common'
+import { Nullable } from 'src/modules/shared/types'
 import { EnvironmentArranger } from '../../arranger/environment-arranger'
 
 @Injectable()
@@ -47,9 +48,9 @@ export class TypeOrmEnvironmentArranger
     await repository.save(dataArray)
   }
 
-  async findOneBy<T>(entity: { new (): T }, query: any): Promise<T | null> {
+  async findOneBy<T>(entity: { new (): T }, query: any): Promise<Nullable<T>> {
     const repository = this.repository(entity)
-    return repository.findOneBy(query) as T | null
+    return repository.findOneBy(query) as Nullable<T>
   }
 
   async find<T>(entity: { new (): T }, query: any): Promise<T[]> {

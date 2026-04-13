@@ -1,7 +1,8 @@
-import { v7 as uuidv7 } from 'uuid'
 import { TypeOrmEngineRepository } from 'src/modules/engines/infrastructure/persistence/typeorm/typeorm-engine.repository'
-import { EngineBuilder } from '../../modules/engines/domain/engine.builder'
 import { EngineMother } from '../../modules/engines/domain/engine.mother'
+import { EngineBuilder } from '../../modules/engines/domain/engine.builder'
+import { EngineIdMother } from '../../modules/engines/domain/value-objects/engine-id.mother'
+import { EngineSerialNumberMother } from '../../modules/engines/domain/value-objects/engine-serial-number'
 import { moduleFixture } from '../../jest.setup.integration'
 
 let repository: TypeOrmEngineRepository
@@ -30,7 +31,7 @@ describe('EngineRepository (integration tests)', () => {
     })
 
     it('should return null if engine does not exist', async () => {
-      const nonExistingId = uuidv7()
+      const nonExistingId = EngineIdMother.random()
       const foundEngine = await repository.get(nonExistingId)
 
       expect(foundEngine).toBeNull()
@@ -48,7 +49,7 @@ describe('EngineRepository (integration tests)', () => {
     })
 
     it('should return false if no engine with the given serial number exists', async () => {
-      const nonExistingSerialNumber = 'NONEXISTINGSN'
+      const nonExistingSerialNumber = EngineSerialNumberMother.random()
       const exists = await repository.exists(nonExistingSerialNumber)
 
       expect(exists).toBe(false)
@@ -63,8 +64,8 @@ describe('EngineRepository (integration tests)', () => {
       // Update some properties of the engine
       const updatedHealth = 80
       const updatedEngine = EngineBuilder.anEngine()
-        .withId(engine.id)
-        .withSerialNumber(engine.serialNumber)
+        .withId(engine.id.value)
+        .withSerialNumber(engine.serialNumber.value)
         .withHealth(updatedHealth)
         .build()
 
@@ -85,14 +86,14 @@ describe('EngineRepository (integration tests)', () => {
       const updatedHealth1 = 80
       const updatedHealth2 = 90
       const updatedEngine1 = EngineBuilder.anEngine()
-        .withId(engine1.id)
-        .withSerialNumber(engine1.serialNumber)
+        .withId(engine1.id.value)
+        .withSerialNumber(engine1.serialNumber.value)
         .withHealth(updatedHealth1)
         .build()
 
       const updatedEngine2 = EngineBuilder.anEngine()
-        .withId(engine2.id)
-        .withSerialNumber(engine2.serialNumber)
+        .withId(engine2.id.value)
+        .withSerialNumber(engine2.serialNumber.value)
         .withHealth(updatedHealth2)
         .build()
 

@@ -6,7 +6,7 @@ import { FilterValue } from 'src/modules/shared/domain/query/filter-value'
 import { FilterOperator, Operator } from 'src/modules/shared/domain/query/filter-operator'
 import { AircraftTailNumber } from '../value-objects/aircraft-tail-number.vo'
 
-class AircraftWithTailNumberSpecification extends Criteria {
+export class AircraftWithTailNumberSpecification extends Criteria {
   constructor(tailNumber: AircraftTailNumber) {
     super({
       filters: new Filters([

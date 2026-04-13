@@ -1,9 +1,10 @@
-import { v7 as uuidv7 } from 'uuid'
 import { TypeOrmFleetRepository } from 'src/modules/fleets/infrastructure/persistence/typeorm/typeorm-fleet.repository'
 import { FleetWithNameSpecification } from 'src/modules/fleets/domain/specifications/fleet-with-name.specification'
 import { FleetBuilder } from '../../modules/fleets/domain/fleet.builder'
-import { moduleFixture } from '../../jest.setup.integration'
+import { FleetIdMother } from '../../modules/fleets/domain/value-objects/fleet-id.mother'
+import { FleetNameMother } from '../../modules/fleets/domain/value-objects/fleet-name.mother'
 import { setupCompany } from './helpers/setup-company'
+import { moduleFixture } from '../../jest.setup.integration'
 
 let repository: TypeOrmFleetRepository
 let companyId: string
@@ -36,7 +37,7 @@ describe('FleetRepository (integration tests)', () => {
     })
 
     it('should return null if fleet does not exist', async () => {
-      const nonExistingId = uuidv7()
+      const nonExistingId = FleetIdMother.random()
       const foundFleet = await repository.get(nonExistingId)
       expect(foundFleet).toBeNull()
     })
@@ -54,7 +55,7 @@ describe('FleetRepository (integration tests)', () => {
     })
 
     it('should return false if no fleet with the given name exists', async () => {
-      const nonExistingFleetName = 'NonExistingFleetName'
+      const nonExistingFleetName = FleetNameMother.random()
       const criteria = new FleetWithNameSpecification(nonExistingFleetName)
       const exists = await repository.exists(criteria)
 
@@ -78,7 +79,7 @@ describe('FleetRepository (integration tests)', () => {
     })
 
     it('should return an empty list if no fleet matches the criteria', async () => {
-      const nonExistingFleetName = 'NonExistingFleetName'
+      const nonExistingFleetName = FleetNameMother.random()
       const criteria = new FleetWithNameSpecification(nonExistingFleetName)
       const matchingFleets = await repository.matching(criteria)
 
@@ -101,7 +102,7 @@ describe('FleetRepository (integration tests)', () => {
     })
 
     it('should return 0 if no fleet matches the criteria', async () => {
-      const nonExistingFleetName = 'NonExistingFleetName'
+      const nonExistingFleetName = FleetNameMother.random()
       const criteria = new FleetWithNameSpecification(nonExistingFleetName)
       const count = await repository.count(criteria)
 
@@ -117,7 +118,12 @@ describe('FleetRepository (integration tests)', () => {
 
       // Update some properties of the fleet
       const updatedName = 'Updated Fleet Name'
-      const updatedFleet = FleetBuilder.aFleet().withName(updatedName).withId(fleet.id).withCompanyId(companyId).build()
+      const updatedFleet = FleetBuilder
+        .aFleet()
+        .withName(updatedName)
+        .withId(fleet.id.value)
+        .withCompanyId(companyId)
+        .build()
 
       await repository.save(updatedFleet)
 

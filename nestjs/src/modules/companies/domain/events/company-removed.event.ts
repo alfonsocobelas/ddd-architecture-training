@@ -19,4 +19,8 @@ export class CompanyRemovedDomainEvent extends DomainEvent {
     super({ eventName: CompanyRemovedDomainEvent.EVENT_NAME, eventId, occurredOn, aggregateId })
     this.name = name
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }

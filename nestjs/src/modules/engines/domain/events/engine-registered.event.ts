@@ -39,4 +39,8 @@ export class EngineRegisteredDomainEvent extends DomainEvent {
     this.isInstalled = isInstalled
     this.status = status
   }
+
+  public toPrimitives() {
+    throw new Error('Method not implemented.')
+  }
 }

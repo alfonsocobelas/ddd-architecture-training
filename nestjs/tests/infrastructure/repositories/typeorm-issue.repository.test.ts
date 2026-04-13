@@ -1,7 +1,7 @@
-import { v7 as uuidv7 } from 'uuid'
 import { TypeOrmIssueRepository } from 'src/modules/issues/infrastructure/persistence/typeorm/typeorm-issue.repository'
 import { IssueMother } from '../../modules/issues/domain/issue.mother'
 import { moduleFixture } from '../../jest.setup.integration'
+import { IssueIdMother } from '../../modules/issues/domain/value-objects/issue-id.mother'
 
 let repository: TypeOrmIssueRepository
 
@@ -12,7 +12,7 @@ beforeEach(async () => {
 describe('IssueRepository (integration tests)', () => {
   describe('register method', () => {
     it('should register a new issue', async () => {
-      const issue = IssueMother.random()
+      const issue = IssueMother.avionics()
 
       await repository.register(issue)
     })
@@ -20,7 +20,7 @@ describe('IssueRepository (integration tests)', () => {
 
   describe('get method', () => {
     it('should return an issue by its id', async () => {
-      const issue = IssueMother.random()
+      const issue = IssueMother.avionics()
 
       await repository.register(issue)
       const foundIssue = await repository.get(issue.id)
@@ -29,7 +29,7 @@ describe('IssueRepository (integration tests)', () => {
     })
 
     it('should return null if issue does not exist', async () => {
-      const nonExistingId = uuidv7()
+      const nonExistingId = IssueIdMother.random()
       const foundIssue = await repository.get(nonExistingId)
 
       expect(foundIssue).toBeNull()
@@ -38,7 +38,7 @@ describe('IssueRepository (integration tests)', () => {
 
   describe('get method', () => {
     it('should return an issue by its id', async () => {
-      const issue = IssueMother.random()
+      const issue = IssueMother.avionics()
 
       await repository.register(issue)
       const foundIssue = await repository.get(issue.id)
@@ -47,7 +47,7 @@ describe('IssueRepository (integration tests)', () => {
     })
 
     it('should return null if issue does not exist', async () => {
-      const nonExistingId = uuidv7()
+      const nonExistingId = IssueIdMother.random()
       const foundIssue = await repository.get(nonExistingId)
 
       expect(foundIssue).toBeNull()

@@ -8,5 +8,5 @@ export async function setupAircraftModel(): Promise<string> {
   const repository = moduleFixture.get<TypeOrmAircraftModelRepository>(TypeOrmAircraftModelRepository)
   await repository.save(aircraftModel)
 
-  return aircraftModel.id
+  return aircraftModel.id.value
 }

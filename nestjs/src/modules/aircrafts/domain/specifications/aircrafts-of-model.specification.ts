@@ -6,7 +6,7 @@ import { FilterField } from 'src/modules/shared/domain/query/filter-field'
 import { FilterOperator, Operator } from 'src/modules/shared/domain/query/filter-operator'
 import { AircraftModelId } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
 
-class AircraftsOfModelSpecification extends Criteria {
+export class AircraftsOfModelSpecification extends Criteria {
   constructor(modelId: AircraftModelId) {
     super({
       filters: new Filters([

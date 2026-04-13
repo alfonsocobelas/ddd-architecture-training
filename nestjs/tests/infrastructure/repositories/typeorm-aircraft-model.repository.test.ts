@@ -1,4 +1,4 @@
-import { v7 as uuidv7 } from 'uuid'
+import { AircraftModelId } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
 import { TypeOrmAircraftModelRepository } from 'src/modules/aircraft-models/infrastructure/persistence/typeorm/typeorm-aircraft-model.repository'
 import { AircraftModelMother } from '../../modules/aircraft-models/domain/aircraft-model.mother'
 import { moduleFixture } from '../../jest.setup.integration'
@@ -39,7 +39,7 @@ describe('AircraftModelRepository (integration tests)', () => {
     })
 
     it('should return null if aircraft model does not exist', async () => {
-      const nonExistingId = uuidv7()
+      const nonExistingId = AircraftModelId.random()
       const foundAircraftModel = await repository.get(nonExistingId)
 
       expect(foundAircraftModel).toBeNull()
@@ -71,7 +71,7 @@ describe('AircraftModelRepository (integration tests)', () => {
     })
 
     it('should return false if no aircraft model with the given code exists', async () => {
-      const nonExistingCode = 'non-existing-code'
+      const nonExistingCode = AircraftModelId.random()
       const exists = await repository.exists(nonExistingCode)
 
       expect(exists).toBe(false)

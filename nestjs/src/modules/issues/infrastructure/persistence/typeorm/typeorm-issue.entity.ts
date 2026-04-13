@@ -1,7 +1,5 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToOne, JoinColumn, Check, Index } from 'typeorm'
+import { Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Check, Index } from 'typeorm'
 import { Nullable } from 'src/modules/shared/types'
-import { EngineEntity } from 'src/modules/engines/infrastructure/persistence/typeorm/typeorm-engine.entity'
-import { AircraftEntity } from 'src/modules/aircrafts/infrastructure/persistence/typeorm/typeorm-aircraft.entity'
 import { IssuePartCategoryEnum, IssueSeverityLevelEnum } from 'src/modules/issues/domain/issue-enums'
 import { ISSUE_CONSTRAINTS as LIMITS } from '../../../domain/issue-constants'
 
@@ -44,13 +42,4 @@ export class IssueEntity {
 
   @DeleteDateColumn({ type: 'timestamptz', nullable: true })
     deletedAt?: Date
-
-  // --- JOINS RELATIONS --- //
-  @ManyToOne(() => AircraftEntity, { nullable: true })
-  @JoinColumn({ name: 'aircraftId' })
-    aircraft?: AircraftEntity
-
-  @ManyToOne(() => EngineEntity, { nullable: true })
-  @JoinColumn({ name: 'engineId' })
-    engine?: EngineEntity
 }
