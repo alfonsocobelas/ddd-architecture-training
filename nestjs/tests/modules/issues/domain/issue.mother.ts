@@ -1,20 +1,20 @@
 import { v7 as uuidv7 } from 'uuid'
-import { IssueCreateProps, IssuePrimitiveProps, IssueProps } from 'src/modules/issues/domain/issue-types'
 import { Issue } from 'src/modules/issues/domain/issue'
-import { IssuePartCategory } from 'src/modules/issues/domain/issue-enums'
+import { IssuePrimitiveProps } from 'src/modules/issues/domain/issue-types'
+import { IssuePartCategoryEnum } from 'src/modules/issues/domain/issue-enums'
 import { IssueBuilder } from './issue.builder'
 import { repeat } from '../../shared/utils/random-array'
 
 export class IssueMother {
   static fromInput(input: Partial<IssuePrimitiveProps>): Issue {
-    return IssueBuilder.anIssue().withProps(input as Partial<IssueProps>).build()
+    return IssueBuilder.anIssue().withProps(input as Partial<IssuePrimitiveProps>).build()
   }
 
-  static register(overrides?: Partial<IssueCreateProps>): Issue {
+  static register(overrides?: Partial<IssuePrimitiveProps>): Issue {
     return IssueBuilder.anIssue().withProps(overrides).create()
   }
 
-  static reconstruct(overrides?: Partial<IssueProps>): Issue {
+  static reconstruct(overrides?: Partial<IssuePrimitiveProps>): Issue {
     return IssueBuilder.anIssue().withProps(overrides).build()
   }
 
@@ -29,7 +29,7 @@ export class IssueMother {
   static avionics(aircraftId: string = uuidv7()) {
     return IssueBuilder
       .anIssue()
-      .withPartCategory(IssuePartCategory.AVIONICS)
+      .withPartCategory(IssuePartCategoryEnum.AVIONICS)
       .withAircraftId(aircraftId)
       .build()
   }
@@ -37,7 +37,7 @@ export class IssueMother {
   static engine(engineId: string = uuidv7()) {
     return IssueBuilder
       .anIssue()
-      .withPartCategory(IssuePartCategory.ENGINE)
+      .withPartCategory(IssuePartCategoryEnum.ENGINE)
       .withEngineId(engineId)
       .build()
   }

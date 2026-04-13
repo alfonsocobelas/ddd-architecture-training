@@ -1,30 +1,30 @@
 import { v7 as uuidv7 } from 'uuid'
-import { RegisterAircraftInput } from 'src/modules/aircrafts/application/dtos/register-aircraft-input.dto'
-import { AircraftCreateProps, AircraftPrimitiveProps, AircraftProps } from 'src/modules/aircrafts/domain/aircraft-types'
 import { Aircraft } from 'src/modules/aircrafts/domain/aircraft'
-import { AircraftStatus } from 'src/modules/aircrafts/domain/aircraft-enums'
+import { AircraftStatusEnum } from 'src/modules/aircrafts/domain/aircraft-enums'
+import { RegisterAircraftInput } from 'src/modules/aircrafts/application/dtos/register-aircraft-input.dto'
+import { AircraftPrimitiveProps } from 'src/modules/aircrafts/domain/aircraft-types'
 import { AircraftBuilder } from './aircraft.builder'
-import { randomEnumValue } from '../../shared/utils/random-enum'
-import { randomBoolean } from '../../shared/utils/random-boolean'
 import { repeat } from '../../shared/utils/random-array'
+import { randomBoolean } from '../../shared/utils/random-boolean'
+import { randomEnumValue } from '../../shared/utils/random-enum'
 
 export class AircraftMother {
   static fromInput(input: Partial<AircraftPrimitiveProps>): Aircraft {
-    return AircraftBuilder.anAircraft().withProps(input as Partial<AircraftProps>).build()
+    return AircraftBuilder.anAircraft().withProps(input as Partial<AircraftPrimitiveProps>).build()
   }
 
-  static register(overrides?: Partial<AircraftCreateProps>): Aircraft {
+  static register(overrides?: Partial<AircraftPrimitiveProps>): Aircraft {
     return AircraftBuilder.anAircraft().withProps(overrides).create()
   }
 
-  static reconstruct(overrides?: Partial<AircraftProps>): Aircraft {
+  static reconstruct(overrides?: Partial<AircraftPrimitiveProps>): Aircraft {
     return AircraftBuilder.anAircraft().withProps(overrides).build()
   }
 
   static random(): Aircraft {
     return AircraftBuilder
       .anAircraft()
-      .withStatus(randomEnumValue(AircraftStatus))
+      .withStatus(randomEnumValue(AircraftStatusEnum))
       .withIsActive(randomBoolean())
       .build()
   }
@@ -46,7 +46,7 @@ export class AircraftMother {
     return AircraftBuilder
       .anAircraft()
       .withId(aircraftId)
-      .withStatus(AircraftStatus.ACTIVE)
+      .withStatus(AircraftStatusEnum.ACTIVE)
       .withEngineIds([uuidv7(), uuidv7()])
       .withFleetId(uuidv7())
       .withFlightHours(500)
@@ -57,7 +57,7 @@ export class AircraftMother {
   static inMaintenance() {
     return AircraftBuilder
       .anAircraft()
-      .withStatus(AircraftStatus.MAINTENANCE)
+      .withStatus(AircraftStatusEnum.MAINTENANCE)
       .withFleetId(uuidv7())
       .withIsActive(false)
       .build()
@@ -66,7 +66,7 @@ export class AircraftMother {
   static orfan() {
     return AircraftBuilder
       .anAircraft()
-      .withStatus(AircraftStatus.STORED)
+      .withStatus(AircraftStatusEnum.STORED)
       .withEngineIds([uuidv7(), uuidv7()])
       .withIsActive(false)
       .build()
@@ -77,7 +77,7 @@ export class AircraftMother {
       .anAircraft()
       .withId(aircraftId)
       .withEngineIds([])
-      .withStatus(AircraftStatus.ACTIVE)
+      .withStatus(AircraftStatusEnum.ACTIVE)
       .withIsActive(true)
       .build()
   }

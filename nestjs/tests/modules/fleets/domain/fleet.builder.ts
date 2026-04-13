@@ -1,8 +1,15 @@
 import { v7 as uuidv7 } from 'uuid'
 import { Fleet } from 'src/modules/fleets/domain/fleet'
-import { FleetProps } from 'src/modules/fleets/domain/fleet-types'
+import { FleetId } from 'src/modules/fleets/domain/value-objects/fleet-id.vo'
+import { CompanyId } from 'src/modules/shared/domain/value-objects/companies/company-id.vo'
+import { FleetName } from 'src/modules/fleets/domain/value-objects/fleet-name.vo'
+import { FleetType } from 'src/modules/fleets/domain/value-objects/fleet-type.vo'
+import { FleetAircraftIds } from 'src/modules/fleets/domain/value-objects/fleet-aircraftIds.vo'
+import { FleetPrimitiveProps } from 'src/modules/fleets/domain/fleet-types'
+import { FleetMaintenanceBudget } from 'src/modules/fleets/domain/value-objects/fleet-maintenance-budget.vo'
+import { FleetFleetOperationRegion } from 'src/modules/fleets/domain/value-objects/fleet-operation-region.vo'
+import { FleetStatusEnum, FleetTypeEnum, FleetFleetOperationRegionEnum } from 'src/modules/fleets/domain/fleet-enums'
 import { FLEET_CONSTRAINTS as LIMITS } from 'src/modules/fleets/domain/fleet-constants'
-import { FleetStatus, FleetType, OperationRegion } from 'src/modules/fleets/domain/fleet-enums'
 import { randomEnumValue } from '../../shared/utils/random-enum'
 import { randomString } from '../../shared/utils/random-string'
 import { randomNumber } from '../../shared/utils/random-number'
@@ -13,15 +20,15 @@ import { randomNumber } from '../../shared/utils/random-number'
  *  during test execution.
  */
 export class FleetBuilder {
-  private props: FleetProps = {
+  private props: FleetPrimitiveProps = {
     id: uuidv7(),
     companyId: uuidv7(),
     aircraftIds: [uuidv7(), uuidv7()],
     name: randomString(LIMITS.NAME.MIN_LENGTH, LIMITS.NAME.MAX_LENGTH),
     maintenanceBudget: randomNumber(LIMITS.MAINTENANCE_BUDGET.MIN, LIMITS.MAINTENANCE_BUDGET.MAX),
-    type: randomEnumValue(FleetType),
-    operationRegion: randomEnumValue(OperationRegion),
-    status: FleetStatus.DRAFT
+    type: randomEnumValue(FleetTypeEnum),
+    operationRegion: randomEnumValue(FleetFleetOperationRegionEnum),
+    status: FleetStatusEnum.DRAFT
   }
 
   static aFleet(): FleetBuilder {
@@ -48,12 +55,12 @@ export class FleetBuilder {
     return this
   }
 
-  withOperationRegion(operationRegion: OperationRegion): FleetBuilder {
+  withFleetOperationRegion(operationRegion: FleetFleetOperationRegionEnum): FleetBuilder {
     this.props.operationRegion = operationRegion
     return this
   }
 
-  withType(type: FleetType): FleetBuilder {
+  withType(type: FleetTypeEnum): FleetBuilder {
     this.props.type = type
     return this
   }
@@ -63,29 +70,29 @@ export class FleetBuilder {
     return this
   }
 
-  withStatus(status: FleetStatus): FleetBuilder {
+  withStatus(status: FleetStatusEnum): FleetBuilder {
     this.props.status = status
     return this
   }
 
-  withProps(overrides?: Partial<FleetProps>): FleetBuilder {
+  withProps(overrides?: Partial<FleetPrimitiveProps>): FleetBuilder {
     this.props = { ...this.props, ...overrides }
     return this
   }
 
   create(): Fleet {
     return Fleet.create({
-      id: this.props.id,
-      companyId: this.props.companyId,
-      aircraftIds: this.props.aircraftIds,
-      name: this.props.name,
-      type: this.props.type,
-      operationRegion: this.props.operationRegion,
-      maintenanceBudget: this.props.maintenanceBudget
+      id: FleetId.create(this.props.id),
+      companyId: CompanyId.create(this.props.companyId),
+      aircraftIds: FleetAircraftIds.create(this.props.aircraftIds),
+      name: FleetName.create(this.props.name),
+      type: FleetType.create(this.props.type),
+      operationRegion: FleetFleetOperationRegion.create(this.props.operationRegion),
+      maintenanceBudget: FleetMaintenanceBudget.create(this.props.maintenanceBudget)
     })
   }
 
   build(): Fleet {
-    return Fleet.reconstruct(this.props)
+    return Fleet.fromPrimitives(this.props)
   }
 }

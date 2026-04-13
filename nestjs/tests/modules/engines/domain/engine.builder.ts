@@ -1,9 +1,11 @@
 import { v7 as uuidv7 } from 'uuid'
 import { Engine } from 'src/modules/engines/domain/engine'
-import { EngineProps } from 'src/modules/engines/domain/engine-types'
-import { EngineStatus } from 'src/modules/engines/domain/engine-enums'
-import { randomString } from '../../shared/utils/random-string'
+import { EngineId } from 'src/modules/shared/domain/value-objects/engines/engine-id.vo'
+import { EngineStatusEnum } from 'src/modules/engines/domain/engine-enums'
+import { EngineSerialNumber } from 'src/modules/engines/domain/value-objects/engine-serial-number.vo'
+import { EnginePrimitiveProps } from 'src/modules/engines/domain/engine-types'
 import { ENGINE_DEFAULTS as DEFAULT, ENGINE_CONSTRAINTS as LIMITS } from 'src/modules/engines/domain/engine-constants'
+import { randomString } from '../../shared/utils/random-string'
 import { randomNumber } from '../../shared/utils/random-number'
 
 /**
@@ -12,13 +14,13 @@ import { randomNumber } from '../../shared/utils/random-number'
  *  during test execution.
  */
 export class EngineBuilder {
-  private props: EngineProps = {
+  private props: EnginePrimitiveProps = {
     id: uuidv7(),
     serialNumber: randomString(LIMITS.SERIAL_NUMBER.MIN_LENGTH, LIMITS.SERIAL_NUMBER.MAX_LENGTH).trim().toUpperCase(),
     healthScore: randomNumber(LIMITS.HEALTH_SCORE.MIN, LIMITS.HEALTH_SCORE.MAX),
     flyingHoursAccumulated: DEFAULT.FLYING_HOURS,
     cyclesSinceLastOverhaul: DEFAULT.CYCLES_SINCE_LAST_OVERHAUL,
-    status: EngineStatus.OPERATIONAL,
+    status: EngineStatusEnum.OPERATIONAL,
     isInstalled: false
   }
 
@@ -36,7 +38,7 @@ export class EngineBuilder {
     return this
   }
 
-  withStatus(status: EngineStatus) {
+  withStatus(status: EngineStatusEnum) {
     this.props.status = status
     return this
   }
@@ -57,19 +59,19 @@ export class EngineBuilder {
     return this
   }
 
-  withProps(overrides?: Partial<EngineProps>): EngineBuilder {
+  withProps(overrides?: Partial<EnginePrimitiveProps>): EngineBuilder {
     this.props = { ...this.props, ...overrides }
     return this
   }
 
   create(): Engine {
     return Engine.create({
-      id: this.props.id,
-      serialNumber: this.props.serialNumber
+      id: EngineId.create(this.props.id),
+      serialNumber: EngineSerialNumber.create(this.props.serialNumber)
     })
   }
 
   build(): Engine {
-    return Engine.reconstruct(this.props)
+    return Engine.fromPrimitives(this.props)
   }
 }

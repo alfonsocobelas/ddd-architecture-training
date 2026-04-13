@@ -1,20 +1,20 @@
 import { v7 as uuidv7 } from 'uuid'
-import { EngineCreateProps, EnginePrimitiveProps, EngineProps } from 'src/modules/engines/domain/engine-types'
 import { Engine } from 'src/modules/engines/domain/engine'
-import { EngineStatus } from 'src/modules/engines/domain/engine-enums'
+import { EngineStatusEnum } from 'src/modules/engines/domain/engine-enums'
+import { EngineCreateProps, EnginePrimitiveProps } from 'src/modules/engines/domain/engine-types'
 import { EngineBuilder } from './engine.builder'
 import { repeat } from '../../shared/utils/random-array'
 
 export class EngineMother {
   static fromInput(input: Partial<EnginePrimitiveProps>): Engine {
-    return EngineBuilder.anEngine().withProps(input as Partial<EngineProps>).build()
+    return EngineBuilder.anEngine().withProps(input as Partial<EnginePrimitiveProps>).build()
   }
 
   static register(overrides?: Partial<EngineCreateProps>): Engine {
     return EngineBuilder.anEngine().withProps(overrides).create()
   }
 
-  static reconstruct(overrides?: Partial<EngineProps>): Engine {
+  static reconstruct(overrides?: Partial<EnginePrimitiveProps>): Engine {
     return EngineBuilder.anEngine().withProps(overrides).build()
   }
 
@@ -44,7 +44,7 @@ export class EngineMother {
       .anEngine()
       .withId(engineId)
       .withAircraftId(aircraftId)
-      .withStatus(EngineStatus.OPERATIONAL)
+      .withStatus(EngineStatusEnum.OPERATIONAL)
       .withIsInstalled(false)
       .build()
   }
@@ -52,7 +52,7 @@ export class EngineMother {
   static damaged() {
     return EngineBuilder
       .anEngine()
-      .withStatus(EngineStatus.MAINTENANCE)
+      .withStatus(EngineStatusEnum.MAINTENANCE)
       .withHealth(40)
       .build()
   }

@@ -1,8 +1,11 @@
 import { v7 as uuidv7 } from 'uuid'
 import { Aircraft } from 'src/modules/aircrafts/domain/aircraft'
-import { AircraftProps } from 'src/modules/aircrafts/domain/aircraft-types'
-import { AircraftStatus } from 'src/modules/aircrafts/domain/aircraft-enums'
-import { AIRCRAFT_DEFAULTS as DEFAULTS, AIRCRAFT_CONSTRAINTS as LIMITS } from 'src/modules/aircrafts/domain/aircraft-constants'
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
+import { AircraftModelId } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
+import { AircraftTailNumber } from 'src/modules/aircrafts/domain/value-objects/aircraft-tail-number.vo'
+import { AircraftStatusEnum } from 'src/modules/aircrafts/domain/aircraft-enums'
+import { AircraftPrimitiveProps } from 'src/modules/aircrafts/domain/aircraft-types'
+import { AIRCRAFT_DEFAULTS as DEFAULT,AIRCRAFT_CONSTRAINTS as LIMITS } from 'src/modules/aircrafts/domain/aircraft-constants'
 import { randomString } from '../../shared/utils/random-string'
 import { randomNumber } from '../../shared/utils/random-number'
 
@@ -12,14 +15,14 @@ import { randomNumber } from '../../shared/utils/random-number'
  *  during test execution.
  */
 export class AircraftBuilder {
-  private props: AircraftProps = {
+  private props: AircraftPrimitiveProps = {
     id: uuidv7(),
     modelId: uuidv7(),
-    engineIds: DEFAULTS.INITIAL_ENGINE_IDS,
+    engineIds: DEFAULT.INITIAL_ENGINE_IDS,
     tailNumber: randomString(LIMITS.TAIL_NUMBER.MIN_LENGTH, LIMITS.TAIL_NUMBER.MAX_LENGTH).trim().toUpperCase(),
     totalFlightHours: randomNumber(LIMITS.FLIGHT_HOURS.MIN, LIMITS.FLIGHT_HOURS.MAX),
     fuelLevelPercentage: randomNumber(LIMITS.FUEL_LEVEL.MIN, LIMITS.FUEL_LEVEL.MAX),
-    status: AircraftStatus.DRAFT,
+    status: AircraftStatusEnum.DRAFT,
     isActive: false
   }
 
@@ -42,7 +45,7 @@ export class AircraftBuilder {
     return this
   }
 
-  withStatus(status: AircraftStatus): AircraftBuilder {
+  withStatus(status: AircraftStatusEnum): AircraftBuilder {
     this.props.status = status
     return this
   }
@@ -72,20 +75,20 @@ export class AircraftBuilder {
     return this
   }
 
-  withProps(overrides?: Partial<AircraftProps>): AircraftBuilder {
+  withProps(overrides?: Partial<AircraftPrimitiveProps>): AircraftBuilder {
     this.props = { ...this.props, ...overrides }
     return this
   }
 
   create(): Aircraft {
     return Aircraft.create({
-      id: this.props.id,
-      modelId: this.props.modelId,
-      tailNumber: this.props.tailNumber
+      id: AircraftId.create(this.props.id),
+      modelId: AircraftModelId.create(this.props.modelId),
+      tailNumber: AircraftTailNumber.create(this.props.tailNumber)
     })
   }
 
   build(): Aircraft {
-    return Aircraft.reconstruct(this.props)
+    return Aircraft.fromPrimitives(this.props)
   }
 }

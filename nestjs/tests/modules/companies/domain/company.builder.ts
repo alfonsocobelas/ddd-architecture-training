@@ -1,6 +1,8 @@
 import { v7 as uuidv7 } from 'uuid'
 import { Company } from 'src/modules/companies/domain/company'
-import { CompanyProps } from 'src/modules/companies/domain/company-types'
+import { CompanyId } from 'src/modules/shared/domain/value-objects/companies/company-id.vo'
+import { CompanyName } from 'src/modules/companies/domain/value-objects/company-name.vo'
+import { CompanyPrimitiveProps } from 'src/modules/companies/domain/company-types'
 import { COMPANY_CONSTRAINTS as LIMITS } from 'src/modules/companies/domain/company-constants'
 import { randomString } from '../../shared/utils/random-string'
 
@@ -10,7 +12,7 @@ import { randomString } from '../../shared/utils/random-string'
  *  during test execution.
  */
 export class CompanyBuilder {
-  private props: CompanyProps = {
+  private props: CompanyPrimitiveProps = {
     id: uuidv7(),
     name: randomString(LIMITS.NAME.MIN_LENGTH, LIMITS.NAME.MAX_LENGTH)
   }
@@ -29,19 +31,19 @@ export class CompanyBuilder {
     return this
   }
 
-  withProps(overrides?: Partial<CompanyProps>): CompanyBuilder {
+  withProps(overrides?: Partial<CompanyPrimitiveProps>): CompanyBuilder {
     this.props = { ...this.props, ...overrides }
     return this
   }
 
   create(): Company {
     return Company.create({
-      id: this.props.id,
-      name: this.props.name
+      id: CompanyId.create(this.props.id),
+      name: CompanyName.create(this.props.name)
     })
   }
 
   build(): Company {
-    return Company.reconstruct(this.props)
+    return Company.fromPrimitives(this.props)
   }
 }

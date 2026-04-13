@@ -1,11 +1,19 @@
 import { v7 as uuidv7 } from 'uuid'
 import { Issue } from 'src/modules/issues/domain/issue'
-import { IssueProps } from 'src/modules/issues/domain/issue-types'
-import { IssuePartCategory, IssueSeverityLevel } from 'src/modules/issues/domain/issue-enums'
+import { EngineId } from 'src/modules/shared/domain/value-objects/engines/engine-id.vo'
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
+import { IssueId } from 'src/modules/issues/domain/value-objects/issue-id.vo'
+import { IssueCode } from 'src/modules/issues/domain/value-objects/issue-code.vo'
+import { IssueDescription } from 'src/modules/issues/domain/value-objects/issue-description.vo'
+import { IssuePartCategory } from 'src/modules/issues/domain/value-objects/issue-part-category.vo'
+import { IssueSeverityLevel } from 'src/modules/issues/domain/value-objects/issue-severity.vo'
+import { IssueRequiresGrounding } from 'src/modules/issues/domain/value-objects/issue-requires-grounding.vo'
+import { IssuePrimitiveProps } from 'src/modules/issues/domain/issue-types'
 import { ISSUE_CONSTRAINTS as LIMITS } from 'src/modules/issues/domain/issue-constants'
-import { randomEnumValue } from '../../shared/utils/random-enum'
+import { IssuePartCategoryEnum, IssueSeverityLevelEnum } from 'src/modules/issues/domain/issue-enums'
 import { randomString } from '../../shared/utils/random-string'
 import { randomBoolean } from '../../shared/utils/random-boolean'
+import { randomEnumValue } from '../../shared/utils/random-enum'
 
 /**
  * IMPORTANT: In integration tests, be careful with fields that have uniqueness constraints.
@@ -13,12 +21,12 @@ import { randomBoolean } from '../../shared/utils/random-boolean'
  * during test execution.
  */
 export class IssueBuilder {
-  private props: IssueProps = {
+  private props: IssuePrimitiveProps = {
     id: uuidv7(),
     code: randomString(LIMITS.CODE.MIN_LENGTH, LIMITS.CODE.MAX_LENGTH).trim().toUpperCase(),
     description: randomString(LIMITS.DESCRIPTION.MIN_LENGTH, LIMITS.DESCRIPTION.MAX_LENGTH),
-    severity: randomEnumValue(IssueSeverityLevel),
-    partCategory: randomEnumValue(IssuePartCategory),
+    severity: randomEnumValue(IssueSeverityLevelEnum),
+    partCategory: randomEnumValue(IssuePartCategoryEnum),
     requiresGrounding: randomBoolean()
   }
 
@@ -41,7 +49,7 @@ export class IssueBuilder {
     return this
   }
 
-  withSeverity(severity: IssueSeverityLevel): IssueBuilder {
+  withSeverity(severity: IssueSeverityLevelEnum): IssueBuilder {
     this.props.severity = severity
     return this
   }
@@ -51,7 +59,7 @@ export class IssueBuilder {
     return this
   }
 
-  withPartCategory(partCategory: IssuePartCategory): IssueBuilder {
+  withPartCategory(partCategory: IssuePartCategoryEnum): IssueBuilder {
     this.props.partCategory = partCategory
     return this
   }
@@ -66,25 +74,25 @@ export class IssueBuilder {
     return this
   }
 
-  withProps(overrides?: Partial<IssueProps>): IssueBuilder {
+  withProps(overrides?: Partial<IssuePrimitiveProps>): IssueBuilder {
     this.props = { ...this.props, ...overrides }
     return this
   }
 
   create(): Issue {
     return Issue.create({
-      id: this.props.id,
-      code: this.props.code,
-      description: this.props.description,
-      severity: this.props.severity,
-      requiresGrounding: this.props.requiresGrounding,
-      partCategory: this.props.partCategory,
-      aircraftId: this.props.aircraftId,
-      engineId: this.props.engineId
+      id: IssueId.create(this.props.id),
+      code: IssueCode.create(this.props.code),
+      description: IssueDescription.create(this.props.description),
+      severity: IssueSeverityLevel.create(this.props.severity),
+      requiresGrounding: IssueRequiresGrounding.create(this.props.requiresGrounding),
+      partCategory: IssuePartCategory.create(this.props.partCategory),
+      aircraftId: this.props.aircraftId ? AircraftId.create(this.props.aircraftId) : undefined,
+      engineId: this.props.engineId ? EngineId.create(this.props.engineId) : undefined
     })
   }
 
   build(): Issue {
-    return Issue.reconstruct(this.props)
+    return Issue.fromPrimitives(this.props)
   }
 }

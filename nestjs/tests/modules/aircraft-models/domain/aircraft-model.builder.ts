@@ -1,11 +1,17 @@
 import { v7 as uuidv7 } from 'uuid'
 import { AircraftModel } from 'src/modules/aircraft-models/domain/aircraft-model'
-import { AircraftModelProps } from 'src/modules/aircraft-models/domain/aircraft-model-types'
-import { AircraftModelStatus } from 'src/modules/aircraft-models/domain/aircraft-model-enums'
+import { AircraftModelPrimitiveProps } from 'src/modules/aircraft-models/domain/aircraft-model-types'
+import { AircraftModelStatusEnum } from 'src/modules/aircraft-models/domain/aircraft-model-enums'
 import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from 'src/modules/aircraft-models/domain/aircraft-model-constants'
 import { randomString } from '../../shared/utils/random-string'
 import { randomNumber } from '../../shared/utils/random-number'
 import { randomEnumValue } from '../../shared/utils/random-enum'
+import { AircraftModelId } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
+import { AircraftModelName } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-name.vo'
+import { AircraftModelCode } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-code.vo'
+import { AircraftModelManufacturer } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-manufacturer.vo'
+import { AircraftModelPassengerCapacity } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-passenger-capacity.vo'
+import { AircraftModelNumEngines } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-num-engines.vo'
 
 /**
  * IMPORTANT: In integration tests, be careful with fields that have uniqueness constraints.
@@ -13,14 +19,14 @@ import { randomEnumValue } from '../../shared/utils/random-enum'
  *  during test execution.
  */
 export class AircraftModelBuilder {
-  private props: AircraftModelProps = {
+  private props: AircraftModelPrimitiveProps = {
     id: uuidv7(),
     name: randomString(LIMITS.NAME.MIN_LENGTH, LIMITS.NAME.MAX_LENGTH),
     code: randomString(LIMITS.CODE.MIN_LENGTH, LIMITS.CODE.MAX_LENGTH).trim().toUpperCase(),
     manufacturer: randomString(LIMITS.MANUFACTURER.MIN_LENGTH, LIMITS.MANUFACTURER.MAX_LENGTH),
     passengerCapacity: randomNumber(LIMITS.PASSENGERS.MIN, LIMITS.PASSENGERS.MAX),
     numEngines: randomNumber(LIMITS.ENGINES.MIN, LIMITS.ENGINES.MAX),
-    status: randomEnumValue(AircraftModelStatus)
+    status: randomEnumValue(AircraftModelStatusEnum)
   }
 
   static aModel(): AircraftModelBuilder {
@@ -57,28 +63,28 @@ export class AircraftModelBuilder {
     return this
   }
 
-  withStatus(status: AircraftModelStatus): AircraftModelBuilder {
+  withStatus(status: AircraftModelStatusEnum): AircraftModelBuilder {
     this.props.status = status
     return this
   }
 
-  withProps(overrides?: Partial<AircraftModelProps>): AircraftModelBuilder {
+  withProps(overrides?: Partial<AircraftModelPrimitiveProps>): AircraftModelBuilder {
     this.props = { ...this.props, ...overrides }
     return this
   }
 
   create(): AircraftModel {
     return AircraftModel.create({
-      id: this.props.id,
-      name: this.props.name,
-      code: this.props.code,
-      manufacturer: this.props.manufacturer,
-      passengerCapacity: this.props.passengerCapacity,
-      numEngines: this.props.numEngines
+      id: AircraftModelId.create(this.props.id),
+      name: AircraftModelName.create(this.props.name),
+      code: AircraftModelCode.create(this.props.code),
+      manufacturer: AircraftModelManufacturer.create(this.props.manufacturer),
+      passengerCapacity: AircraftModelPassengerCapacity.create(this.props.passengerCapacity),
+      numEngines: AircraftModelNumEngines.create(this.props.numEngines)
     })
   }
 
   build(): AircraftModel {
-    return AircraftModel.reconstruct(this.props)
+    return AircraftModel.fromPrimitives(this.props)
   }
 }
