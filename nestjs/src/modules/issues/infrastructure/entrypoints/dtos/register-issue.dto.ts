@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString, IsUUID, IsEnum, IsBoolean, MinLength, MaxLength } from 'class-validator'
-import { IssuePartCategory, IssueSeverityLevel } from 'src/modules/issues/domain/issue-enums'
+import { IssuePartCategoryEnum, IssueSeverityLevelEnum } from 'src/modules/issues/domain/issue-enums'
 import { ISSUE_CONSTRAINTS as LIMITS } from 'src/modules/issues/domain/issue-constants'
 
 export class RegisterIssueDto {
@@ -30,15 +30,15 @@ export class RegisterIssueDto {
   @MaxLength(LIMITS.DESCRIPTION.MAX_LENGTH)
     description!: string
 
-  @IsEnum(IssueSeverityLevel)
+  @IsEnum(IssueSeverityLevelEnum)
   @IsNotEmpty()
-    severity!: IssueSeverityLevel
+    severity!: IssueSeverityLevelEnum
 
   @IsBoolean()
   @IsNotEmpty()
     requiresGrounding!: boolean
 
-  @IsEnum(IssuePartCategory)
+  @IsEnum(IssuePartCategoryEnum)
   @IsNotEmpty()
-    partCategory!: IssuePartCategory
+    partCategory!: IssuePartCategoryEnum
 }
