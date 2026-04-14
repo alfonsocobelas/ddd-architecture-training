@@ -167,7 +167,7 @@ describe('SearchAircraftsUseCase (unit tests)', () => {
     const input = SearchAircraftsInputMother.withInvalidFilterField()
 
     // WHEN & THEN
-    await expect(useCase.invoke(input)).rejects.toThrow('The field non_existent_field is not allowed for searching.')
+    await expect(useCase.invoke(input)).rejects.toThrow('The field "non_existent_field" is not allowed for searching.')
   })
 
   it('should throw an error when an invalid order field is provided', async () => {
@@ -175,6 +175,6 @@ describe('SearchAircraftsUseCase (unit tests)', () => {
     const input = SearchAircraftsInputMother.withInvalidOrderField()
 
     // WHEN & THEN
-    await expect(useCase.invoke(input)).rejects.toThrow('The field non_existent_field is not allowed for ordering.')
+    await expect(useCase.invoke(input)).rejects.toThrow('The field "non_existent_field" is not allowed for ordering.')
   })
 })

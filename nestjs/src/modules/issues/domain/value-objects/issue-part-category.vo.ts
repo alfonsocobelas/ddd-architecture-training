@@ -3,6 +3,8 @@ import { IssuePartCategoryEnum, IssuePartCategoryValue } from '../issue-enums'
 import { IssueError } from '../issue-errors'
 
 export class IssuePartCategory extends EnumValueObject<IssuePartCategoryEnum> {
+  protected static fieldName = 'Issue part category'
+
   private constructor(value: IssuePartCategoryEnum) {
     super(value, IssuePartCategoryValue)
   }
@@ -13,6 +15,8 @@ export class IssuePartCategory extends EnumValueObject<IssuePartCategoryEnum> {
   }
 
   private static validate(value: string, aircraftId?: string, engineId?: string): void {
+    this.ensureIsValidEnum(value as IssuePartCategoryEnum, IssuePartCategoryValue)
+
     if ((value === IssuePartCategoryEnum.AVIONICS || value === IssuePartCategoryEnum.FUSELAGE) && !aircraftId) {
       throw new IssueError('aircraftId is required when partCategory is Aircraft')
     }

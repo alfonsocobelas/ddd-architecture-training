@@ -8,7 +8,7 @@ import { FleetAircraftIds } from 'src/modules/fleets/domain/value-objects/fleet-
 import { FleetPrimitiveProps } from 'src/modules/fleets/domain/fleet-types'
 import { FleetMaintenanceBudget } from 'src/modules/fleets/domain/value-objects/fleet-maintenance-budget.vo'
 import { FleetFleetOperationRegion } from 'src/modules/fleets/domain/value-objects/fleet-operation-region.vo'
-import { FleetStatusEnum, FleetTypeEnum, FleetFleetOperationRegionEnum } from 'src/modules/fleets/domain/fleet-enums'
+import { FleetStatusEnum, FleetTypeEnum, FleetOperationRegionEnum } from 'src/modules/fleets/domain/fleet-enums'
 import { FLEET_CONSTRAINTS as LIMITS } from 'src/modules/fleets/domain/fleet-constants'
 import { randomEnumValue } from '../../shared/utils/random-enum'
 import { randomString } from '../../shared/utils/random-string'
@@ -27,7 +27,7 @@ export class FleetBuilder {
     name: randomString(LIMITS.NAME.MIN_LENGTH, LIMITS.NAME.MAX_LENGTH),
     maintenanceBudget: randomNumber(LIMITS.MAINTENANCE_BUDGET.MIN, LIMITS.MAINTENANCE_BUDGET.MAX),
     type: randomEnumValue(FleetTypeEnum),
-    operationRegion: randomEnumValue(FleetFleetOperationRegionEnum),
+    operationRegion: randomEnumValue(FleetOperationRegionEnum),
     status: FleetStatusEnum.DRAFT
   }
 
@@ -55,7 +55,7 @@ export class FleetBuilder {
     return this
   }
 
-  withFleetOperationRegion(operationRegion: FleetFleetOperationRegionEnum): FleetBuilder {
+  withFleetOperationRegion(operationRegion: FleetOperationRegionEnum): FleetBuilder {
     this.props.operationRegion = operationRegion
     return this
   }

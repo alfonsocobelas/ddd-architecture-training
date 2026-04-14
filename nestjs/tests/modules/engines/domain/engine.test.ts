@@ -1,11 +1,11 @@
 import fc from 'fast-check'
-import { v7 as uuidv7 } from 'uuid'
 import { normalizeString } from 'src/modules/shared/utils/normalize'
 import { EngineBuilder } from './engine.builder'
-import { EngineStatus } from 'src/modules/engines/domain/engine-enums'
+import { EngineStatusEnum } from 'src/modules/engines/domain/engine-enums'
 import { ENGINE_DEFAULTS as DEFAULT, ENGINE_CONSTRAINTS as LIMITS } from 'src/modules/engines/domain/engine-constants'
 import { EngineMother } from './engine.mother'
 import { Engine } from 'src/modules/engines/domain/engine'
+import { AircraftIdMother } from '../../shared/domain/mothers/aircraftId.mother'
 
 describe('Engine domain model (unit/property-based test)', () => {
 
@@ -16,7 +16,7 @@ describe('Engine domain model (unit/property-based test)', () => {
           fc.property(fc.uuid({ version: 4 }), (invalidId) => {
             const builder = EngineBuilder.anEngine().withId(invalidId)
 
-            expect(() => builder.create()).toThrow('Invalid id')
+            expect(() => builder.create()).toThrow('Engine ID must be a valid UUID v7')
           })
         )
       })
@@ -30,7 +30,7 @@ describe('Engine domain model (unit/property-based test)', () => {
             (invalidSn) => {
               const builder = EngineBuilder.anEngine().withSerialNumber(invalidSn)
 
-              expect(() => builder.create()).toThrow('Serial number cannot be empty')
+              expect(() => builder.create()).toThrow('Serial number cannot be empty string')
             }
           )
         )
@@ -74,44 +74,46 @@ describe('Engine domain model (unit/property-based test)', () => {
         expect(engine).toBeInstanceOf(Engine)
         expect(engine).toHaveProperty('id')
         expect(engine).toHaveProperty('serialNumber')
-        expect(engine.isInstalled).toBe(false)
-        expect(engine.aircraftId).toBeUndefined()
-        expect(engine.status).toBe(EngineStatus.OPERATIONAL)
-        expect(engine.healthScore).toBe(LIMITS.HEALTH_SCORE.MAX)
-        expect(engine.flyingHoursAccumulated).toBe(DEFAULT.FLYING_HOURS)
-        expect(engine.cyclesSinceLastOverhaul).toBe(DEFAULT.CYCLES_SINCE_LAST_OVERHAUL)
+        expect(engine.isInstalled.value).toBe(false)
+        expect(engine.aircraftId?.value).toBeUndefined()
+        expect(engine.status.value).toBe(EngineStatusEnum.OPERATIONAL)
+        expect(engine.healthScore.value).toBe(LIMITS.HEALTH_SCORE.MAX)
+        expect(engine.flyingHoursAccumulated.value).toBe(DEFAULT.FLYING_HOURS)
+        expect(engine.cyclesSinceLastOverhaul.value).toBe(DEFAULT.CYCLES_SINCE_LAST_OVERHAUL)
       })
 
       it('should normalize serial number to uppercase and trim whitespace', () => {
         const engine = EngineBuilder.anEngine().withSerialNumber('  sn-123-abc  ').create()
 
-        expect(engine.serialNumber).toBe('SN-123-ABC')
+        expect(engine.serialNumber.value).toBe('SN-123-ABC')
       })
     })
 
     describe('on installation', () => {
       it('should allow installation only if operational and not installed', () => {
         const engine = EngineMother.operational()
-        const aircraftId = uuidv7()
+        const aircraftId = AircraftIdMother.random()
 
         engine.installInAircraft(aircraftId)
 
-        expect(engine.isInstalled).toBe(true)
-        expect(engine.aircraftId).toBe(aircraftId)
+        expect(engine.isInstalled.value).toBe(true)
+        expect(engine.aircraftId?.value).toBe(aircraftId.value)
       })
 
       it('should fail to install if already installed', () => {
-        const aircraftId = uuidv7()
-        const engine = EngineMother.installed(aircraftId)
+        const aircraftId = AircraftIdMother.random()
+        const engine = EngineMother.installed(aircraftId.value)
+        const notFreeAircraftId = AircraftIdMother.random()
 
-        expect(() => engine.installInAircraft(uuidv7()))
-          .toThrow(`Engine ${engine.id} is already installed on the other aircraft`)
+        expect(() => engine.installInAircraft(notFreeAircraftId))
+          .toThrow(`Engine ${engine.id.value} is already installed on the other aircraft`)
       })
 
       it('should fail to install if status is not OPERATIONAL', () => {
+        const aircraftId = AircraftIdMother.random()
         const engine = EngineMother.damaged()
 
-        expect(() => engine.installInAircraft(uuidv7()))
+        expect(() => engine.installInAircraft(aircraftId))
           .toThrow('Only operational engines can be installed')
       })
 
@@ -122,12 +124,12 @@ describe('Engine domain model (unit/property-based test)', () => {
             (lowHealthScore) => {
               const engine = EngineBuilder
                 .anEngine()
-                .withStatus(EngineStatus.OPERATIONAL)
+                .withStatus(EngineStatusEnum.OPERATIONAL)
                 .withIsInstalled(false)
                 .withHealth(lowHealthScore)
                 .build()
 
-              expect(() => engine.installInAircraft(uuidv7())).toThrow(`Engine health score must be at least ${LIMITS.HEALTH_SCORE.MIN} to be installed`)
+              expect(() => engine.installInAircraft(AircraftIdMother.random())).toThrow(`Engine health score must be at least ${LIMITS.HEALTH_SCORE.MIN} to be installed`)
             }
           )
         )

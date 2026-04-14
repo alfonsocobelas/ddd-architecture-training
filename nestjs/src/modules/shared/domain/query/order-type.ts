@@ -20,7 +20,7 @@ export class OrderType {
     const orderType = ORDER_TYPE_MAP.get(value)
 
     if (!orderType) {
-      throw new InvalidArgumentError(`The order type ${value} is invalid`)
+      throw new InvalidArgumentError(`The order type "${value}" is invalid`)
     }
 
     return new OrderType(orderType)

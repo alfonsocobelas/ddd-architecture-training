@@ -13,7 +13,7 @@ describe('Company domain model (unit/property-based test)', () => {
           fc.property(fc.uuid({ version: 4 }), (invalidId) => {
             const builder = CompanyBuilder.aCompany().withId(invalidId)
 
-            expect(() => builder.create()).toThrow('Invalid id')
+            expect(() => builder.create()).toThrow('Company ID must be a valid UUID v7')
           })
         )
       })
@@ -27,7 +27,7 @@ describe('Company domain model (unit/property-based test)', () => {
             (invalidName) => {
               const builder = CompanyBuilder.aCompany().withName(invalidName)
 
-              expect(() => builder.create()).toThrow('Name cannot be empty')
+              expect(() => builder.create()).toThrow('Company name cannot be empty string')
             }
           )
         )

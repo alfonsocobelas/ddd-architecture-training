@@ -115,6 +115,23 @@ export class Aircraft extends AggregateRoot {
     }
   }
 
+  equals(other: AggregateRoot): boolean {
+    if (!(other instanceof Aircraft)) {
+      return false
+    }
+
+    return this.id.equals(other.id) &&
+      this.modelId.equals(other.modelId) &&
+      this.tailNumber.equals(other.tailNumber) &&
+      this._engineIds.equals(other._engineIds) &&
+      this._status.equals(other._status) &&
+      this._isActive.equals(other._isActive) &&
+      this._totalFlightHours.equals(other._totalFlightHours) &&
+      this._fuelLevelPercentage.equals(other._fuelLevelPercentage) &&
+      ((this._fleetId === undefined && other._fleetId === undefined) ||
+        (this._fleetId !== undefined && other._fleetId !== undefined && this._fleetId.equals(other._fleetId)))
+  }
+
   remove(): void {
     this.record(new AircraftRemovedDomainEvent({
       aggregateId: this.id.value,

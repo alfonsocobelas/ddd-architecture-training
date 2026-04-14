@@ -2,6 +2,7 @@ import { InvalidArgumentError } from '../../errors'
 
 export abstract class ValueObject<T> {
   protected readonly _value: T
+  protected static fieldName: string
 
   protected constructor(value: T) {
     this.ensureIsDefined(value)
@@ -30,7 +31,7 @@ export abstract class ValueObject<T> {
 
   private ensureIsDefined(value: T): void {
     if (value === null || value === undefined) {
-      throw new InvalidArgumentError(`[${this.constructor.name}] Value must be defined`)
+      throw new InvalidArgumentError(`[${this.constructor.name}] Value "${value}" must be defined`)
     }
   }
 }

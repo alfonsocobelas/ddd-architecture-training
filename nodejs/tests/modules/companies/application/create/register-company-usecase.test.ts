@@ -34,6 +34,7 @@ describe('RegisterCompanyUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Company with name "${input.name}" already exists.`)
+
     repository.assertNotCalled('register')
   })
 })

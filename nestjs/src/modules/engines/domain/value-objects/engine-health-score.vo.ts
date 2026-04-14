@@ -2,6 +2,8 @@ import { NumberValueObject } from 'src/modules/shared/domain/value-objects/numbe
 import { ENGINE_CONSTRAINTS as LIMITS } from '../engine-constants'
 
 export class EngineHealthScore extends NumberValueObject {
+  protected static fieldName = 'Health score'
+
   private constructor(value: number) {
     super(value)
   }

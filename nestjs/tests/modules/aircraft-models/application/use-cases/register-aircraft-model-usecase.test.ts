@@ -1,21 +1,25 @@
 import { RegisterAircraftModelUseCase } from 'src/modules/aircraft-models/application/use-cases/register-aircraft-model-usecase.service'
-import { RegisterAircraftModelInputMother } from '../mothers/register-aircraft-model-intput.mother'
-import { AircraftModelRepositoryMock } from '../../mocks/aircraft-model.repository.mock'
 import { AircraftModelMother } from '../../domain/aircraft-model.mother'
+import { RegisterAircraftModelInputMother } from '../dtos/register-aircraft-model-intput.mother'
+import { EventBusMock } from '../../../shared/mocks/event-bus.mock'
+import { AircraftModelRepositoryMock } from '../../mocks/aircraft-model.repository.mock'
 
 describe('RegisterAircraftModelUseCase (unit test)', () => {
   let repository: AircraftModelRepositoryMock
+  let eventBus: EventBusMock
   let useCase: RegisterAircraftModelUseCase
 
   beforeEach(() => {
     repository = new AircraftModelRepositoryMock()
-    useCase = new RegisterAircraftModelUseCase(repository)
+    eventBus = new EventBusMock()
+    useCase = new RegisterAircraftModelUseCase(repository, eventBus)
   })
 
   it('should register a new aircraft model', async () => {
     // GIVEN
     const input = RegisterAircraftModelInputMother.random()
     const expectedModel = AircraftModelMother.register(input)
+    const expectedEvents = expectedModel.pullDomainEvents()
     repository.givenDoesNotExist()
 
     // WHEN
@@ -23,8 +27,9 @@ describe('RegisterAircraftModelUseCase (unit test)', () => {
     repository.whenRegisterSuccess()
 
     // THEN
-    repository.assertCalledWith('exists', input.code)
+    repository.assertCalledWith('exists', expectedModel.code)
     repository.assertCalledWith('register', expectedModel)
+    eventBus.assertPublishedEvents(expectedEvents)
   })
 
   it('should throw AlreadyExistsError if code is already taken', async () => {
@@ -33,7 +38,10 @@ describe('RegisterAircraftModelUseCase (unit test)', () => {
     repository.givenAlreadyExists()
 
     // WHEN & THEN
-    await expect(useCase.invoke(input)).rejects.toThrow(`AircraftModel with code "${input.code}" already exists.`)
+    await expect(useCase.invoke(input))
+      .rejects.toThrow(`AircraftModel with code "${input.code}" already exists.`)
+
     repository.assertNotCalled('register')
+    eventBus.assertNotPublished()
   })
 })

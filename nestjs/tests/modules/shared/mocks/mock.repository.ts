@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
 
 export abstract class MockRepository<T> {
@@ -22,12 +23,25 @@ export abstract class MockRepository<T> {
     expect(this.getMock(methodName)).not.toHaveBeenCalled()
   }
 
-  assertCalledWith(methodName: string, ...args: unknown[]): void {
-    expect(this.getMock(methodName)).toHaveBeenCalledWith(...args)
+  assertCalledWith(methodName: string, ...expectedArgs: unknown[]): void {
+    const calls = this.getMock(methodName).mock.calls
+    const match = calls.some(call =>
+      call.length === expectedArgs.length &&
+      call.every((arg: unknown, i: number) => this.valueObjectEquals(arg, expectedArgs[i]))
+    )
+
+    expect(match).toBe(true)
   }
 
-  assertLastCalledWith(methodName: string, ...args: unknown[]): void {
-    expect(this.getMock(methodName)).toHaveBeenLastCalledWith(...args)
+  assertLastCalledWith(methodName: string, ...expectedArgs: unknown[]): void {
+    const calls = this.getMock(methodName).mock.calls
+    const lastCall = calls[calls.length - 1]
+    const match =
+      lastCall &&
+      lastCall.length === expectedArgs.length &&
+      lastCall.every((arg: unknown, i: number) => this.valueObjectEquals(arg, expectedArgs[i]))
+
+    expect(match).toBe(true)
   }
 
   assertCalledTimes(methodName: string, times: number): void {
@@ -46,5 +60,37 @@ export abstract class MockRepository<T> {
     const lastCallIndex = mock.mock.calls.length - 1
     const lastCallCriteria = mock.mock.calls[lastCallIndex][0] as Criteria
     expect(check(lastCallCriteria)).toBe(true)
+  }
+
+  private valueObjectEquals(a: any, b: any): boolean {
+    // Ambos son arrays
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) {return false}
+      return a.every((item, i) => this.valueObjectEquals(item, b[i]))
+    }
+
+    // Uno es ValueObjectList y el otro es array
+    if (a && typeof a.toArray === 'function' && Array.isArray(b)) {
+      return this.valueObjectEquals(a.toArray, b)
+    }
+    if (b && typeof b.toArray === 'function' && Array.isArray(a)) {
+      return this.valueObjectEquals(a, b.toArray)
+    }
+
+    // Ambos son ValueObjectList
+    if (a && typeof a.equals === 'function' && b && typeof b.equals === 'function') {
+      return a.equals(b)
+    }
+
+    // Value object simple
+    if (a && typeof a.equals === 'function') {
+      return a.equals(b)
+    }
+    if (b && typeof b.equals === 'function') {
+      return b.equals(a)
+    }
+
+    // Primitivos
+    return a === b
   }
 }

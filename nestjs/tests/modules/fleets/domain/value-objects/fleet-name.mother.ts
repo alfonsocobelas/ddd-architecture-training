@@ -1,5 +1,6 @@
 import { FleetName } from 'src/modules/fleets/domain/value-objects/fleet-name.vo'
 import { StringMother } from '../../../shared/domain/mothers/string.mother'
+import { FLEET_CONSTRAINTS as LIMITS } from 'src/modules/fleets/domain/fleet-constants'
 
 export class FleetNameMother {
   static create(value: string): FleetName {
@@ -7,6 +8,6 @@ export class FleetNameMother {
   }
 
   static random(): FleetName {
-    return this.create(StringMother.random({ minLength: 3, maxLength: 50 }))
+    return this.create(StringMother.random({ minLength: LIMITS.NAME.MIN_LENGTH, maxLength: LIMITS.NAME.MAX_LENGTH }))
   }
 }

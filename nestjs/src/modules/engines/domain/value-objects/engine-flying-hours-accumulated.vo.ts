@@ -2,6 +2,8 @@ import { NumberValueObject } from 'src/modules/shared/domain/value-objects/numbe
 import { ENGINE_DEFAULTS as DEFAULT } from '../engine-constants'
 
 export class EngineFlyingHoursAccumulated extends NumberValueObject {
+  protected static fieldName = 'Flying hours accumulated'
+
   private constructor(value: number) {
     super(value)
   }

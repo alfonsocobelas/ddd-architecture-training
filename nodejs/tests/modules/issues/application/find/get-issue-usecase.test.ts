@@ -35,6 +35,7 @@ describe('GetIssueUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Issue with id "${input.id}" not found.`)
+
     issueRepository.assertCalledWith('get', input.id)
   })
 })

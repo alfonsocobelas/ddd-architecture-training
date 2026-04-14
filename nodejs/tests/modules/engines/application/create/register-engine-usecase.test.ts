@@ -33,9 +33,7 @@ describe('RegisterEngineUseCase (unit tests)', () => {
     repository.givenAlreadyExists()
 
     // WHEN & THEN
-    await expect(useCase.invoke(input)).rejects.toThrow(
-      `Engine with serialNumber "${input.serialNumber}" already exists.`
-    )
+    await expect(useCase.invoke(input)).rejects.toThrow(`Engine with serialNumber "${input.serialNumber}" already exists.`)
     repository.assertNotCalled('register')
   })
 })

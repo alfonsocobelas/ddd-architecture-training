@@ -75,4 +75,22 @@ export class Issue extends AggregateRoot {
       engineId: this.engineId ? this.engineId.value : undefined
     }
   }
+
+  equals(other: AggregateRoot): boolean {
+    if (!(other instanceof Issue)) {
+      return false
+    }
+
+    return this.id.equals(other.id) &&
+      this.code.equals(other.code) &&
+      this.description.equals(other.description) &&
+      this.severity.equals(other.severity) &&
+      this.requiresGrounding.equals(other.requiresGrounding) &&
+      this.partCategory.equals(other.partCategory) &&
+      ((this.aircraftId === undefined && other.aircraftId === undefined) ||
+        (this.aircraftId !== undefined && other.aircraftId !== undefined &&
+          this.aircraftId.equals(other.aircraftId))) &&
+      ((this.engineId === undefined && other.engineId === undefined) ||
+        (this.engineId !== undefined && other.engineId !== undefined && this.engineId.equals(other.engineId)))
+  }
 }

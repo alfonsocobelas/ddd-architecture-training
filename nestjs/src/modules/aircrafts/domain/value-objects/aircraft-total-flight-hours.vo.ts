@@ -3,6 +3,8 @@ import { AIRCRAFT_CONSTRAINTS as LIMITS } from '../aircraft-constants'
 import { AircraftError } from '../aircraft-errors'
 
 export class AircraftTotalFlightHours extends IntegerValueObject {
+  protected static fieldName = 'Total flight hours'
+
   private constructor(value: number) {
     super(value)
   }
@@ -21,6 +23,8 @@ export class AircraftTotalFlightHours extends IntegerValueObject {
   }
 
   private static validate(value: number): void {
+    this.ensureIsInteger(value)
+
     if (value < LIMITS.FLIGHT_HOURS.MIN) {
       throw new AircraftError(`Total flight hours must be greater than or equal to ${LIMITS.FLIGHT_HOURS.MIN}.`)
     }

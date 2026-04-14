@@ -35,6 +35,7 @@ describe('GetCompanyUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Company with id "${input.id}" not found.`)
+
     repository.assertCalledWith('get', input.id)
   })
 })

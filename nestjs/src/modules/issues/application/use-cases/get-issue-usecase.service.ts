@@ -13,8 +13,8 @@ export class GetIssueUseCase {
 
   async invoke(input: GetIssueInput): Promise<GetIssueOutput> {
     const issueId = IssueId.create(input.id)
-    const issue = await this.issueRepository.get(issueId)
 
+    const issue = await this.issueRepository.get(issueId)
     if (!issue) {
       throw new EntityNotFoundError('Issue', input.id)
     }

@@ -1,7 +1,7 @@
 import { Aircraft } from 'src/modules/aircrafts/domain/aircraft'
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
-import { AircraftReadModel } from 'src/modules/aircrafts/domain/aircraft-types'
+import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
 import { MockRepository } from '../../shared/mocks/mock.repository'
 
@@ -21,15 +21,11 @@ export class AircraftRepositoryMock
     return this.getMock('remove')(aircraft)
   }
 
-  get(aircraftId: string): Promise<Nullable<Aircraft>> {
+  get(aircraftId: AircraftId): Promise<Nullable<Aircraft>> {
     return this.getMock('get')(aircraftId)
   }
 
-  getTechnicalSheet(aircraftId: string): Promise<Nullable<AircraftReadModel>> {
-    return this.getMock('getTechnicalSheet')(aircraftId)
-  }
-
-  find(aircraftIds: string[]): Promise<Aircraft[]> {
+  find(aircraftIds: AircraftId[]): Promise<Aircraft[]> {
     return this.getMock('find')(aircraftIds)
   }
 
@@ -60,14 +56,6 @@ export class AircraftRepositoryMock
 
   givenNoAircraftsFound(): void {
     this.setMockResult('find', [])
-  }
-
-  givenTechnicalSheet(sheet: AircraftReadModel): void {
-    this.setMockResult('getTechnicalSheet', sheet)
-  }
-
-  givenNoTechnicalSheet(): void {
-    this.setMockResult('getTechnicalSheet', null)
   }
 
   givenMatching(aircrafts: Aircraft[]): void {

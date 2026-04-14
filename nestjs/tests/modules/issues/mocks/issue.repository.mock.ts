@@ -1,8 +1,9 @@
 import { Issue } from 'src/modules/issues/domain/issue'
-import { Nullable } from 'src/modules/shared/nullable'
+import { IssueId } from 'src/modules/issues/domain/value-objects/issue-id.vo'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
-import { MockRepository } from '../../shared/mocks/mock.repository'
 import { IssueRepository } from 'src/modules/issues/domain/issue.repository'
+import { MockRepository } from '../../shared/mocks/mock.repository'
 
 export class IssueRepositoryMock
   extends MockRepository<Issue>
@@ -16,7 +17,7 @@ export class IssueRepositoryMock
     return this.getMock('save')(issues)
   }
 
-  get(issueId: string): Promise<Nullable<Issue>> {
+  get(issueId: IssueId): Promise<Nullable<Issue>> {
     return this.getMock('get')(issueId)
   }
 

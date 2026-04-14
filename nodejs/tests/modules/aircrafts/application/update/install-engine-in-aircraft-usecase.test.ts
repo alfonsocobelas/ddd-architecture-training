@@ -56,6 +56,7 @@ describe('InstallEngineInAircraftUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Engine with id "${input.engineId}" not found.`)
+
     aircraftRepository.assertCalledWith('get', input.aircraftId)
     engineRepository.assertCalledWith('get', input.engineId)
     modelRepository.assertNotCalled('get')
@@ -72,6 +73,7 @@ describe('InstallEngineInAircraftUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Aircraft with id "${input.aircraftId}" not found.`)
+
     aircraftRepository.assertCalledWith('get', input.aircraftId)
     engineRepository.assertCalledWith('get', input.engineId)
     modelRepository.assertNotCalled('get')
@@ -89,9 +91,8 @@ describe('InstallEngineInAircraftUseCase (unit tests)', () => {
     modelRepository.givenNotFound()
 
     // WHEN & THEN
-    await expect(useCase.invoke(input)).rejects.toThrow(
-      `AircraftModel with id "${expectedAircraft.modelId}" not found.`
-    )
+    await expect(useCase.invoke(input)).rejects.toThrow(`AircraftModel with id "${expectedAircraft.modelId}" not found.`)
+
     aircraftRepository.assertCalledWith('get', input.aircraftId)
     engineRepository.assertCalledWith('get', input.engineId)
     modelRepository.assertCalledWith('get', expectedAircraft.modelId)

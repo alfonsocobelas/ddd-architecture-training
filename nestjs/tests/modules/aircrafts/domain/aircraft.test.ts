@@ -1,10 +1,12 @@
 import fc from 'fast-check'
-import { v7 as uuidv7 } from 'uuid'
 import { normalizeString } from 'src/modules/shared/utils/normalize'
 import { Aircraft } from 'src/modules/aircrafts/domain/aircraft'
-import { AircraftStatus } from 'src/modules/aircrafts/domain/aircraft-enums'
+import { AircraftStatusEnum } from 'src/modules/aircrafts/domain/aircraft-enums'
 import { AIRCRAFT_CONSTRAINTS as LIMITS } from 'src/modules/aircrafts/domain/aircraft-constants'
 import { AircraftBuilder } from './aircraft.builder'
+import { FleetIdMother } from '../../fleets/domain/value-objects/fleet-id.mother'
+import { EngineIdMother } from '../../engines/domain/value-objects/engine-id.mother'
+import { AircraftModelNumEnginesMother } from '../../aircraft-models/domain/value-objects/aircraft-model-num-engines.mother'
 
 describe('Aircraft domain model (unit/property-based test)', () => {
 
@@ -15,7 +17,7 @@ describe('Aircraft domain model (unit/property-based test)', () => {
           fc.property(fc.uuid({ version: 4 }), (invalidId) => {
             const builder = AircraftBuilder.anAircraft().withId(invalidId)
 
-            expect(() => builder.create()).toThrow('Invalid id')
+            expect(() => builder.create()).toThrow('Aircraft ID must be a valid UUID v7')
           })
         )
       })
@@ -27,7 +29,7 @@ describe('Aircraft domain model (unit/property-based test)', () => {
           fc.property(fc.uuid({ version: 4 }), (invalidModelId) => {
             const builder = AircraftBuilder.anAircraft().withModelId(invalidModelId)
 
-            expect(() => builder.create()).toThrow('Invalid modelId')
+            expect(() => builder.create()).toThrow('Aircraft model ID must be a valid UUID v7')
           })
         )
       })
@@ -83,9 +85,9 @@ describe('Aircraft domain model (unit/property-based test)', () => {
             fc.double({ min: LIMITS.FUEL_LEVEL.MIN, max: LIMITS.FUEL_LEVEL.MAX, noNaN: true })
               .filter(num => !Number.isInteger(num)),
             (invalidLevel) => {
-              const aircraft = AircraftBuilder.anAircraft().build()
+              const aircraft = AircraftBuilder.anAircraft().withFuelLevel(invalidLevel)
 
-              expect(() => { aircraft.fuelLevelPercentage = invalidLevel }).toThrow('Fuel level percentage must be an integer')
+              expect(() => { aircraft.build() }).toThrow('Fuel level percentage must be an integer')
             }
           )
         )
@@ -96,9 +98,9 @@ describe('Aircraft domain model (unit/property-based test)', () => {
           fc.property(
             fc.integer({ max: LIMITS.FUEL_LEVEL.MIN - 1 }),
             (invalidFuel) => {
-              const aircraft = AircraftBuilder.anAircraft().build()
+              const aircraft = AircraftBuilder.anAircraft().withFuelLevel(invalidFuel)
 
-              expect(() => { aircraft.fuelLevelPercentage = invalidFuel }).toThrow(`Fuel level percentage must be greater than or equal to ${LIMITS.FUEL_LEVEL.MIN}.`)
+              expect(() => { aircraft.build() }).toThrow(`Fuel level percentage must be greater than or equal to ${LIMITS.FUEL_LEVEL.MIN}.`)
             }
           )
         )
@@ -109,9 +111,9 @@ describe('Aircraft domain model (unit/property-based test)', () => {
           fc.property(
             fc.integer({ min: LIMITS.FUEL_LEVEL.MAX + 1 }),
             (invalidFuel) => {
-              const aircraft = AircraftBuilder.anAircraft().build()
+              const aircraft = AircraftBuilder.anAircraft().withFuelLevel(invalidFuel)
 
-              expect(() => { aircraft.fuelLevelPercentage = invalidFuel })
+              expect(() => { aircraft.build() })
                 .toThrow(`Fuel level percentage must be less than or equal to ${LIMITS.FUEL_LEVEL.MAX}.`)
             }
           )
@@ -126,9 +128,9 @@ describe('Aircraft domain model (unit/property-based test)', () => {
             fc.double({ min: LIMITS.FLIGHT_HOURS.MIN, max: LIMITS.FLIGHT_HOURS.MAX, noNaN: true })
               .filter(num => !Number.isInteger(num)),
             (invalidHours) => {
-              const aircraft = AircraftBuilder.anAircraft().build()
+              const aircraft = AircraftBuilder.anAircraft().withFlightHours(invalidHours)
 
-              expect(() => { aircraft.totalFlightHours = invalidHours }).toThrow('Total flight hours must be an integer')
+              expect(() => { aircraft.build() }).toThrow('Total flight hours must be an integer')
             }
           )
         )
@@ -139,10 +141,9 @@ describe('Aircraft domain model (unit/property-based test)', () => {
           fc.property(
             fc.integer({ max: LIMITS.FLIGHT_HOURS.MIN - 1 }),
             (invalidHours) => {
-              const aircraft = AircraftBuilder.anAircraft().build()
+              const aircraft = AircraftBuilder.anAircraft().withFlightHours(invalidHours)
 
-              expect(() => { aircraft.totalFlightHours = invalidHours })
-                .toThrow(`Total flight hours must be greater than or equal to ${LIMITS.FLIGHT_HOURS.MIN}.`)
+              expect(() => { aircraft.build() }).toThrow(`Total flight hours must be greater than or equal to ${LIMITS.FLIGHT_HOURS.MIN}.`)
             }
           )
         )
@@ -153,10 +154,9 @@ describe('Aircraft domain model (unit/property-based test)', () => {
           fc.property(
             fc.integer({ min: LIMITS.FLIGHT_HOURS.MAX + 1 }),
             (invalidHours) => {
-              const aircraft = AircraftBuilder.anAircraft().build()
+              const aircraft = AircraftBuilder.anAircraft().withFlightHours(invalidHours)
 
-              expect(() => { aircraft.totalFlightHours = invalidHours })
-                .toThrow(`Total flight hours must be less than or equal to ${LIMITS.FLIGHT_HOURS.MAX}.`)
+              expect(() => { aircraft.build() }).toThrow(`Total flight hours must be less than or equal to ${LIMITS.FLIGHT_HOURS.MAX}.`)
             }
           )
         )
@@ -167,9 +167,9 @@ describe('Aircraft domain model (unit/property-based test)', () => {
       it('should throw if status is not a valid enum value', () => {
         fc.assert(
           fc.property(fc.string(), (invalidStatus) => {
-            const aircraft = AircraftBuilder.anAircraft().build()
+            const aircraft = AircraftBuilder.anAircraft().withStatus(invalidStatus as AircraftStatusEnum)
 
-            expect(() => { aircraft.status = invalidStatus as AircraftStatus }).toThrow(`Invalid aircraft status: ${invalidStatus}`)
+            expect(() => { aircraft.build() }).toThrow('Aircraft status is not a valid enum value')
           })
         )
       })
@@ -191,18 +191,18 @@ describe('Aircraft domain model (unit/property-based test)', () => {
         expect(aircraft).toHaveProperty('totalFlightHours')
         expect(aircraft).toHaveProperty('fuelLevelPercentage')
         expect(aircraft).toHaveProperty('status')
-        expect(aircraft.fleetId).toBeUndefined()
-        expect(aircraft.engineIds).toEqual([])
-        expect(aircraft.isActive).toBe(false)
-        expect(aircraft.status).toBe(AircraftStatus.DRAFT)
-        expect(aircraft.totalFlightHours).toBe(LIMITS.FLIGHT_HOURS.MIN)
-        expect(aircraft.fuelLevelPercentage).toBe(LIMITS.FUEL_LEVEL.MIN)
+        expect(aircraft.fleetId?.value).toBeUndefined()
+        expect(aircraft.engineIds?.values).toEqual([])
+        expect(aircraft.isActive?.value).toBe(false)
+        expect(aircraft.status?.value).toBe(AircraftStatusEnum.DRAFT)
+        expect(aircraft.totalFlightHours?.value).toBe(LIMITS.FLIGHT_HOURS.MIN)
+        expect(aircraft.fuelLevelPercentage?.value).toBe(LIMITS.FUEL_LEVEL.MIN)
       })
 
       it('should normalize tail number when creating a new aircraft', () => {
         const aircraft = AircraftBuilder.anAircraft().withTailNumber('  ec-lxy  ').create()
 
-        expect(aircraft.tailNumber).toBe('EC-LXY')
+        expect(aircraft.tailNumber.value).toBe('EC-LXY')
       })
     })
 
@@ -225,8 +225,8 @@ describe('Aircraft domain model (unit/property-based test)', () => {
     describe('on engine installation', () => {
       it('should not allow installing engines if status is DRAFT', () => {
         const aircraft = AircraftBuilder.anAircraft().build()
-        const engineId = uuidv7()
-        const numEngines = 1
+        const engineId = EngineIdMother.random()
+        const numEngines = AircraftModelNumEnginesMother.create(1)
 
         expect(() => aircraft.installEngine(engineId, numEngines)).toThrow('Engines can only be installed on active or in-maintenance aircraft')
       })
@@ -234,24 +234,25 @@ describe('Aircraft domain model (unit/property-based test)', () => {
       it('should allow installation in MAINTENANCE status', () => {
         const aircraft = AircraftBuilder
           .anAircraft()
-          .withStatus(AircraftStatus.MAINTENANCE)
+          .withStatus(AircraftStatusEnum.MAINTENANCE)
           .build()
 
-        const engineId = uuidv7()
-        aircraft.installEngine(engineId, 2)
+        const engineId = EngineIdMother.random()
+        const numEngines = AircraftModelNumEnginesMother.create(2)
+        aircraft.installEngine(engineId, numEngines)
 
-        expect(aircraft.engineIds).toContain(engineId)
+        expect(aircraft.engineIds.values).toContain(engineId.value)
       })
 
       it('should throw error if installing more engines than allowed', () => {
-        const engineId1 = uuidv7()
-        const engineId2 = uuidv7()
-        const numEngines = 1
+        const engineId1 = EngineIdMother.random()
+        const engineId2 = EngineIdMother.random()
+        const numEngines = AircraftModelNumEnginesMother.create(1)
 
         const aircraft = AircraftBuilder
           .anAircraft()
-          .withStatus(AircraftStatus.MAINTENANCE)
-          .withEngineIds([engineId1])
+          .withStatus(AircraftStatusEnum.MAINTENANCE)
+          .withEngineIds([engineId1.value])
           .build()
 
         expect(() => aircraft.installEngine(engineId2, numEngines)).toThrow('Cannot install more engines than the model allows')
@@ -261,7 +262,7 @@ describe('Aircraft domain model (unit/property-based test)', () => {
     describe('on fleet assignment', () => {
       it('should add aircraft to fleet if not already assigned', () => {
         const aircraft = AircraftBuilder.anAircraft().build()
-        const fleetId = uuidv7()
+        const fleetId = FleetIdMother.random()
 
         aircraft.addToFleet(fleetId)
 
@@ -269,12 +270,12 @@ describe('Aircraft domain model (unit/property-based test)', () => {
       })
 
       it('should throw error if adding to fleet when already assigned', () => {
-        const fleetId1 = uuidv7()
-        const fleetId2 = uuidv7()
+        const fleetId1 = FleetIdMother.random()
+        const fleetId2 = FleetIdMother.random()
 
         const aircraft = AircraftBuilder
           .anAircraft()
-          .withFleetId(fleetId1)
+          .withFleetId(fleetId1.value)
           .build()
 
         expect(() => aircraft.addToFleet(fleetId2)).toThrow(`Aircraft is already assigned to fleet ${fleetId1}.`)

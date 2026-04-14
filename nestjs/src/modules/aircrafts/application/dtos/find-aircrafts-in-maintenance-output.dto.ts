@@ -6,4 +6,6 @@ export interface FindAircraftsInMaintenanceOutput {
     fuelLevelPercentage: number
     status: string
     isActive: boolean
+    fleetId?: string
+    engineIds: string[]
 }

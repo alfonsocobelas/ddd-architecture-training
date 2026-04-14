@@ -1,6 +1,8 @@
 import { BooleanValueObject } from 'src/modules/shared/domain/value-objects/boolean-value-object'
 
 export class AircraftIsActive extends BooleanValueObject {
+  protected static fieldName = 'AircraftIsActive'
+
   private constructor(value: boolean) {
     super(value)
   }

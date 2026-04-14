@@ -4,6 +4,8 @@ import { AircraftModelError } from '../aircraft-model-errors'
 import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from '../aircraft-model-constants'
 
 export class AircraftModelCode extends StringValueObject {
+  protected static fieldName = 'Aircraft model code'
+
   private constructor(value: string) {
     super(value)
   }
@@ -17,8 +19,10 @@ export class AircraftModelCode extends StringValueObject {
   // todo: que hacemos con los errores? como se gestionan los errores en los value objects?
   // hay que crear una clase personalizada por ejemplo par este value object AircraftModelCodeError?
   // o una generica del aggregado nos vale como la que tenemos AircraftModelError, o una mas generica
-  // todabia como InvalidArgumentError?
+  // todavia como InvalidArgumentError?
   private static validate(value: string): void {
+    this.ensureIsString(value)
+
     if (value.length < LIMITS.CODE.MIN_LENGTH) {
       throw new AircraftModelError(`Code must be at least ${LIMITS.CODE.MIN_LENGTH} characters`)
     }

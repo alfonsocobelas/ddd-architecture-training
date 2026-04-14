@@ -57,6 +57,7 @@ describe('RetireAircraftFromFleetUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Aircraft with id "${input.aircraftId}" not found.`)
+
     fleetRepository.assertCalledWith('get', input.fleetId)
     aircraftRepository.assertCalledWith('get', input.aircraftId)
     aircraftRepository.assertNotCalled('save')

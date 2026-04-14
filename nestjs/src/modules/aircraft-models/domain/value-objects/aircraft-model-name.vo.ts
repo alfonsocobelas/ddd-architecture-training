@@ -3,6 +3,8 @@ import { AircraftModelError } from '../aircraft-model-errors'
 import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from '../aircraft-model-constants'
 
 export class AircraftModelName extends StringValueObject {
+  protected static fieldName = 'Aircraft model name'
+
   private constructor(value: string) {
     super(value)
   }
@@ -13,6 +15,8 @@ export class AircraftModelName extends StringValueObject {
   }
 
   private static validate(value: string): void {
+    this.ensureIsString(value)
+
     if (value.length < LIMITS.NAME.MIN_LENGTH) {
       throw new AircraftModelError(`Name must be at least ${LIMITS.NAME.MIN_LENGTH} characters`)
     }

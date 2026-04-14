@@ -2,11 +2,14 @@ import { EnumValueObject } from 'src/modules/shared/domain/value-objects/enum-va
 import { AircraftStatusEnum, AircraftStatusValues } from '../aircraft-enums'
 
 export class AircraftStatus extends EnumValueObject<AircraftStatusEnum> {
+  protected static fieldName = 'Aircraft status'
+
   private constructor(value: AircraftStatusEnum) {
     super(value, AircraftStatusValues)
   }
 
   static create(value: string): AircraftStatus {
+    this.ensureIsValidEnum(value as AircraftStatusEnum, AircraftStatusValues)
     return new AircraftStatus(value as AircraftStatusEnum)
   }
 

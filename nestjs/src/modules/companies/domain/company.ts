@@ -41,6 +41,15 @@ export class Company extends AggregateRoot {
     }
   }
 
+  equals(other: AggregateRoot): boolean {
+    if (!(other instanceof Company)) {
+      return false
+    }
+
+    return this.id.equals(other.id) &&
+      this.name.equals(other.name)
+  }
+
   remove(): void {
     this.record(new CompanyRemovedDomainEvent({
       aggregateId: this.id.value,

@@ -43,6 +43,7 @@ describe('RegisterAircraftUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`AircraftModel with id "${input.modelId}" not found.`)
+
     modelRepository.assertCalledWith('get', input.modelId)
     aircraftRepository.assertCalledWith('exists', expect.any(AircraftWithTailNumberSpecification))
     aircraftRepository.assertNotCalled('register')
@@ -56,9 +57,8 @@ describe('RegisterAircraftUseCase (unit tests)', () => {
     aircraftRepository.givenAlreadyExists()
 
     // WHEN & THEN
-    await expect(useCase.invoke(input)).rejects.toThrow(
-      `Aircraft with tailNumber "${input.tailNumber}" already exists.`
-    )
+    await expect(useCase.invoke(input)).rejects.toThrow(`Aircraft with tailNumber "${input.tailNumber}" already exists.`)
+
     modelRepository.assertCalledWith('get', input.modelId)
     aircraftRepository.assertCalledWith('exists', expect.any(AircraftWithTailNumberSpecification))
     aircraftRepository.assertNotCalled('register')

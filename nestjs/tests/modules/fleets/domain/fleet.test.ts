@@ -1,10 +1,10 @@
 import fc from 'fast-check'
-import { v7 as uuidv7 } from 'uuid'
 import { normalizeString } from 'src/modules/shared/utils/normalize'
 import { Fleet } from 'src/modules/fleets/domain/fleet'
-import { FleetStatus, FleetType, OperationRegion } from 'src/modules/fleets/domain/fleet-enums'
+import { FleetStatusEnum, FleetTypeEnum, FleetOperationRegionEnum } from 'src/modules/fleets/domain/fleet-enums'
 import { FLEET_CONSTRAINTS as LIMITS } from 'src/modules/fleets/domain/fleet-constants'
 import { FleetBuilder } from './fleet.builder'
+import { AircraftIdMother } from '../../shared/domain/mothers/aircraftId.mother'
 
 describe('Fleet domain model (unit/property-based tests)', () => {
 
@@ -15,7 +15,7 @@ describe('Fleet domain model (unit/property-based tests)', () => {
           fc.property(fc.uuid({ version: 4 }), (invalidId) => {
             const builder = FleetBuilder.aFleet().withId(invalidId)
 
-            expect(() => builder.create()).toThrow('Invalid id')
+            expect(() => builder.create()).toThrow('Fleet ID must be a valid UUID v7')
           })
         )
       })
@@ -27,7 +27,7 @@ describe('Fleet domain model (unit/property-based tests)', () => {
           fc.property(fc.uuid({ version: 4 }), (invalidCompanyId) => {
             const builder = FleetBuilder.aFleet().withCompanyId(invalidCompanyId)
 
-            expect(() => builder.create()).toThrow('Invalid company id')
+            expect(() => builder.create()).toThrow('Company ID must be a valid UUID v7')
           })
         )
       })
@@ -41,7 +41,7 @@ describe('Fleet domain model (unit/property-based tests)', () => {
             (invalidName) => {
               const builder = FleetBuilder.aFleet().withName(invalidName)
 
-              expect(() => builder.create()).toThrow('Name cannot be empty')
+              expect(() => builder.create()).toThrow('Fleet name cannot be empty string')
             }
           )
         )
@@ -82,7 +82,7 @@ describe('Fleet domain model (unit/property-based tests)', () => {
           fc.property(fc.string(), (invalidBudget) => {
             const builder = FleetBuilder.aFleet().withMaintenanceBudget(invalidBudget as unknown as number)
 
-            expect(() => builder.create()).toThrow('Invalid maintenance budget')
+            expect(() => builder.create()).toThrow('Maintenance budget must be an integer')
           })
         )
       })
@@ -92,7 +92,7 @@ describe('Fleet domain model (unit/property-based tests)', () => {
           fc.property(fc.float().filter(f => !Number.isInteger(f)), (invalidBudget) => {
             const builder = FleetBuilder.aFleet().withMaintenanceBudget(invalidBudget)
 
-            expect(() => builder.create()).toThrow('Invalid maintenance budget')
+            expect(() => builder.create()).toThrow('Maintenance budget must be an integer')
           })
         )
       })
@@ -121,10 +121,10 @@ describe('Fleet domain model (unit/property-based tests)', () => {
     describe('operation region validation', () => {
       it('should throw if operation region is invalid', () => {
         fc.assert(
-          fc.property(fc.string().filter(s => !(s in OperationRegion)), (invalidRegion) => {
-            const builder = FleetBuilder.aFleet().withOperationRegion(invalidRegion as OperationRegion)
+          fc.property(fc.string().filter(s => !(s in FleetOperationRegionEnum)), (invalidRegion) => {
+            const builder = FleetBuilder.aFleet().withFleetOperationRegion(invalidRegion as FleetOperationRegionEnum)
 
-            expect(() => builder.create()).toThrow(`Invalid operation region: ${invalidRegion}`)
+            expect(() => builder.create()).toThrow('Fleet operation region is not a valid enum value')
           })
         )
       })
@@ -133,10 +133,10 @@ describe('Fleet domain model (unit/property-based tests)', () => {
     describe('type validation', () => {
       it('should throw if fleet type is invalid', () => {
         fc.assert(
-          fc.property(fc.string().filter(s => !(s in FleetType)), (invalidType) => {
-            const builder = FleetBuilder.aFleet().withType(invalidType as FleetType)
+          fc.property(fc.string().filter(s => !(s in FleetTypeEnum)), (invalidType) => {
+            const builder = FleetBuilder.aFleet().withType(invalidType as FleetTypeEnum)
 
-            expect(() => builder.create()).toThrow(`Invalid fleet type: ${invalidType}`)
+            expect(() => builder.create()).toThrow('Fleet type is not a valid enum value')
           })
         )
       })
@@ -163,14 +163,14 @@ describe('Fleet domain model (unit/property-based tests)', () => {
         expect(fleet).toHaveProperty('operationRegion')
         expect(fleet).toHaveProperty('maintenanceBudget')
         expect(fleet).toHaveProperty('aircraftIds')
-        expect(fleet.status).toBe(FleetStatus.DRAFT)
+        expect(fleet.status.value).toBe(FleetStatusEnum.DRAFT)
       })
     })
 
     describe('on addition', () => {
       it('should not allow adding the same aircraft twice', () => {
         const fleet = FleetBuilder.aFleet().build()
-        const aircraftId = uuidv7()
+        const aircraftId = AircraftIdMother.random()
 
         fleet.addAircraft(aircraftId)
 
@@ -181,7 +181,7 @@ describe('Fleet domain model (unit/property-based tests)', () => {
     describe('on retirement', () => {
       it('should not allow retiring an aircraft that is not part of the fleet', () => {
         const fleet = FleetBuilder.aFleet().build()
-        const aircraftId = uuidv7()
+        const aircraftId = AircraftIdMother.random()
 
         expect(() => fleet.retireAircraft(aircraftId)).toThrow(`Aircraft with id ${aircraftId} is not part of the fleet`)
       })

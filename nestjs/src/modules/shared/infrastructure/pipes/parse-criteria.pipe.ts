@@ -26,7 +26,7 @@ export class ParseCriteriaPipe implements PipeTransform {
       const parsed = typeof data === 'string' ? JSON.parse(data) : data
 
       if (!Array.isArray(parsed)) {
-        throw new InvalidArgumentError(`Invalid ${errorLabel} format`)
+        throw new InvalidArgumentError(`Invalid "${errorLabel}" format`)
       }
 
       return parsed.map(item => {
@@ -34,7 +34,7 @@ export class ParseCriteriaPipe implements PipeTransform {
 
         requiredKeys.forEach(key => {
           if (!item[key]) {
-            throw new InvalidArgumentError(`Invalid ${errorLabel} format`)
+            throw new InvalidArgumentError(`Invalid "${errorLabel}" format`)
           }
 
           map.set(key, String(item[key]))
@@ -47,7 +47,7 @@ export class ParseCriteriaPipe implements PipeTransform {
         throw error
       }
 
-      throw new InvalidArgumentError(`Invalid ${errorLabel} format`)
+      throw new InvalidArgumentError(`Invalid "${errorLabel}" format`)
     }
   }
 }

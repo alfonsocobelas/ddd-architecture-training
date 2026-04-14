@@ -92,6 +92,22 @@ export class Engine extends AggregateRoot {
     }
   }
 
+  equals(other: AggregateRoot): boolean {
+    if (!(other instanceof Engine)) {
+      return false
+    }
+
+    return this.id.equals(other.id) &&
+      this.serialNumber.equals(other.serialNumber) &&
+      this.healthScore.equals(other.healthScore) &&
+      this.flyingHoursAccumulated.equals(other.flyingHoursAccumulated) &&
+      this.cyclesSinceLastOverhaul.equals(other.cyclesSinceLastOverhaul) &&
+      this.isInstalled.equals(other.isInstalled) &&
+      this.status.equals(other.status) &&
+      ((this.aircraftId === undefined && other.aircraftId === undefined) ||
+        (this.aircraftId !== undefined && other.aircraftId !== undefined && this.aircraftId.equals(other.aircraftId)))
+  }
+
   installInAircraft(aircraftId: AircraftId): void {
     this.ensureCanBeInstalled()
     this._isInstalled = EngineIsInstalled.installed()

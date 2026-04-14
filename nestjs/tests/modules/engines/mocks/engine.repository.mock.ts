@@ -1,7 +1,9 @@
 import { Engine } from 'src/modules/engines/domain/engine'
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
+import { EngineId } from 'src/modules/shared/domain/value-objects/engines/engine-id.vo'
 import { EngineRepository } from 'src/modules/engines/domain/engine.repository'
+import { EngineSerialNumber } from 'src/modules/engines/domain/value-objects/engine-serial-number.vo'
 import { MockRepository } from '../../shared/mocks/mock.repository'
 
 export class EngineRepositoryMock
@@ -12,7 +14,7 @@ export class EngineRepositoryMock
     return this.getMock('register')(engine)
   }
 
-  get(engineId: string): Promise<Nullable<Engine>> {
+  get(engineId: EngineId): Promise<Nullable<Engine>> {
     return this.getMock('get')(engineId)
   }
 
@@ -20,8 +22,12 @@ export class EngineRepositoryMock
     return this.getMock('save')(engines)
   }
 
-  exists(serialNumber: string): Promise<boolean> {
+  exists(serialNumber: EngineSerialNumber): Promise<boolean> {
     return this.getMock('exists')(serialNumber)
+  }
+
+  find(engineIds: EngineId[]): Promise<Engine[]> {
+    return this.getMock('find')(engineIds)
   }
 
   matching(criteria: Criteria): Promise<Engine[]> {
@@ -35,6 +41,10 @@ export class EngineRepositoryMock
 
   givenNotFound(): void {
     this.setMockResult('get', null)
+  }
+
+  givenFoundMany(engines: Engine[]): void {
+    this.setMockResult('find', engines)
   }
 
   givenAlreadyExists(): void {

@@ -39,6 +39,7 @@ describe('GetAircraftUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Aircraft with id "${input.id}" not found.`)
+
     repository.assertCalledWith('getTechnicalSheet', input.id)
   })
 })

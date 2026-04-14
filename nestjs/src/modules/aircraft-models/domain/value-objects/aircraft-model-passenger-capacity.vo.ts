@@ -3,6 +3,8 @@ import { AircraftModelError } from '../aircraft-model-errors'
 import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from '../aircraft-model-constants'
 
 export class AircraftModelPassengerCapacity extends IntegerValueObject {
+  protected static fieldName = 'Passenger capacity'
+
   private constructor(value: number) {
     super(value)
   }
@@ -13,6 +15,8 @@ export class AircraftModelPassengerCapacity extends IntegerValueObject {
   }
 
   private static validate(value: number): void {
+    this.ensureIsInteger(value)
+
     if (value < LIMITS.PASSENGERS.MIN) {
       throw new AircraftModelError(`Passenger capacity must be greater than or equal to ${LIMITS.PASSENGERS.MIN}`)
     }

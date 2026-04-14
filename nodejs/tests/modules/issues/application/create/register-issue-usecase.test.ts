@@ -55,6 +55,7 @@ describe('RegisterIssueUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Issue with code "${input.code}" already exists.`)
+
     issueRepository.assertCalledWith('exists', expect.any(IssueWithCodeSpecification))
     issueRepository.assertNotCalled('register')
   })

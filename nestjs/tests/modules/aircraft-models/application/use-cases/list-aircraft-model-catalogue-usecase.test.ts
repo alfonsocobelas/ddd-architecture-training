@@ -1,7 +1,7 @@
 import { ListAircraftModelCatalogueUseCase } from 'src/modules/aircraft-models/application/use-cases/list-aircraft-model-catalogue-usecase.service'
-import { ListAircraftModelCatalogueOutputMother } from '../mothers/list-aircraft-model-catalogue-output.mother'
-import { AircraftModelRepositoryMock } from '../../mocks/aircraft-model.repository.mock'
 import { AircraftModelMother } from '../../domain/aircraft-model.mother'
+import { ListAircraftModelCatalogueOutputMother } from '../dtos/list-aircraft-model-catalogue-output.mother'
+import { AircraftModelRepositoryMock } from '../../mocks/aircraft-model.repository.mock'
 
 describe('ListAircraftModelCatalogueUseCase', () => {
   let repository: AircraftModelRepositoryMock

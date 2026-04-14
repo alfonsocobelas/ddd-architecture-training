@@ -9,11 +9,11 @@ export abstract class NumberValueObject extends ValueObject<number> {
 
   protected static ensureIsNumber(value: number): void {
     if (isNaN(value)) {
-      throw new InvalidArgumentError(`[${ this.constructor.name}] Value must be a valid number`)
+      throw new InvalidArgumentError(`${this.fieldName} must be a valid number`)
     }
 
     if (typeof value !== 'number') {
-      throw new InvalidArgumentError(`[${ this.constructor.name}] Value must be a number`)
+      throw new InvalidArgumentError(`${this.fieldName} must be a number`)
     }
   }
 }

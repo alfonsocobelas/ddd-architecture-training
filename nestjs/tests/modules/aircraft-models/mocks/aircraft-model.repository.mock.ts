@@ -1,7 +1,9 @@
+import { Nullable } from 'src/modules/shared/types'
+import { AircraftModel } from 'src/modules/aircraft-models/domain/aircraft-model'
+import { AircraftModelId } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
+import { AircraftModelCode } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-code.vo'
 import { AircraftModelRepository } from 'src/modules/aircraft-models/domain/aircraft-model.repository'
 import { MockRepository } from '../../shared/mocks/mock.repository'
-import { AircraftModel } from 'src/modules/aircraft-models/domain/aircraft-model'
-import { Nullable } from 'src/modules/shared/nullable'
 
 export class AircraftModelRepositoryMock
   extends MockRepository<AircraftModel>
@@ -15,15 +17,15 @@ export class AircraftModelRepositoryMock
     return this.getMock('save')(aircraftModels)
   }
 
-  remove(modelId: string): Promise<void> {
+  remove(modelId: AircraftModelId): Promise<void> {
     return this.getMock('remove')(modelId)
   }
 
-  get(modelId: string): Promise<Nullable<AircraftModel>> {
+  get(modelId: AircraftModelId): Promise<Nullable<AircraftModel>> {
     return this.getMock('get')(modelId)
   }
 
-  exists(code: string): Promise<boolean> {
+  exists(code: AircraftModelCode): Promise<boolean> {
     return this.getMock('exists')(code)
   }
 

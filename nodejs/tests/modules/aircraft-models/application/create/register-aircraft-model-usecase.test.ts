@@ -34,6 +34,7 @@ describe('RegisterAircraftModelUseCase (unit test)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`AircraftModel with code "${input.code}" already exists.`)
+
     repository.assertNotCalled('register')
   })
 })

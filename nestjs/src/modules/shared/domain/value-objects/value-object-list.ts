@@ -36,6 +36,22 @@ export abstract class ValueObjectList<
     return this._items.length
   }
 
+  equals(vo: ValueObjectList<T, Self>): boolean {
+    if (vo === null || vo === undefined) {
+      return false
+    }
+
+    if (vo.constructor !== this.constructor) {
+      return false
+    }
+
+    if (this._items.length !== vo._items.length) {
+      return false
+    }
+
+    return this._items.every(item => vo.contains(item))
+  }
+
   contains(id: T): boolean {
     return this._items.some(item => item.equals(id))
   }

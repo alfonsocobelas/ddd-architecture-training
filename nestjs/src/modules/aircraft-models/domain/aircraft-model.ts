@@ -66,6 +66,20 @@ export class AircraftModel extends AggregateRoot {
     )
   }
 
+  equals(other: AggregateRoot): boolean {
+    if (!(other instanceof AircraftModel)) {
+      return false
+    }
+
+    return this.id.equals(other.id) &&
+      this.name.equals(other.name) &&
+      this.code.equals(other.code) &&
+      this.manufacturer.equals(other.manufacturer) &&
+      this.passengerCapacity.equals(other.passengerCapacity) &&
+      this.numEngines.equals(other.numEngines) &&
+      this.status.equals(other.status)
+  }
+
   toPrimitives(): AircraftModelPrimitiveProps {
     return {
       id: this.id.value,

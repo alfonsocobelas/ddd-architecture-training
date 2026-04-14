@@ -1,6 +1,8 @@
 import { Company } from 'src/modules/companies/domain/company'
-import { Nullable } from 'src/modules/shared/nullable'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
+import { CompanyId } from 'src/modules/shared/domain/value-objects/companies/company-id.vo'
+import { CompanyName } from 'src/modules/companies/domain/value-objects/company-name.vo'
 import { CompanyRepository } from 'src/modules/companies/domain/company.repository'
 import { MockRepository } from '../../shared/mocks/mock.repository'
 
@@ -12,7 +14,7 @@ export class CompanyRepositoryMock
     return this.getMock('register')(company)
   }
 
-  get(companyId: string): Promise<Nullable<Company>> {
+  get(companyId: CompanyId): Promise<Nullable<Company>> {
     return this.getMock('get')(companyId)
   }
 
@@ -20,7 +22,7 @@ export class CompanyRepositoryMock
     return this.getMock('save')(company)
   }
 
-  exists(name: string): Promise<boolean> {
+  exists(name: CompanyName): Promise<boolean> {
     return this.getMock('exists')(name)
   }
 
@@ -28,7 +30,7 @@ export class CompanyRepositoryMock
     return this.getMock('matching')(criteria)
   }
 
-  remove(companyId: string): Promise<void> {
+  remove(companyId: CompanyId): Promise<void> {
     return this.getMock('remove')(companyId)
   }
 

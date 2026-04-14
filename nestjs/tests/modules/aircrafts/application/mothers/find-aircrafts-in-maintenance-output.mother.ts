@@ -8,13 +8,15 @@ export class FindAircraftsInMaintenanceOutputMother {
 
   static fromDomain(aircraft: Aircraft): FindAircraftsInMaintenanceOutput {
     return {
-      id: aircraft.id,
-      modelId: aircraft.modelId,
-      tailNumber: aircraft.tailNumber,
-      totalFlightHours: aircraft.totalFlightHours,
-      fuelLevelPercentage: aircraft.fuelLevelPercentage,
-      status: aircraft.status,
-      isActive: aircraft.isActive
+      id: aircraft.id.value,
+      status: aircraft.status.value,
+      modelId: aircraft.modelId.value,
+      fleetId: aircraft.fleetId?.value,
+      isActive: aircraft.isActive.value,
+      engineIds: aircraft.engineIds.values,
+      tailNumber: aircraft.tailNumber.value,
+      totalFlightHours: aircraft.totalFlightHours.value,
+      fuelLevelPercentage: aircraft.fuelLevelPercentage.value
     }
   }
 }

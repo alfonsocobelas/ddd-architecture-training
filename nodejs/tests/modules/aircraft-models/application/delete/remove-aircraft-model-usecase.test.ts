@@ -41,6 +41,7 @@ describe('RemoveAircraftModelUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`AircraftModel with id "${input.id}" not found.`)
+
     modelRepository.assertCalledWith('get', input.id)
     aircraftRespository.assertCalledWith('count', expect.any(AircraftsOfModelSpecification))
     modelRepository.assertNotCalled('remove')

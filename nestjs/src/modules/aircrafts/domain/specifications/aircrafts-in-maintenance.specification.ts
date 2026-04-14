@@ -7,7 +7,7 @@ import { FilterValue } from 'src/modules/shared/domain/query/filter-value'
 import { FilterOperator, Operator } from 'src/modules/shared/domain/query/filter-operator'
 import { AircraftStatusEnum } from '../aircraft-enums'
 
-class AircraftsInMaintenanceSpecification extends Criteria {
+export class AircraftsInMaintenanceSpecification extends Criteria {
   constructor() {
     super(
       {

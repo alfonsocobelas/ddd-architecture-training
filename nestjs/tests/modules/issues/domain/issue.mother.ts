@@ -18,6 +18,7 @@ export class IssueMother {
     return IssueBuilder.anIssue().withProps(overrides).build()
   }
 
+  // todo: corregir, cuando sea tenga aircraftId tiene que ser avionics, cuando tenga engineId tiene que ser engine
   static random() {
     return IssueBuilder.anIssue().build()
   }

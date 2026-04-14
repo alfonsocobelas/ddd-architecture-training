@@ -8,7 +8,7 @@ export abstract class BooleanValueObject extends ValueObject<boolean> {
 
   protected static ensureIsBoolean(value: boolean): void {
     if (typeof value !== 'boolean') {
-      throw new Error(`[${this.constructor.name}] The value '${value}' is not a boolean`)
+      throw new Error(`${this.fieldName} is not a boolean`)
     }
   }
 }

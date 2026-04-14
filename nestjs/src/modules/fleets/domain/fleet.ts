@@ -91,6 +91,21 @@ export class Fleet extends AggregateRoot {
     }
   }
 
+  equals(other: AggregateRoot): boolean {
+    if (!(other instanceof Fleet)) {
+      return false
+    }
+
+    return this.id.equals(other.id) &&
+      this.companyId.equals(other.companyId) &&
+      this.name.equals(other.name) &&
+      this.type.equals(other.type) &&
+      this.operationRegion.equals(other.operationRegion) &&
+      this.maintenanceBudget.equals(other.maintenanceBudget) &&
+      this._aircraftIds.equals(other._aircraftIds) &&
+      this._status.equals(other._status)
+  }
+
   addAircraft(aircraftId: AircraftId): void {
     this.ensureAircraftIsNotPartOfFleet(aircraftId)
     this._aircraftIds = this._aircraftIds.add(aircraftId)

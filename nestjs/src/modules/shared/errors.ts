@@ -43,14 +43,14 @@ export class AlreadyExistsError extends BaseCustomError {
 }
 
 export abstract class BusinessRuleViolationError extends BaseCustomError {
-  constructor(message: string, entityName: string, cause?: unknown) {
-    super(`Domain validation error [${entityName}]: ${message}`, http.UNPROCESSABLE_ENTITY, cause)
+  constructor(message: string = 'Domain validation error', entityName: string, cause?: unknown) {
+    super(`[${entityName}]: ${message}`, http.UNPROCESSABLE_ENTITY, cause)
   }
 }
 
 export class InvalidArgumentError extends BaseCustomError {
-  constructor(message: string, cause?: unknown) {
-    super(`Invalid argument: ${message}`, http.BAD_REQUEST, cause)
+  constructor(message: string = 'Invalid argument error', cause?: unknown) {
+    super(message, http.BAD_REQUEST, cause)
   }
 }
 

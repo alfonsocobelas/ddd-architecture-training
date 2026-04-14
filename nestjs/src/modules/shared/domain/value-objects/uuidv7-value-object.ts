@@ -4,7 +4,6 @@ import { InvalidArgumentError } from '../../errors'
 
 export class UuidV7ValueObject extends ValueObject<string> {
   constructor(value: string) {
-    UuidV7ValueObject.ensureIsValidUuidV7(value)
     super(value)
   }
 
@@ -12,11 +11,11 @@ export class UuidV7ValueObject extends ValueObject<string> {
     return new UuidV7ValueObject(uuidv7())
   }
 
-  private static ensureIsValidUuidV7(value: string): void {
+  protected static ensureIsValidUuidV7(value: string): void {
     const isUuidV7 = uuidValidate(value) && uuidVersion(value) === 7
 
     if (!isUuidV7) {
-      throw new InvalidArgumentError(`[${this.constructor.name}] Invalid UUID: ${value}`)
+      throw new InvalidArgumentError(`${this.fieldName} must be a valid UUID v7`)
     }
   }
 }

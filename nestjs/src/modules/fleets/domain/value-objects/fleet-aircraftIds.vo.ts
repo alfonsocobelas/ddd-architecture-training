@@ -14,11 +14,11 @@ export class FleetAircraftIds extends ValueObjectList<AircraftId, FleetAircraftI
   }
 
   add(item: AircraftId): FleetAircraftIds {
-    throw new Error('Method not implemented.')
+    return new FleetAircraftIds([...this._items, item])
   }
 
   remove(item: AircraftId): FleetAircraftIds {
-    throw new Error('Method not implemented.')
+    return new FleetAircraftIds(this._items.filter(id => !id.equals(item)))
   }
 
   static empty(): FleetAircraftIds {

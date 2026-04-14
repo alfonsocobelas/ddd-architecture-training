@@ -3,6 +3,8 @@ import { IssueError } from '../issue-errors'
 import { ISSUE_CONSTRAINTS as LIMITS } from '../issue-constants'
 
 export class IssueCode extends StringValueObject {
+  protected static fieldName = 'Issue code'
+
   private constructor(value: string) {
     super(value)
   }
@@ -13,6 +15,8 @@ export class IssueCode extends StringValueObject {
   }
 
   private static validate(value: string): void {
+    this.ensureIsString(value)
+
     if (value.length < LIMITS.CODE.MIN_LENGTH) {
       throw new IssueError(`Code must be at least ${LIMITS.CODE.MIN_LENGTH} characters`)
     }

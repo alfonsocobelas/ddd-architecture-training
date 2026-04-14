@@ -1,7 +1,7 @@
 import fc from 'fast-check'
 import { normalizeString } from 'src/modules/shared/utils/normalize'
 import { AircraftModel } from 'src/modules/aircraft-models/domain/aircraft-model'
-import { AircraftModelStatus } from 'src/modules/aircraft-models/domain/aircraft-model-enums'
+import { AircraftModelStatusEnum } from 'src/modules/aircraft-models/domain/aircraft-model-enums'
 import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from 'src/modules/aircraft-models/domain/aircraft-model-constants'
 import { AircraftModelBuilder } from './aircraft-model.builder'
 import { AircraftModelMother } from './aircraft-model.mother'
@@ -15,7 +15,7 @@ describe('AircraftModel domain model (unit/property-based test)', () => {
           fc.property(fc.uuid({ version: 4 }), (invalidId) => {
             const builder = AircraftModelBuilder.aModel().withId(invalidId)
 
-            expect(() => builder.create()).toThrow('Invalid id')
+            expect(() => builder.create()).toThrow('Aircraft model ID must be a valid UUID v7')
           })
         )
       })
@@ -29,7 +29,7 @@ describe('AircraftModel domain model (unit/property-based test)', () => {
             (invalidCode) => {
               const builder = AircraftModelBuilder.aModel().withCode(invalidCode)
 
-              expect(() => builder.create()).toThrow('Code cannot be empty')
+              expect(() => builder.create()).toThrow('Aircraft model code cannot be empty string')
             }
           )
         )
@@ -68,7 +68,7 @@ describe('AircraftModel domain model (unit/property-based test)', () => {
       it('should fail if name is empty or only whitespace', () => {
         const builder = AircraftModelBuilder.aModel().withName('   ')
 
-        expect(() => builder.create()).toThrow('Name cannot be empty')
+        expect(() => builder.create()).toThrow('Aircraft model name cannot be empty string')
       })
 
       it('should fail if name is less than 2 characters', () => {
@@ -240,13 +240,13 @@ describe('AircraftModel domain model (unit/property-based test)', () => {
         expect(model).toHaveProperty('manufacturer')
         expect(model).toHaveProperty('passengerCapacity')
         expect(model).toHaveProperty('numEngines')
-        expect(model.status).toBe(AircraftModelStatus.DRAFT)
+        expect(model.status.value).toBe(AircraftModelStatusEnum.DRAFT)
       })
 
       it('should normalize the aircraft code when creating a new model', () => {
         const model = AircraftModelBuilder.aModel().withCode('  b737-max  ').create()
 
-        expect(model.code).toBe('B737-MAX')
+        expect(model.code.value).toBe('B737-MAX')
       })
     })
 
@@ -272,7 +272,7 @@ describe('AircraftModel domain model (unit/property-based test)', () => {
             (totalAircraftCount) => {
               const model = AircraftModelMother.random()
 
-              expect(() => model.ensureCanBeRemoved(totalAircraftCount)).toThrow('Cannot remove model with associated aircraft')
+              expect(() => model.remove(totalAircraftCount)).toThrow('Cannot remove model with associated aircraft')
             }
           )
         )
@@ -282,7 +282,7 @@ describe('AircraftModel domain model (unit/property-based test)', () => {
         const totalAircraftCount = 0
         const model = AircraftModelMother.random()
 
-        expect(() => model.ensureCanBeRemoved(totalAircraftCount)).not.toThrow()
+        expect(() => model.remove(totalAircraftCount)).not.toThrow()
       })
     })
   })

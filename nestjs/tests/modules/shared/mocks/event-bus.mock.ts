@@ -35,7 +35,20 @@ export class EventBusMock implements EventBus {
     expect(publishSpyCalls.length).toBeGreaterThan(0)
 
     const publishedEvents = publishSpyCalls.flatMap(call => call[0])
-    expect(publishedEvents).toEqual(expect.arrayContaining(expectedEvents))
+
+    expectedEvents.forEach(expectedEvent => {
+      const expected = this.getDataFromDomainEvent(expectedEvent)
+      const match = publishedEvents.some(publishedEvent => {
+        const published = this.getDataFromDomainEvent(publishedEvent)
+        return expect(published).toMatchObject(expected) === undefined
+      })
+      expect(match).toBe(true)
+    })
+  }
+
+  private getDataFromDomainEvent(event: DomainEvent) {
+    const { eventId, occurredOn, ...attributes } = event
+    return attributes
   }
 
   public assertNotPublished(): void {

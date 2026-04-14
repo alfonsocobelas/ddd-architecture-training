@@ -26,7 +26,7 @@ export class FilterOperator extends EnumValueObject<Operator> {
     const op = OPERATOR_MAP.get(value)
 
     if (!op) {
-      throw new InvalidArgumentError(`The filter operator ${value} is invalid`)
+      throw new InvalidArgumentError(`The filter operator "${value}" is invalid`)
     }
 
     return new FilterOperator(op)

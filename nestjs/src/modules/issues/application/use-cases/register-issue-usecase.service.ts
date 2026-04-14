@@ -24,8 +24,8 @@ export class RegisterIssueUseCase {
 
   async invoke(input: RegisterIssueInput): Promise<void> {
     const props = IssueInputMapper.toDomain(input)
-    const issueExists = await this.repository.exists(withCode(props.code))
 
+    const issueExists = await this.repository.exists(withCode(props.code))
     if (issueExists) {
       throw new AlreadyExistsError('Issue', 'code', input.code)
     }

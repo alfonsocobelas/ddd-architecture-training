@@ -51,6 +51,7 @@ describe('RemoveEngineFromAircraftUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Engine with id "${input.engineId}" not found.`)
+
     aircraftRepository.assertCalledWith('get', input.aircraftId)
     engineRepository.assertCalledWith('get', input.engineId)
     aircraftRepository.assertNotCalled('save')
@@ -66,6 +67,7 @@ describe('RemoveEngineFromAircraftUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Aircraft with id "${input.aircraftId}" not found.`)
+
     aircraftRepository.assertCalledWith('get', input.aircraftId)
     engineRepository.assertCalledWith('get', input.engineId)
     aircraftRepository.assertNotCalled('save')

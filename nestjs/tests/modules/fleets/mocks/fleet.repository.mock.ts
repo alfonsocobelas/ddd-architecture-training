@@ -1,8 +1,9 @@
 import { Fleet } from 'src/modules/fleets/domain/fleet'
-import { Nullable } from 'src/modules/shared/nullable'
+import { FleetId } from 'src/modules/fleets/domain/value-objects/fleet-id.vo'
+import { Nullable } from 'src/modules/shared/types'
 import { Criteria } from 'src/modules/shared/domain/query/criteria'
-import { MockRepository } from '../../shared/mocks/mock.repository'
 import { FleetRepository } from 'src/modules/fleets/domain/fleet.repository'
+import { MockRepository } from '../../shared/mocks/mock.repository'
 
 export class FleetRepositoryMock
   extends MockRepository<Fleet>
@@ -12,7 +13,7 @@ export class FleetRepositoryMock
     return this.getMock('register')(fleet)
   }
 
-  get(fleetId: string): Promise<Nullable<Fleet>> {
+  get(fleetId: FleetId): Promise<Nullable<Fleet>> {
     return this.getMock('get')(fleetId)
   }
 

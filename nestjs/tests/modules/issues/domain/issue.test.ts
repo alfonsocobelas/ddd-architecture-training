@@ -1,6 +1,6 @@
 import fc from 'fast-check'
 import { normalizeString } from 'src/modules/shared/utils/normalize'
-import { IssuePartCategory, IssueSeverityLevel } from 'src/modules/issues/domain/issue-enums'
+import { IssuePartCategoryEnum, IssueSeverityLevelEnum } from 'src/modules/issues/domain/issue-enums'
 import { ISSUE_CONSTRAINTS as LIMITS } from 'src/modules/issues/domain/issue-constants'
 import { Issue } from 'src/modules/issues/domain/issue'
 import { IssueBuilder } from './issue.builder'
@@ -15,7 +15,7 @@ describe('Issue domain model (unit/property-based tests)', () => {
           fc.property(fc.uuid({ version: 4 }), (invalidId) => {
             const builder = IssueBuilder.anIssue().withId(invalidId)
 
-            expect(() => builder.create()).toThrow('Invalid id')
+            expect(() => builder.create()).toThrow('Issue ID must be a valid UUID v7')
           })
         )
       })
@@ -25,9 +25,12 @@ describe('Issue domain model (unit/property-based tests)', () => {
       it('should throw error if aircraftId is not UUID v7', () => {
         fc.assert(
           fc.property(fc.uuid({ version: 4 }), (invalidAircraftId) => {
-            const builder = IssueBuilder.anIssue().withAircraftId(invalidAircraftId)
+            const builder = IssueBuilder
+              .anIssue()
+              .withAircraftId(invalidAircraftId)
+              .withPartCategory(IssuePartCategoryEnum.AVIONICS)
 
-            expect(() => builder.create()).toThrow('Invalid aircraftId')
+            expect(() => builder.create()).toThrow('Issue aircraft ID must be a valid UUID v7')
           })
         )
       })
@@ -37,9 +40,12 @@ describe('Issue domain model (unit/property-based tests)', () => {
       it('should throw error if engineId is not UUID v7', () => {
         fc.assert(
           fc.property(fc.uuid({ version: 4 }), (invalidEngineId) => {
-            const builder = IssueBuilder.anIssue().withEngineId(invalidEngineId)
+            const builder = IssueBuilder
+              .anIssue()
+              .withEngineId(invalidEngineId)
+              .withPartCategory(IssuePartCategoryEnum.ENGINE)
 
-            expect(() => builder.create()).toThrow('Invalid engineId')
+            expect(() => builder.create()).toThrow('Issue engine ID must be a valid UUID v7')
           })
         )
       })
@@ -53,7 +59,7 @@ describe('Issue domain model (unit/property-based tests)', () => {
             (invalidCode) => {
               const builder = IssueBuilder.anIssue().withCode(invalidCode)
 
-              expect(() => builder.create()).toThrow('Code cannot be empty')
+              expect(() => builder.create()).toThrow('Issue code cannot be empty string')
             }
           )
         )
@@ -135,11 +141,11 @@ describe('Issue domain model (unit/property-based tests)', () => {
       it('should throw if severity is not a valid enum value', () => {
         fc.assert(
           fc.property(
-            fc.string().filter(s => !(s in IssueSeverityLevel)),
+            fc.string().filter(s => !(s in IssueSeverityLevelEnum)),
             (invalidSeverity) => {
-              const builder = IssueBuilder.anIssue().withSeverity(invalidSeverity as IssueSeverityLevel)
+              const builder = IssueBuilder.anIssue().withSeverity(invalidSeverity as IssueSeverityLevelEnum)
 
-              expect(() => builder.create()).toThrow(`Invalid severity level: ${invalidSeverity}`)
+              expect(() => builder.create()).toThrow('Issue severity level is not a valid enum value')
             }
           )
         )
@@ -148,19 +154,19 @@ describe('Issue domain model (unit/property-based tests)', () => {
 
     describe('part category validation', () => {
       it('should throw if part category is AVIONICS but aircraftId is not provided', () => {
-        const builder = IssueBuilder.anIssue().withPartCategory(IssuePartCategory.AVIONICS)
+        const builder = IssueBuilder.anIssue().withPartCategory(IssuePartCategoryEnum.AVIONICS)
 
         expect(() => builder.create()).toThrow('aircraftId is required when partCategory is Aircraft')
       })
 
       it('should throw if part category is FUSELAGE but aircraftId is not provided', () => {
-        const builder = IssueBuilder.anIssue().withPartCategory(IssuePartCategory.FUSELAGE)
+        const builder = IssueBuilder.anIssue().withPartCategory(IssuePartCategoryEnum.FUSELAGE)
 
         expect(() => builder.create()).toThrow('aircraftId is required when partCategory is Aircraft')
       })
 
       it('should throw if part category is ENGINE but engineId is not provided', () => {
-        const builder = IssueBuilder.anIssue().withPartCategory(IssuePartCategory.ENGINE)
+        const builder = IssueBuilder.anIssue().withPartCategory(IssuePartCategoryEnum.ENGINE)
 
         expect(() => builder.create()).toThrow('engineId is required when partCategory is ENGINE')
       })

@@ -15,12 +15,15 @@ export class SearchAircraftsOutputMother {
       pageSize: input.pageSize,
       totalPages: Math.ceil(total / input.pageSize),
       items: items.map(aircraft => ({
-        id: aircraft.id,
-        modelId: aircraft.modelId,
-        tailNumber: aircraft.tailNumber,
-        totalFlightHours: aircraft.totalFlightHours,
-        fuelLevelPercentage: aircraft.fuelLevelPercentage,
-        status: aircraft.status
+        id: aircraft.id.value,
+        status: aircraft.status.value,
+        modelId: aircraft.modelId.value,
+        fleetId: aircraft.fleetId?.value,
+        isActive: aircraft.isActive.value,
+        engineIds: aircraft.engineIds.values,
+        tailNumber: aircraft.tailNumber.value,
+        totalFlightHours: aircraft.totalFlightHours.value,
+        fuelLevelPercentage: aircraft.fuelLevelPercentage.value
       }))
     }
   }

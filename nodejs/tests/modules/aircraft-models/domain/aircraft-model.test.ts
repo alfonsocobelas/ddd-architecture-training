@@ -9,7 +9,7 @@ import { AircraftModelMother } from './aircraft-model.mother'
 describe('AircraftModel domain model (unit/property-based test)', () => {
   describe('Invariants', () => {
     describe('id validation', () => {
-      it('should fail if ID is not a valid UUID v7', () => {
+      it('should fail if ID is not a valid UUIDv7', () => {
         fc.assert(
           fc.property(fc.uuid({ version: 4 }), invalidId => {
             const builder = AircraftModelBuilder.aModel().withId(invalidId)

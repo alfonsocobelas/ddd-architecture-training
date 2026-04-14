@@ -8,7 +8,7 @@ export class CriteriaValidator {
       .filters
       .forEach(filter => {
         if (!allowedFields.includes(filter.field.value)) {
-          throw new InvalidArgumentError(`The field ${filter.field.value} is not allowed for searching.` )
+          throw new InvalidArgumentError(`The field "${filter.field.value}" is not allowed for searching.` )
         }
       })
   }
@@ -18,7 +18,7 @@ export class CriteriaValidator {
       .orders
       .forEach(order => {
         if (!allowedFields.includes(order.orderBy.value)) {
-          throw new InvalidArgumentError(`The field ${order.orderBy.value} is not allowed for ordering.` )
+          throw new InvalidArgumentError(`The field "${order.orderBy.value}" is not allowed for ordering.` )
         }
       })
   }

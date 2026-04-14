@@ -42,6 +42,7 @@ describe('AddAircraftToFleetUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Fleet with id "${input.fleetId}" not found.`)
+
     aircraftRepository.assertNotCalled('save')
     fleetRepository.assertNotCalled('save')
   })
@@ -55,6 +56,7 @@ describe('AddAircraftToFleetUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Aircraft with id "${input.aircraftId}" not found.`)
+
     fleetRepository.assertCalledWith('get', input.fleetId)
     aircraftRepository.assertCalledWith('get', input.aircraftId)
     aircraftRepository.assertNotCalled('save')
@@ -71,6 +73,7 @@ describe('AddAircraftToFleetUseCase (unit tests)', () => {
 
     // WHEN & THEN
     await expect(useCase.invoke(input)).rejects.toThrow(`Aircraft is already assigned to fleet ${input.fleetId}.`)
+
     fleetRepository.assertCalledWith('get', input.fleetId)
     aircraftRepository.assertCalledWith('get', input.aircraftId)
     aircraftRepository.assertNotCalled('save')

@@ -1,8 +1,8 @@
 import { GetAircraftModelUseCase } from 'src/modules/aircraft-models/application/use-cases/get-aircraft-model-usecase.service'
-import { GetAircraftModelInputMother } from '../mothers/get-aircraft-model-input.mother'
-import { GetAircraftModelOutputMother } from '../mothers/get-aircraft-model-output.mother'
-import { AircraftModelRepositoryMock } from '../../mocks/aircraft-model.repository.mock'
 import { AircraftModelMother } from '../../domain/aircraft-model.mother'
+import { GetAircraftModelInputMother } from '../dtos/get-aircraft-model-input.mother'
+import { GetAircraftModelOutputMother } from '../dtos/get-aircraft-model-output.mother'
+import { AircraftModelRepositoryMock } from '../../mocks/aircraft-model.repository.mock'
 
 describe('GetAircraftModelUseCase (unit tests)', () => {
   let repository: AircraftModelRepositoryMock
@@ -14,10 +14,12 @@ describe('GetAircraftModelUseCase (unit tests)', () => {
   })
 
   it('should get an existing aircraft model by id', async () => {
-    // GIVEN
+    // ARRANGE
     const input = GetAircraftModelInputMother.random()
     const expectedModel = AircraftModelMother.fromInput(input)
     const expectedOutput = GetAircraftModelOutputMother.fromDomain(expectedModel)
+
+    // GIVEN
     repository.givenFound(expectedModel)
 
     // WHEN
@@ -25,16 +27,21 @@ describe('GetAircraftModelUseCase (unit tests)', () => {
 
     // THEN
     expect(result).toEqual(expectedOutput)
-    repository.assertCalledWith('get', input.id)
+    repository.assertCalledWith('get', expectedModel.id)
   })
 
   it('should throw EntityNotFoundError if model does not exist', async () => {
-    // GIVEN
+    // ARRANGE
     const input = GetAircraftModelInputMother.random()
+    const expectedModel = AircraftModelMother.fromInput(input)
+
+    // GIVEN
     repository.givenNotFound()
 
     // WHEN & THEN
-    await expect(useCase.invoke(input)).rejects.toThrow(`AircraftModel with id "${input.id}" not found.`)
-    repository.assertCalledWith('get', input.id)
+    await expect(useCase.invoke(input))
+      .rejects.toThrow(`AircraftModel with id "${expectedModel.id.value}" not found.`)
+
+    repository.assertCalledWith('get', expectedModel.id)
   })
 })
