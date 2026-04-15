@@ -27,17 +27,19 @@ export class IssueMother {
     return repeat(() => this.random(), count)
   }
 
-  static avionics(aircraftId: string = uuidv7()) {
+  static avionics({ aircraftId = uuidv7(), id = uuidv7() } = {}): Issue {
     return IssueBuilder
       .anIssue()
+      .withId(id)
       .withPartCategory(IssuePartCategoryEnum.AVIONICS)
       .withAircraftId(aircraftId)
       .build()
   }
 
-  static engine(engineId: string = uuidv7()) {
+  static engine({ engineId = uuidv7(), id = uuidv7() } = {}): Issue {
     return IssueBuilder
       .anIssue()
+      .withId(id)
       .withPartCategory(IssuePartCategoryEnum.ENGINE)
       .withEngineId(engineId)
       .build()

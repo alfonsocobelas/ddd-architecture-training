@@ -1,7 +1,7 @@
 import { withTailNumber } from 'src/modules/aircrafts/domain/specifications/aircraft-with-tail-number.specification'
 import { RegisterAircraftUseCase } from 'src/modules/aircrafts/application/use-cases/register-aircraft-usecase.service'
 import { RegisterAircraftInputMother } from '../mothers/register-aircraft-input.mother'
-import { AircraftModelMother } from '../../../aircraft-models/domain/aircraft-model.mother'
+import { AircraftModelBuilder } from '../../../aircraft-models/domain/aircraft-model.builder'
 import { AircraftMother } from '../../domain/aircraft.mother'
 import { AircraftModelRepositoryMock } from '../../../aircraft-models/mocks/aircraft-model.repository.mock'
 import { AircraftRepositoryMock } from '../../mocks/aircraft.repository.mock'
@@ -21,11 +21,13 @@ describe('RegisterAircraftUseCase (unit tests)', () => {
   })
 
   it('should register a new aircraft', async () => {
-    // GIVEN
+    // ARRANGE
     const input = RegisterAircraftInputMother.random()
-    const expectedModel = AircraftModelMother.fromInput(input)
     const expectedAircraft = AircraftMother.register(input)
+    const expectedModel = AircraftModelBuilder.aModel().withId(input.modelId).build()
     const expectedEvents = expectedAircraft.pullDomainEvents()
+
+    // GIVEN
     modelRepository.givenFound(expectedModel)
     aircraftRepository.givenDoesNotExist()
 
@@ -35,15 +37,18 @@ describe('RegisterAircraftUseCase (unit tests)', () => {
 
     // THEN
     modelRepository.assertCalledWith('get', expectedModel.id)
-    aircraftRepository.assertCalledWith('exists', expect.any(withTailNumber))
+    aircraftRepository.assertCalledWithSpecification('exists', withTailNumber(expectedAircraft.tailNumber))
     aircraftRepository.assertCalledWith('register', expectedAircraft)
     eventBus.assertPublishedEvents(expectedEvents)
   })
 
   it('should throw EntityNotFoundError if aircraft model does not exist', async () => {
-    // GIVEN
+    // ARRANGE
     const input = RegisterAircraftInputMother.random()
-    const expectedModel = AircraftModelMother.fromInput(input)
+    const expectedAircraft = AircraftMother.fromInput(input)
+    const expectedModel = AircraftModelBuilder.aModel().withId(input.modelId).build()
+
+    // GIVEN
     modelRepository.givenNotFound()
     aircraftRepository.givenDoesNotExist()
 
@@ -51,16 +56,19 @@ describe('RegisterAircraftUseCase (unit tests)', () => {
     await expect(useCase.invoke(input))
       .rejects.toThrow(`AircraftModel with id "${input.modelId}" not found.`)
 
+    aircraftRepository.assertCalledWithSpecification('exists', withTailNumber(expectedAircraft.tailNumber))
     modelRepository.assertCalledWith('get', expectedModel.id)
-    aircraftRepository.assertCalledWith('exists', expect.any(withTailNumber))
     aircraftRepository.assertNotCalled('register')
     eventBus.assertNotPublished()
   })
 
   it('should throw AlreadyExistsError if tail number is already taken', async () => {
-    // GIVEN
+    // ARRANGE
     const input = RegisterAircraftInputMother.random()
-    const expectedModel = AircraftModelMother.fromInput(input)
+    const expectedAircraft = AircraftMother.fromInput(input)
+    const expectedModel = AircraftModelBuilder.aModel().withId(input.modelId).build()
+
+    // GIVEN
     modelRepository.givenFound(expectedModel)
     aircraftRepository.givenAlreadyExists()
 
@@ -68,8 +76,8 @@ describe('RegisterAircraftUseCase (unit tests)', () => {
     await expect(useCase.invoke(input))
       .rejects.toThrow(`Aircraft with tailNumber "${input.tailNumber}" already exists.`)
 
+    aircraftRepository.assertCalledWithSpecification('exists', withTailNumber(expectedAircraft.tailNumber))
     modelRepository.assertCalledWith('get', expectedModel.id)
-    aircraftRepository.assertCalledWith('exists', expect.any(withTailNumber))
     aircraftRepository.assertNotCalled('register')
     eventBus.assertNotPublished()
   })

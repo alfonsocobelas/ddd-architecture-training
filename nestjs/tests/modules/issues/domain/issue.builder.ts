@@ -86,7 +86,7 @@ export class IssueBuilder {
       description: IssueDescription.create(this.props.description),
       severity: IssueSeverityLevel.create(this.props.severity),
       requiresGrounding: IssueRequiresGrounding.create(this.props.requiresGrounding),
-      partCategory: IssuePartCategory.create(this.props.partCategory),
+      partCategory: IssuePartCategory.create(this.props.partCategory, this.props.aircraftId, this.props.engineId),
       aircraftId: this.props.aircraftId ? AircraftId.create(this.props.aircraftId) : undefined,
       engineId: this.props.engineId ? EngineId.create(this.props.engineId) : undefined
     })

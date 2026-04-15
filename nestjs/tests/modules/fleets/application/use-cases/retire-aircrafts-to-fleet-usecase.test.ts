@@ -35,15 +35,13 @@ describe('RetireAircraftsFromFleetUseCase (unit tests)', () => {
     await useCase.invoke(input)
 
     // THEN
-    const expectedFleet = { ...fleet, aircraftIds: [] }
-    const expectedAircrafts = aircrafts.map((aircraft) => ({ ...aircraft, fleetId: undefined }))
     const expectectAircraftIds = aircrafts.map(aircraft => aircraft.id)
     const expectedEvents = [...fleet.pullDomainEvents(), ...aircrafts.flatMap(a => a.pullDomainEvents())]
 
     fleetRepository.assertCalledWith('get', fleet.id)
     aircraftRepository.assertCalledWith('find', expectectAircraftIds)
-    aircraftRepository.assertCalledWith('save', expectedAircrafts)
-    fleetRepository.assertCalledWith('save', expectedFleet)
+    aircraftRepository.assertCalledWith('save', aircrafts)
+    fleetRepository.assertCalledWith('save', fleet)
     eventBus.assertPublishedEvents(expectedEvents)
   })
 
@@ -83,11 +81,11 @@ describe('RetireAircraftsFromFleetUseCase (unit tests)', () => {
   it('should throw InvalidArgumentError if some aircraft IDs are not found', async () => {
     // ARRANGE
     const input = RetireAircraftsFromFleetInputMother.random()
+    const fleet = FleetBuilder.aFleet().withId(input.fleetId).withAircraftIds(input.aircraftIds).build()
+    const expectedAircraftIds = input.aircraftIds.map(id => AircraftBuilder.anAircraft().withId(id).build().id)
     const foundAircrafts = input.aircraftIds.slice(0, -1).map((id) =>
       AircraftBuilder.anAircraft().withId(id).withFleetId(input.fleetId).build()
     )
-    const expectedAircraftIds = foundAircrafts.map(aircraft => aircraft.id)
-    const fleet = FleetBuilder.aFleet().withId(input.fleetId).withAircraftIds(input.aircraftIds).build()
 
     // GIVEN
     fleetRepository.givenFound(fleet)

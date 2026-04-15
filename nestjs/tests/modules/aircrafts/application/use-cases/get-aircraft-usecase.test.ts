@@ -22,7 +22,7 @@ describe('GetAircraftUseCase (unit tests)', () => {
     useCase = new GetAircraftUseCase(aircraftRepository, modelRepository, engineRepository)
   })
 
-  it.only('should get an existing aircraft by id', async () => {
+  it('should get an existing aircraft by id', async () => {
     // ARRANGE
     const input = GetAircraftInputMother.random()
     const engines = [EngineMother.random(), EngineMother.random()]

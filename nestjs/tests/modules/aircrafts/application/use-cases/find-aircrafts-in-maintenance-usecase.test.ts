@@ -1,5 +1,5 @@
 import { FindAircraftsInMaintenanceUseCase } from 'src/modules/aircrafts/application/use-cases/find-aircrafts-in-maintenance-usecase.service'
-import { AircraftsInMaintenanceSpecification } from 'src/modules/aircrafts/domain/specifications/aircrafts-in-maintenance.specification'
+import { inMaintenance } from 'src/modules/aircrafts/domain/specifications/aircrafts-in-maintenance.specification'
 import { FindAircraftsInMaintenanceOutput } from 'src/modules/aircrafts/application/dtos/find-aircrafts-in-maintenance-output.dto'
 import { FindAircraftsInMaintenanceOutputMother } from '../mothers/find-aircrafts-in-maintenance-output.mother'
 import { Aircraft } from 'src/modules/aircrafts/domain/aircraft'
@@ -26,7 +26,7 @@ describe('FindAircraftsInMaintenanceUseCase', () => {
 
     // THEN
     expect(result).toEqual(expectedOutput)
-    repository.assertCalledWith('matching', expect.any(AircraftsInMaintenanceSpecification))
+    repository.assertCalledWithSpecification('matching', inMaintenance())
   })
 
   it('should return an empty list if no aircrafts are in maintenance', async () => {
@@ -40,6 +40,6 @@ describe('FindAircraftsInMaintenanceUseCase', () => {
 
     // THEN
     expect(result).toEqual(expectedOutput)
-    repository.assertCalledWith('matching', expect.any(AircraftsInMaintenanceSpecification))
+    repository.assertCalledWithSpecification('matching', inMaintenance())
   })
 })

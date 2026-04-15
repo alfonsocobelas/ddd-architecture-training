@@ -23,11 +23,11 @@ export class RegisterIssueInputMother {
     return this.create()
   }
 
-  static engine(engineId: string): RegisterIssueInput {
+  static engine(engineId = uuidv7()): RegisterIssueInput {
     return this.create({ engineId, partCategory: IssuePartCategoryEnum.ENGINE })
   }
 
-  static avionics(aircraftId: string): RegisterIssueInput {
+  static avionics(aircraftId = uuidv7()): RegisterIssueInput {
     return this.create({ aircraftId, partCategory: IssuePartCategoryEnum.AVIONICS })
   }
 }

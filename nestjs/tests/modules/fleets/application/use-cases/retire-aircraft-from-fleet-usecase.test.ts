@@ -34,14 +34,14 @@ describe('RetireAircraftFromFleetUseCase (unit tests)', () => {
     await useCase.invoke(input)
 
     // THEN
-    const expectedFleet = { ...fleet, aircraftIds: [] }
-    const expectedAircraft = { ...aircraft, fleetId: undefined }
+    // const expectedFleet = FleetMother.reconstruct({ ...fleet.toPrimitives(), aircraftIds: [] })
+    // const expectedAircraft = AircraftMother.reconstruct({ ...aircraft.toPrimitives(), fleetId: undefined })
     const expectedEvents = [...fleet.pullDomainEvents(), ...aircraft.pullDomainEvents()]
 
     fleetRepository.assertCalledWith('get', fleet.id)
     aircraftRepository.assertCalledWith('get', aircraft.id)
-    aircraftRepository.assertCalledWith('save', expectedAircraft)
-    fleetRepository.assertCalledWith('save', expectedFleet)
+    aircraftRepository.assertCalledWith('save', aircraft)
+    fleetRepository.assertCalledWith('save', fleet)
     eventBus.assertPublishedEvents(expectedEvents)
   })
 

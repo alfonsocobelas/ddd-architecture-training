@@ -1,5 +1,5 @@
 import { RegisterFleetUseCase } from 'src/modules/fleets/application/use-cases/register-fleet-usecase.service'
-import { FleetWithNameSpecification } from 'src/modules/fleets/domain/specifications/fleet-with-name.specification'
+import { withName } from 'src/modules/fleets/domain/specifications/fleet-with-name.specification'
 import { FleetMother } from '../../domain/fleet.mother'
 import { AircraftBuilder } from '../../../aircrafts/domain/aircraft.builder'
 import { RegisterFleetInputMother } from '../mothers/register-fleet-input.mother'
@@ -36,7 +36,7 @@ describe('RegisterFleetUseCase (unit tests)', () => {
     aircraftRepository.whenSaveSuccess()
 
     // THEN
-    fleetRepository.assertCalledWith('exists', expect.any(FleetWithNameSpecification))
+    fleetRepository.assertCalledWithSpecification('exists', withName(expectedFleet.name))
     aircraftRepository.assertCalledWith('find', expectedAircraftIds)
     fleetRepository.assertCalledWith('register', expectedFleet)
     aircraftRepository.assertCalledWith('save', expectedAircrafts)
@@ -46,6 +46,7 @@ describe('RegisterFleetUseCase (unit tests)', () => {
   it('should throw AlreadyExistsError if fleet with same name already exists', async () => {
     // GIVEN
     const input = RegisterFleetInputMother.random()
+    const expectedFleet = FleetMother.fromInput(input)
     const expectedAircrafts = input.aircraftIds.map(id => AircraftBuilder.anAircraft().withId(id).build())
     const expectedAircraftIds = expectedAircrafts.map(aircraft => aircraft.id)
     aircraftRepository.givenAircraftsFound(expectedAircrafts)
@@ -56,15 +57,18 @@ describe('RegisterFleetUseCase (unit tests)', () => {
       .rejects.toThrow(`Fleet with name "${input.name}" already exists.`)
 
     aircraftRepository.assertCalledWith('find', expectedAircraftIds)
-    fleetRepository.assertCalledWith('exists', expect.any(FleetWithNameSpecification))
+    fleetRepository.assertCalledWithSpecification('exists', withName(expectedFleet.name))
     fleetRepository.assertNotCalled('register')
     aircraftRepository.assertNotCalled('save')
   })
 
   it('should throw InvalidArgumentError if no aircrafts are found with the provided IDs', async () => {
-    // GIVEN
+    // ARRANGE
     const input = RegisterFleetInputMother.random()
+    const expectedFleet = FleetMother.fromInput(input)
     const expectedAircraftIds = input.aircraftIds.map(id => AircraftBuilder.anAircraft().withId(id).build().id)
+
+    // GIVEN
     fleetRepository.givenDoesNotExist()
     aircraftRepository.givenNoAircraftsFound()
 
@@ -72,17 +76,21 @@ describe('RegisterFleetUseCase (unit tests)', () => {
     await expect(useCase.invoke(input))
       .rejects.toThrow('No aircrafts found with the provided IDs.')
 
-    fleetRepository.assertCalledWith('exists', expect.any(FleetWithNameSpecification))
+    fleetRepository.assertCalledWithSpecification('exists', withName(expectedFleet.name))
     aircraftRepository.assertCalledWith('find', expectedAircraftIds)
     fleetRepository.assertNotCalled('register')
     aircraftRepository.assertNotCalled('save')
   })
 
   it('should throw InvalidArgumentError if some aircraft IDs were not found', async () => {
-    // GIVEN
+    // ARRANGE
     const input = RegisterFleetInputMother.random()
-    const foundAircrafts = input.aircraftIds.slice(0, -1).map(id => AircraftBuilder.anAircraft().withId(id).build())
-    const expectedAircraftIds = foundAircrafts.map(a => a.id)
+    const expectedFleet = FleetMother.fromInput(input)
+    const expectedAircrafts = input.aircraftIds.map(a => AircraftBuilder.anAircraft().withId(a).build())
+    const expectedAircraftIds = expectedAircrafts.map(a => a.id)
+    const foundAircrafts = expectedAircrafts.slice(0, -1).map(aircraft => aircraft)
+
+    // GIVEN
     fleetRepository.givenDoesNotExist()
     aircraftRepository.givenAircraftsFound(foundAircrafts)
 
@@ -90,7 +98,7 @@ describe('RegisterFleetUseCase (unit tests)', () => {
     await expect(useCase.invoke(input))
       .rejects.toThrow('Some aircraft IDs were not found.')
 
-    fleetRepository.assertCalledWith('exists', expect.any(FleetWithNameSpecification))
+    fleetRepository.assertCalledWithSpecification('exists', withName(expectedFleet.name))
     aircraftRepository.assertCalledWith('find', expectedAircraftIds)
     fleetRepository.assertNotCalled('register')
     aircraftRepository.assertNotCalled('save')

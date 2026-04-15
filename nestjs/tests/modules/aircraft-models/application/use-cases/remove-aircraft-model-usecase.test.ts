@@ -22,11 +22,13 @@ describe('RemoveAircraftModelUseCase (unit tests)', () => {
   })
 
   it('should delete an existing aircraft model by code', async () => {
-    // GIVEN
+    // ARRANGE
     const input = RemoveAircraftModelInputMother.random()
     const expectedModel = AircraftModelMother.fromInput(input)
     const expectedEvents = expectedModel.pullDomainEvents()
     const aircraftCount = ZERO_AIRCRAFTS_COUNT
+
+    // GIVEN
     modelRepository.givenFound(expectedModel)
     aircraftRespository.givenCount(aircraftCount)
 
@@ -34,15 +36,17 @@ describe('RemoveAircraftModelUseCase (unit tests)', () => {
     await useCase.invoke(input)
 
     // THEN
-    aircraftRespository.assertCalledWith('count', expect.any(aircraftsOfModel))
     modelRepository.assertCalledWith('remove', expectedModel.id)
+    aircraftRespository.assertCalledWithSpecification('count', aircraftsOfModel(expectedModel.id))
     eventBus.assertPublishedEvents(expectedEvents)
   })
 
   it('should throw EntityNotFoundError if model does not exist', async () => {
-    // GIVEN
+    // ARRANGE
     const input = RemoveAircraftModelInputMother.random()
     const expectedModel = AircraftModelMother.fromInput(input)
+
+    // GIVEN
     modelRepository.givenNotFound()
 
     // WHEN & THEN
@@ -50,7 +54,7 @@ describe('RemoveAircraftModelUseCase (unit tests)', () => {
       .rejects.toThrow(`AircraftModel with id "${input.id}" not found.`)
 
     modelRepository.assertCalledWith('get', expectedModel.id)
-    aircraftRespository.assertCalledWith('count', expect.any(aircraftsOfModel))
+    aircraftRespository.assertCalledWithSpecification('count', aircraftsOfModel(expectedModel.id))
     modelRepository.assertNotCalled('remove')
   })
 })

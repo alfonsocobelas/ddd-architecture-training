@@ -1,6 +1,6 @@
 import { v7 as uuidv7 } from 'uuid'
 import { RegisterIssueUseCase } from 'src/modules/issues/application/use-cases/register-issue-usecase.service'
-import { IssueWithCodeSpecification } from 'src/modules/issues/domain/specifications/issue-with-code.specification'
+import { withCode } from 'src/modules/issues/domain/specifications/issue-with-code.specification'
 import { IssueMother } from '../../domain/issue.mother'
 import { RegisterIssueInputMother } from '../mothers/register-issue-input.mother'
 import { EventBusMock } from '../../../shared/mocks/event-bus.mock'
@@ -30,7 +30,7 @@ describe('RegisterIssueUseCase (unit tests)', () => {
     issueRepository.whenRegisterSuccess()
 
     // THEN
-    issueRepository.assertCalledWith('exists', expect.any(IssueWithCodeSpecification))
+    issueRepository.assertCalledWithSpecification('exists', withCode(expectedIssue.code))
     issueRepository.assertCalledWith('register', expectedIssue)
     eventBus.assertPublishedEvents(expectedEvents)
   })
@@ -48,21 +48,22 @@ describe('RegisterIssueUseCase (unit tests)', () => {
     issueRepository.whenRegisterSuccess()
 
     // THEN
-    issueRepository.assertCalledWith('exists', expect.any(IssueWithCodeSpecification))
+    issueRepository.assertCalledWithSpecification('exists', withCode(expectedIssue.code))
     issueRepository.assertCalledWith('register', expectedIssue)
     eventBus.assertPublishedEvents(expectedEvents)
   })
 
   it('should throw AlreadyExistsError if an issue with the same code already exists', async () => {
     // GIVEN
-    const input = RegisterIssueInputMother.random()
+    const input = RegisterIssueInputMother.engine()
+    const issue = IssueMother.fromInput(input)
     issueRepository.givenAlreadyExists()
 
     // WHEN & THEN
     await expect(useCase.invoke(input))
       .rejects.toThrow(`Issue with code "${input.code}" already exists.`)
 
-    issueRepository.assertCalledWith('exists', expect.any(IssueWithCodeSpecification))
+    issueRepository.assertCalledWithSpecification('exists', withCode(issue.code))
     issueRepository.assertNotCalled('register')
     eventBus.assertNotPublished()
   })

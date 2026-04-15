@@ -62,6 +62,16 @@ export abstract class MockRepository<T> {
     expect(check(lastCallCriteria)).toBe(true)
   }
 
+  assertCalledWithSpecification(methodName: string, expectedSpec: Criteria) {
+    const calls = this.getMock(methodName).mock.calls
+    const match = calls.some(call =>
+      call.length === 1 &&
+      call[0] instanceof expectedSpec.constructor &&
+      JSON.stringify(call[0]) === JSON.stringify(expectedSpec)
+    )
+    expect(match).toBe(true)
+  }
+
   private valueObjectEquals(a: any, b: any): boolean {
     // Ambos son arrays
     if (Array.isArray(a) && Array.isArray(b)) {

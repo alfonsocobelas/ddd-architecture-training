@@ -16,7 +16,7 @@ describe('GetIssueUseCase (unit tests)', () => {
   it('should get an existing issue by id', async () => {
     // GIVEN
     const input = GetIssueInputMother.random()
-    const expectedIssue = IssueMother.avionics(input.id)
+    const expectedIssue = IssueMother.avionics({ id: input.id })
     const expectedOutput = GetIssueOutputMother.fromDomain(expectedIssue)
     issueRepository.givenFound(expectedIssue)
 
@@ -31,7 +31,7 @@ describe('GetIssueUseCase (unit tests)', () => {
   it('should throw EntityNotFoundError if issue does not exist', async () => {
     // GIVEN
     const input = GetIssueInputMother.random()
-    const expectedIssue = IssueMother.engine(input.id)
+    const expectedIssue = IssueMother.engine({ id: input.id })
     issueRepository.givenNotFound()
 
     // WHEN & THEN

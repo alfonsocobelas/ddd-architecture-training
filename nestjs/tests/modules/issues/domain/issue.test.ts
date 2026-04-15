@@ -30,7 +30,7 @@ describe('Issue domain model (unit/property-based tests)', () => {
               .withAircraftId(invalidAircraftId)
               .withPartCategory(IssuePartCategoryEnum.AVIONICS)
 
-            expect(() => builder.create()).toThrow('Issue aircraft ID must be a valid UUID v7')
+            expect(() => builder.create()).toThrow('Aircraft ID must be a valid UUID v7')
           })
         )
       })
@@ -45,7 +45,7 @@ describe('Issue domain model (unit/property-based tests)', () => {
               .withEngineId(invalidEngineId)
               .withPartCategory(IssuePartCategoryEnum.ENGINE)
 
-            expect(() => builder.create()).toThrow('Issue engine ID must be a valid UUID v7')
+            expect(() => builder.create()).toThrow('Engine ID must be a valid UUID v7')
           })
         )
       })
