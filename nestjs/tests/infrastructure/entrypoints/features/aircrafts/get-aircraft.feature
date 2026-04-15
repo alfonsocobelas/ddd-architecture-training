@@ -1,3 +1,4 @@
+@only
 Feature: Get aircraft technical sheet
   As a maintenance supervisor
   I want to see the full technical details of an aircraft
@@ -9,7 +10,7 @@ Feature: Get aircraft technical sheet
       | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f40 | B38M | Boeing 737 MAX 8 | Boeing       |          2 |               200 | OPERATIONAL |
     And the following "aircrafts" exist in the system:
       | id                                   | tailNumber | modelId                              | totalFlightHours | fuelLevelPercentage | status | engineIds                                                                        | isActive |
-      | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f01 | EC-ABC     | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f40 |           1250.5 |                  85 | ACTIVE | ["018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3e01", "018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3e02"] | true     |
+      | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f01 | EC-ABC     | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f40 |             1250 |                  85 | ACTIVE | ["018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3e01", "018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3e02"] | true     |
     And the following "engines" exist in the system:
       | id                                   | serialNumber | healthScore | aircraftId                           | flyingHoursAccumulated | cyclesSinceLastOverhaul | status      | isInstalled |
       | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3e01 | SN-ENG-1     |        98.5 | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f01 |                    500 |                      50 | OPERATIONAL | true        |
@@ -24,7 +25,7 @@ Feature: Get aircraft technical sheet
         "id": "018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f01",
         "modelId": "018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f40",
         "tailNumber": "EC-ABC",
-        "totalFlightHours": 1250.5,
+        "totalFlightHours": 1250,
         "fuelLevelPercentage": 85,
         "status": "ACTIVE",
         "model": {

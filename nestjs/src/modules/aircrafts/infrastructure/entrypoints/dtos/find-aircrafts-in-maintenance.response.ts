@@ -8,6 +8,8 @@ export class FindAircraftsInMaintenanceResponse {
   @Expose() fuelLevelPercentage!: number
   @Expose() status!: string
   @Exclude() isActive!: boolean
+  @Exclude() fleetId?: string
+  @Exclude() engineIds!: string[]
 
   constructor(partial: Partial<FindAircraftsInMaintenanceResponse>) {
     Object.assign(this, partial)

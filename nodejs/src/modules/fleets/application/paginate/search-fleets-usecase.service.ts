@@ -23,15 +23,7 @@ export default class SearchFleetsUseCase {
       page: input.page,
       pageSize: input.pageSize,
       totalPages: getTotalPages({ pageSize: input.pageSize, total }),
-      items: fleets.map(fleet => ({
-        id: fleet.id,
-        name: fleet.name,
-        companyId: fleet.companyId,
-        type: fleet.type,
-        operationRegion: fleet.operationRegion,
-        maintenanceBudget: fleet.maintenanceBudget,
-        status: fleet.status
-      }))
+      items: fleets.map(fleet => fleet.toPrimitives())
     }
   }
 }

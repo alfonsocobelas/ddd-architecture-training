@@ -1,9 +1,10 @@
 export interface SearchFleetOutput {
   id: string
   name: string
-  companyId: string
   type: string
+  status: string
+  companyId: string
+  aircraftIds: string[]
   operationRegion: string
   maintenanceBudget: number
-  status: string
 }

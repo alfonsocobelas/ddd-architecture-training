@@ -1,4 +1,4 @@
-import { Expose, Type } from 'class-transformer'
+import { Exclude, Expose, Type } from 'class-transformer'
 
 class AircraftResponse {
   @Expose() id!: string
@@ -7,6 +7,9 @@ class AircraftResponse {
   @Expose() totalFlightHours!: number
   @Expose() fuelLevelPercentage!: number
   @Expose() status!: string
+  @Exclude() fleetId?: string
+  @Exclude() isActive!: boolean
+  @Exclude() engineIds!: string[]
 }
 
 export class SearchAircraftsResponse {
