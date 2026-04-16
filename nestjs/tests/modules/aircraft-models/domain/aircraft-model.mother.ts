@@ -1,7 +1,7 @@
-import { AircraftModelPrimitiveProps } from 'src/modules/aircraft-models/domain/aircraft-model-types'
-import { AircraftModel } from 'src/modules/aircraft-models/domain/aircraft-model'
+import { AircraftModel } from 'src/contexts/operations/modules/aircraft-models/domain/aircraft-model'
+import { AircraftModelStatusEnum } from 'src/contexts/operations/modules/aircraft-models/domain/aircraft-model-enums'
+import { AircraftModelPrimitiveProps } from 'src/contexts/operations/modules/aircraft-models/domain/aircraft-model-types'
 import { AircraftModelBuilder } from './aircraft-model.builder'
-import { AircraftModelStatusEnum } from 'src/modules/aircraft-models/domain/aircraft-model-enums'
 import { repeat } from '../../shared/utils/random-array'
 
 export class AircraftModelMother {

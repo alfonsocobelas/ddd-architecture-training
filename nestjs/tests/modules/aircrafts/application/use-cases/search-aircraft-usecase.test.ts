@@ -1,4 +1,4 @@
-import { SearchAircraftsUseCase } from 'src/modules/aircrafts/application/use-cases/search-aircrafts-usecase.service'
+import { SearchAircraftsUseCase } from 'src/contexts/operations/modules/aircrafts/application/use-cases/search-aircrafts-usecase.service'
 import { SearchAircraftsInputMother } from '../mothers/search-aircraft-input.mother'
 import { SearchAircraftsOutputMother } from '../mothers/search-aircraft-ouput.mother'
 import { AircraftRepositoryMock } from '../../mocks/aircraft.repository.mock'

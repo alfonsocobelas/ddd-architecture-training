@@ -1,4 +1,4 @@
-import { TypeOrmCompanyRepository } from 'src/modules/companies/infrastructure/persistence/typeorm/typeorm-company.repository'
+import { TypeOrmCompanyRepository } from 'src/contexts/operations/modules/companies/infrastructure/persistence/typeorm/typeorm-company.repository'
 import { CompanyMother } from '../../modules/companies/domain/company.mother'
 import { CompanyBuilder } from '../../modules/companies/domain/company.builder'
 import { CompanyIdMother } from '../../modules/companies/domain/value-objects/company-id.mother'

@@ -1,4 +1,4 @@
-import { GetCompanyUseCase } from 'src/modules/companies/application/use-cases/get-company-usecase.service'
+import { GetCompanyUseCase } from 'src/contexts/operations/modules/companies/application/use-cases/get-company-usecase.service'
 import { GetCompanyInputMother } from '../mothers/get-company-input.mother'
 import { GetCompanyOutputMother } from '../mothers/get-company-output.mother'
 import { CompanyMother } from '../../domain/company.mother'

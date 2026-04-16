@@ -1,7 +1,7 @@
 import { v7 as uuidv7 } from 'uuid'
-import { Issue } from 'src/modules/issues/domain/issue'
-import { IssuePrimitiveProps } from 'src/modules/issues/domain/issue-types'
-import { IssuePartCategoryEnum } from 'src/modules/issues/domain/issue-enums'
+import { Issue } from 'src/contexts/maintenace/modules/issues/domain/issue'
+import { IssuePrimitiveProps } from 'src/contexts/maintenace/modules/issues/domain/issue-types'
+import { IssuePartCategoryEnum } from 'src/contexts/maintenace/modules/issues/domain/issue-enums'
 import { IssueBuilder } from './issue.builder'
 import { repeat } from '../../shared/utils/random-array'
 

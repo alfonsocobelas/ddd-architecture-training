@@ -1,8 +1,8 @@
-import { Aircraft } from 'src/modules/aircrafts/domain/aircraft'
-import { Nullable } from 'src/modules/shared/types'
-import { Criteria } from 'src/modules/shared/domain/query/criteria'
-import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
-import { AircraftRepository } from 'src/modules/aircrafts/domain/aircraft.repository'
+import { Aircraft } from 'src/contexts/operations/modules/aircrafts/domain/aircraft'
+import { Nullable } from 'src/contexts/shared/types'
+import { Criteria } from 'src/contexts/shared/domain/query/criteria'
+import { AircraftId } from 'src/contexts/shared/domain/value-objects/aircrafts/aircraft-id.vo'
+import { AircraftRepository } from 'src/contexts/operations/modules/aircrafts/domain/aircraft.repository'
 import { MockRepository } from '../../shared/mocks/mock.repository'
 
 export class AircraftRepositoryMock

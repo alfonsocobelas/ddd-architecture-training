@@ -1,4 +1,4 @@
-import { GetAircraftUseCase } from 'src/modules/aircrafts/application/use-cases/get-aircraft-usecase.service'
+import { GetAircraftUseCase } from 'src/contexts/operations/modules/aircrafts/application/use-cases/get-aircraft-usecase.service'
 import { AircraftMother } from '../../domain/aircraft.mother'
 import { AircraftModelMother } from '../../../aircraft-models/domain/aircraft-model.mother'
 import { GetAircraftInputMother } from '../mothers/get-aircraft-input.mother'

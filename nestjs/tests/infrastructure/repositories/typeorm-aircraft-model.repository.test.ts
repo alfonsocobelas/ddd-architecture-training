@@ -1,5 +1,5 @@
-import { AircraftModelId } from 'src/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
-import { TypeOrmAircraftModelRepository } from 'src/modules/aircraft-models/infrastructure/persistence/typeorm/typeorm-aircraft-model.repository'
+import { AircraftModelId } from 'src/contexts/operations/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
+import { TypeOrmAircraftModelRepository } from 'src/contexts/operations/modules/aircraft-models/infrastructure/persistence/typeorm/typeorm-aircraft-model.repository'
 import { AircraftModelMother } from '../../modules/aircraft-models/domain/aircraft-model.mother'
 import { moduleFixture } from '../../jest.setup.integration'
 

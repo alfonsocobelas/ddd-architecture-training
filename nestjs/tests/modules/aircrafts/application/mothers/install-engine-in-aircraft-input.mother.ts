@@ -1,4 +1,4 @@
-import { InstallEngineInAircraftInput } from 'src/modules/aircrafts/application/dtos/install-engine-in-aircraft-input.dto'
+import { InstallEngineInAircraftInput } from 'src/contexts/operations/modules/aircrafts/application/dtos/install-engine-in-aircraft-input.dto'
 import { v7 as uuidv7 } from 'uuid'
 
 export class InstallEngineInAircraftInputMother {

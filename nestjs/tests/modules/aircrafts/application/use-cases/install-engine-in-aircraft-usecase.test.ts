@@ -1,5 +1,5 @@
-import { AircraftStatusEnum } from 'src/modules/aircrafts/domain/aircraft-enums'
-import { InstallEngineInAircraftUsecase } from 'src/modules/aircrafts/application/use-cases/install-engine-in-aircraft-usecase.service'
+import { AircraftStatusEnum } from 'src/contexts/operations/modules/aircrafts/domain/aircraft-enums'
+import { InstallEngineInAircraftUsecase } from 'src/contexts/operations/modules/aircrafts/application/use-cases/install-engine-in-aircraft-usecase.service'
 import { InstallEngineInAircraftInputMother } from '../mothers/install-engine-in-aircraft-input.mother'
 import { EngineMother } from '../../../engines/domain/engine.mother'
 import { AircraftMother } from '../../domain/aircraft.mother'

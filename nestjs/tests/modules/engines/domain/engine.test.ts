@@ -1,10 +1,10 @@
 import fc from 'fast-check'
-import { normalizeString } from 'src/modules/shared/utils/normalize'
+import { normalizeString } from 'src/contexts/shared/utils/normalize'
 import { EngineBuilder } from './engine.builder'
-import { EngineStatusEnum } from 'src/modules/engines/domain/engine-enums'
-import { ENGINE_DEFAULTS as DEFAULT, ENGINE_CONSTRAINTS as LIMITS } from 'src/modules/engines/domain/engine-constants'
+import { EngineStatusEnum } from 'src/contexts/operations/modules/engines/domain/engine-enums'
+import { ENGINE_DEFAULTS as DEFAULT, ENGINE_CONSTRAINTS as LIMITS } from 'src/contexts/operations/modules/engines/domain/engine-constants'
 import { EngineMother } from './engine.mother'
-import { Engine } from 'src/modules/engines/domain/engine'
+import { Engine } from 'src/contexts/operations/modules/engines/domain/engine'
 import { AircraftIdMother } from '../../shared/domain/mothers/aircraftId.mother'
 
 describe('Engine domain model (unit/property-based test)', () => {

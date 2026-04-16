@@ -1,5 +1,5 @@
-import { RegisterFleetUseCase } from 'src/modules/fleets/application/use-cases/register-fleet-usecase.service'
-import { withName } from 'src/modules/fleets/domain/specifications/fleet-with-name.specification'
+import { RegisterFleetUseCase } from 'src/contexts/operations/modules/fleets/application/use-cases/register-fleet-usecase.service'
+import { withName } from 'src/contexts/operations/modules/fleets/domain/specifications/fleet-with-name.specification'
 import { FleetMother } from '../../domain/fleet.mother'
 import { AircraftBuilder } from '../../../aircrafts/domain/aircraft.builder'
 import { RegisterFleetInputMother } from '../mothers/register-fleet-input.mother'

@@ -1,9 +1,9 @@
-import { Company } from 'src/modules/companies/domain/company'
-import { Nullable } from 'src/modules/shared/types'
-import { Criteria } from 'src/modules/shared/domain/query/criteria'
-import { CompanyId } from 'src/modules/shared/domain/value-objects/companies/company-id.vo'
-import { CompanyName } from 'src/modules/companies/domain/value-objects/company-name.vo'
-import { CompanyRepository } from 'src/modules/companies/domain/company.repository'
+import { Company } from 'src/contexts/operations/modules/companies/domain/company'
+import { Nullable } from 'src/contexts/shared/types'
+import { Criteria } from 'src/contexts/shared/domain/query/criteria'
+import { CompanyId } from 'src/contexts/shared/domain/value-objects/companies/company-id.vo'
+import { CompanyName } from 'src/contexts/operations/modules/companies/domain/value-objects/company-name.vo'
+import { CompanyRepository } from 'src/contexts/operations/modules/companies/domain/company.repository'
 import { MockRepository } from '../../shared/mocks/mock.repository'
 
 export class CompanyRepositoryMock

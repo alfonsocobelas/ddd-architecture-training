@@ -1,6 +1,6 @@
-import { CompanyName } from 'src/modules/companies/domain/value-objects/company-name.vo'
+import { CompanyName } from 'src/contexts/operations/modules/companies/domain/value-objects/company-name.vo'
 import { StringMother } from '../../../shared/domain/mothers/string.mother'
-import { COMPANY_CONSTRAINTS as LIMITS } from 'src/modules/companies/domain/company-constants'
+import { COMPANY_CONSTRAINTS as LIMITS } from 'src/contexts/operations/modules/companies/domain/company-constants'
 
 export class CompanyNameMother {
   static create(value: string): CompanyName {

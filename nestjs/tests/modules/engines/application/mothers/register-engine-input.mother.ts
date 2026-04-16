@@ -1,6 +1,6 @@
 import { v7 as uuidv7 } from 'uuid'
-import { RegisterEngineInput } from 'src/modules/engines/application/dtos/register-engine-input.dto'
-import { ENGINE_CONSTRAINTS as LIMITS } from 'src/modules/engines/domain/engine-constants'
+import { RegisterEngineInput } from 'src/contexts/operations/modules/engines/application/dtos/register-engine-input.dto'
+import { ENGINE_CONSTRAINTS as LIMITS } from 'src/contexts/operations/modules/engines/domain/engine-constants'
 import { randomString } from '../../../shared/utils/random-string'
 
 export class RegisterEngineInputMother {

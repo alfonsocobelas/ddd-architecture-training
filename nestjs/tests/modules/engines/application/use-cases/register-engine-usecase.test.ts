@@ -1,4 +1,4 @@
-import { RegisterEngineUseCase } from 'src/modules/engines/application/use-cases/register-engine-usecase.service'
+import { RegisterEngineUseCase } from 'src/contexts/operations/modules/engines/application/use-cases/register-engine-usecase.service'
 import { RegisterEngineInputMother } from '../mothers/register-engine-input.mother'
 import { EngineRepositoryMock } from '../../mocks/engine.repository.mock'
 import { EngineMother } from '../../domain/engine.mother'

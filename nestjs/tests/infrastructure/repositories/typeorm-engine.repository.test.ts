@@ -1,4 +1,4 @@
-import { TypeOrmEngineRepository } from 'src/modules/engines/infrastructure/persistence/typeorm/typeorm-engine.repository'
+import { TypeOrmEngineRepository } from 'src/contexts/operations/modules/engines/infrastructure/persistence/typeorm/typeorm-engine.repository'
 import { EngineMother } from '../../modules/engines/domain/engine.mother'
 import { EngineBuilder } from '../../modules/engines/domain/engine.builder'
 import { EngineIdMother } from '../../modules/engines/domain/value-objects/engine-id.mother'

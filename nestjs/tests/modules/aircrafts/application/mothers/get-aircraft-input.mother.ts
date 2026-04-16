@@ -1,4 +1,4 @@
-import { GetAircraftInput } from 'src/modules/aircrafts/application/dtos/get-aircraft-input.dto'
+import { GetAircraftInput } from 'src/contexts/operations/modules/aircrafts/application/dtos/get-aircraft-input.dto'
 import { v7 as uuidv7 } from 'uuid'
 
 export class GetAircraftInputMother {

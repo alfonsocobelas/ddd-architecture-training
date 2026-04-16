@@ -2,11 +2,11 @@ import { faker } from '@faker-js/faker'
 import { DataSource, QueryRunner } from 'typeorm'
 import { Test, TestingModule } from '@nestjs/testing'
 import { GlobalSeed } from './global-seed'
+import { PersistenceModule } from 'src/contexts/shared/infrastructure/persistence/persistence.module'
+import { CoreConfigModule } from 'src/contexts/shared/infrastructure/config/config.module'
 import { EnvironmentArranger } from './infrastructure/arranger/environment-arranger'
-import { PersistenceModule } from 'src/modules/shared/infrastructure/persistence/persistence.module'
-import { TypeOrmEnvironmentArranger } from './infrastructure/arranger/typeorm/typeorm-environment-arranger'
-import { CoreConfigModule } from 'src/modules/shared/infrastructure/config/config.module'
 import { TestRepositoriesModule } from './infrastructure/test-repositories.module'
+import { TypeOrmEnvironmentArranger } from './infrastructure/arranger/typeorm/typeorm-environment-arranger'
 
 let moduleFixture: TestingModule
 let environmentArranger: EnvironmentArranger

@@ -1,8 +1,8 @@
-import { Fleet } from 'src/modules/fleets/domain/fleet'
-import { FleetId } from 'src/modules/fleets/domain/value-objects/fleet-id.vo'
-import { Nullable } from 'src/modules/shared/types'
-import { Criteria } from 'src/modules/shared/domain/query/criteria'
-import { FleetRepository } from 'src/modules/fleets/domain/fleet.repository'
+import { Fleet } from 'src/contexts/operations/modules/fleets/domain/fleet'
+import { FleetId } from 'src/contexts/operations/modules/fleets/domain/value-objects/fleet-id.vo'
+import { Nullable } from 'src/contexts/shared/types'
+import { Criteria } from 'src/contexts/shared/domain/query/criteria'
+import { FleetRepository } from 'src/contexts/operations/modules/fleets/domain/fleet.repository'
 import { MockRepository } from '../../shared/mocks/mock.repository'
 
 export class FleetRepositoryMock

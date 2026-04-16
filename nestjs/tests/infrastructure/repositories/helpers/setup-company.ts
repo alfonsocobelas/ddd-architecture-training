@@ -1,4 +1,4 @@
-import { TypeOrmCompanyRepository } from 'src/modules/companies/infrastructure/persistence/typeorm/typeorm-company.repository'
+import { TypeOrmCompanyRepository } from 'src/contexts/operations/modules/companies/infrastructure/persistence/typeorm/typeorm-company.repository'
 import { CompanyBuilder } from '../../../modules/companies/domain/company.builder'
 import { moduleFixture } from '../../../jest.setup.integration'
 

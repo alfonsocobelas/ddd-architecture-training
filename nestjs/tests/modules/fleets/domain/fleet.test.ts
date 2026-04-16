@@ -1,8 +1,8 @@
 import fc from 'fast-check'
-import { normalizeString } from 'src/modules/shared/utils/normalize'
-import { Fleet } from 'src/modules/fleets/domain/fleet'
-import { FleetStatusEnum, FleetTypeEnum, FleetOperationRegionEnum } from 'src/modules/fleets/domain/fleet-enums'
-import { FLEET_CONSTRAINTS as LIMITS } from 'src/modules/fleets/domain/fleet-constants'
+import { normalizeString } from 'src/contexts/shared/utils/normalize'
+import { Fleet } from 'src/contexts/operations/modules/fleets/domain/fleet'
+import { FleetStatusEnum, FleetTypeEnum, FleetOperationRegionEnum } from 'src/contexts/operations/modules/fleets/domain/fleet-enums'
+import { FLEET_CONSTRAINTS as LIMITS } from 'src/contexts/operations/modules/fleets/domain/fleet-constants'
 import { FleetBuilder } from './fleet.builder'
 import { AircraftIdMother } from '../../shared/domain/mothers/aircraftId.mother'
 

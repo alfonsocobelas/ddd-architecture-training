@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { INestApplication } from '@nestjs/common'
 import { setWorldConstructor, World, IWorldOptions } from '@cucumber/cucumber'
-import { Nullable } from 'src/modules/shared/types'
+import { Nullable } from 'src/contexts/shared/types'
 import { EnvironmentArranger } from '../../../arranger/environment-arranger'
 
 // Context class to share state between steps

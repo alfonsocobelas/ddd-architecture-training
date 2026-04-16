@@ -1,9 +1,9 @@
-import { Engine } from 'src/modules/engines/domain/engine'
-import { Nullable } from 'src/modules/shared/types'
-import { Criteria } from 'src/modules/shared/domain/query/criteria'
-import { EngineId } from 'src/modules/shared/domain/value-objects/engines/engine-id.vo'
-import { EngineRepository } from 'src/modules/engines/domain/engine.repository'
-import { EngineSerialNumber } from 'src/modules/engines/domain/value-objects/engine-serial-number.vo'
+import { Engine } from 'src/contexts/operations/modules/engines/domain/engine'
+import { Nullable } from 'src/contexts/shared/types'
+import { Criteria } from 'src/contexts/shared/domain/query/criteria'
+import { EngineId } from 'src/contexts/shared/domain/value-objects/engines/engine-id.vo'
+import { EngineRepository } from 'src/contexts/operations/modules/engines/domain/engine.repository'
+import { EngineSerialNumber } from 'src/contexts/operations/modules/engines/domain/value-objects/engine-serial-number.vo'
 import { MockRepository } from '../../shared/mocks/mock.repository'
 
 export class EngineRepositoryMock

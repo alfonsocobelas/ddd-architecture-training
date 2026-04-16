@@ -1,4 +1,4 @@
-import { RetireAircraftsFromFleetUsecase } from 'src/modules/fleets/application/use-cases/retire-aircrafts-from-fleet-usecase.service'
+import { RetireAircraftsFromFleetUsecase } from 'src/contexts/operations/modules/fleets/application/use-cases/retire-aircrafts-from-fleet-usecase.service'
 import { RetireAircraftsFromFleetInputMother } from '../mothers/retire-aircrafts-from-fleet-input.mother'
 import { FleetBuilder } from '../../domain/fleet.builder'
 import { AircraftBuilder } from '../../../aircrafts/domain/aircraft.builder'

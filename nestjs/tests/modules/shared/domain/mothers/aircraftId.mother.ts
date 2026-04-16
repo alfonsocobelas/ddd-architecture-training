@@ -1,4 +1,4 @@
-import { AircraftId } from 'src/modules/shared/domain/value-objects/aircrafts/aircraft-id.vo'
+import { AircraftId } from 'src/contexts/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { UuidV7Mother } from './uuidV7.mother'
 
 export class AircraftIdMother {

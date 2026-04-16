@@ -1,4 +1,4 @@
-import { SearchFleetsUseCase } from 'src/modules/fleets/application/use-cases/search-fleets-usecase.service'
+import { SearchFleetsUseCase } from 'src/contexts/operations/modules/fleets/application/use-cases/search-fleets-usecase.service'
 import { FleetMother } from '../../domain/fleet.mother'
 import { SearchFleetsInputMother } from '../mothers/search-fleets-input.mother'
 import { SearchFleetsOutputMother } from '../mothers/search-fleets-output.mother'

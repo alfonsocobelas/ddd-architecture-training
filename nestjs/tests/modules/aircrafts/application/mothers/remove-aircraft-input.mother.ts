@@ -1,4 +1,4 @@
-import { RemoveAircraftInput } from 'src/modules/aircrafts/application/dtos/remove-aircraft-input.dto'
+import { RemoveAircraftInput } from 'src/contexts/operations/modules/aircrafts/application/dtos/remove-aircraft-input.dto'
 import { v7 as uuidv7 } from 'uuid'
 
 export class RemoveAircraftInputMother {

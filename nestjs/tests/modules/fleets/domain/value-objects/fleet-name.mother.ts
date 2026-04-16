@@ -1,6 +1,6 @@
-import { FleetName } from 'src/modules/fleets/domain/value-objects/fleet-name.vo'
+import { FleetName } from 'src/contexts/operations/modules/fleets/domain/value-objects/fleet-name.vo'
 import { StringMother } from '../../../shared/domain/mothers/string.mother'
-import { FLEET_CONSTRAINTS as LIMITS } from 'src/modules/fleets/domain/fleet-constants'
+import { FLEET_CONSTRAINTS as LIMITS } from 'src/contexts/operations/modules/fleets/domain/fleet-constants'
 
 export class FleetNameMother {
   static create(value: string): FleetName {

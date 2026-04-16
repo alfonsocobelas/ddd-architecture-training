@@ -1,8 +1,8 @@
-import { FindAircraftsInMaintenanceUseCase } from 'src/modules/aircrafts/application/use-cases/find-aircrafts-in-maintenance-usecase.service'
-import { inMaintenance } from 'src/modules/aircrafts/domain/specifications/aircrafts-in-maintenance.specification'
-import { FindAircraftsInMaintenanceOutput } from 'src/modules/aircrafts/application/dtos/find-aircrafts-in-maintenance-output.dto'
+import { FindAircraftsInMaintenanceUseCase } from 'src/contexts/operations/modules/aircrafts/application/use-cases/find-aircrafts-in-maintenance-usecase.service'
+import { inMaintenance } from 'src/contexts/operations/modules/aircrafts/domain/specifications/aircrafts-in-maintenance.specification'
+import { FindAircraftsInMaintenanceOutput } from 'src/contexts/operations/modules/aircrafts/application/dtos/find-aircrafts-in-maintenance-output.dto'
 import { FindAircraftsInMaintenanceOutputMother } from '../mothers/find-aircrafts-in-maintenance-output.mother'
-import { Aircraft } from 'src/modules/aircrafts/domain/aircraft'
+import { Aircraft } from 'src/contexts/operations/modules/aircrafts/domain/aircraft'
 import { AircraftMother } from '../../domain/aircraft.mother'
 import { AircraftRepositoryMock } from '../../mocks/aircraft.repository.mock'
 

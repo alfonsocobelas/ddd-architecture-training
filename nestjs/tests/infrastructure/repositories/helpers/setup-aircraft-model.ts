@@ -1,4 +1,4 @@
-import { TypeOrmAircraftModelRepository } from 'src/modules/aircraft-models/infrastructure/persistence/typeorm/typeorm-aircraft-model.repository'
+import { TypeOrmAircraftModelRepository } from 'src/contexts/operations/modules/aircraft-models/infrastructure/persistence/typeorm/typeorm-aircraft-model.repository'
 import { AircraftModelBuilder } from '../../../modules/aircraft-models/domain/aircraft-model.builder'
 import { moduleFixture } from '../../../jest.setup.integration'
 

@@ -1,6 +1,6 @@
 import { v7 as uuidv7 } from 'uuid'
-import { RegisterIssueUseCase } from 'src/modules/issues/application/use-cases/register-issue-usecase.service'
-import { withCode } from 'src/modules/issues/domain/specifications/issue-with-code.specification'
+import { RegisterIssueUseCase } from 'src/contexts/maintenace/modules/issues/application/use-cases/register-issue-usecase.service'
+import { withCode } from 'src/contexts/maintenace/modules/issues/domain/specifications/issue-with-code.specification'
 import { IssueMother } from '../../domain/issue.mother'
 import { RegisterIssueInputMother } from '../mothers/register-issue-input.mother'
 import { EventBusMock } from '../../../shared/mocks/event-bus.mock'

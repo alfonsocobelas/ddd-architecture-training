@@ -1,4 +1,4 @@
-import { IssueId } from 'src/modules/issues/domain/value-objects/issue-id.vo'
+import { IssueId } from 'src/contexts/maintenace/modules/issues/domain/value-objects/issue-id.vo'
 import { UuidV7Mother } from '../../../shared/domain/mothers/uuidV7.mother'
 
 export class IssueIdMother {

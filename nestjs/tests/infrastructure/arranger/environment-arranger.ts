@@ -1,4 +1,4 @@
-import { Nullable } from 'src/modules/shared/types'
+import { Nullable } from 'src/contexts/shared/types'
 
 export abstract class EnvironmentArranger {
   abstract arrange(): Promise<void>

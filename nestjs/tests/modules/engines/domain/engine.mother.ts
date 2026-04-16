@@ -1,7 +1,7 @@
 import { v7 as uuidv7 } from 'uuid'
-import { Engine } from 'src/modules/engines/domain/engine'
-import { EngineStatusEnum } from 'src/modules/engines/domain/engine-enums'
-import { EngineCreateProps, EnginePrimitiveProps } from 'src/modules/engines/domain/engine-types'
+import { Engine } from 'src/contexts/operations/modules/engines/domain/engine'
+import { EngineStatusEnum } from 'src/contexts/operations/modules/engines/domain/engine-enums'
+import { EngineCreateProps, EnginePrimitiveProps } from 'src/contexts/operations/modules/engines/domain/engine-types'
 import { EngineBuilder } from './engine.builder'
 import { repeat } from '../../shared/utils/random-array'
 

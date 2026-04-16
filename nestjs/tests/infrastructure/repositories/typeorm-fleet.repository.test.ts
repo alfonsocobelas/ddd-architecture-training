@@ -1,5 +1,5 @@
-import { TypeOrmFleetRepository } from 'src/modules/fleets/infrastructure/persistence/typeorm/typeorm-fleet.repository'
-import { FleetWithNameSpecification } from 'src/modules/fleets/domain/specifications/fleet-with-name.specification'
+import { TypeOrmFleetRepository } from 'src/contexts/operations/modules/fleets/infrastructure/persistence/typeorm/typeorm-fleet.repository'
+import { FleetWithNameSpecification } from 'src/contexts/operations/modules/fleets/domain/specifications/fleet-with-name.specification'
 import { FleetBuilder } from '../../modules/fleets/domain/fleet.builder'
 import { FleetIdMother } from '../../modules/fleets/domain/value-objects/fleet-id.mother'
 import { FleetNameMother } from '../../modules/fleets/domain/value-objects/fleet-name.mother'

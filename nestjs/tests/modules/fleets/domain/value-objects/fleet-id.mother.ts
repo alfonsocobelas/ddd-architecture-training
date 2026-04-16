@@ -1,4 +1,4 @@
-import { FleetId } from 'src/modules/fleets/domain/value-objects/fleet-id.vo'
+import { FleetId } from 'src/contexts/operations/modules/fleets/domain/value-objects/fleet-id.vo'
 import { UuidV7Mother } from '../../../shared/domain/mothers/uuidV7.mother'
 
 export class FleetIdMother {

@@ -1,4 +1,4 @@
-import { GetEngineUseCase } from 'src/modules/engines/application/use-cases/get-engine-usecase.service'
+import { GetEngineUseCase } from 'src/contexts/operations/modules/engines/application/use-cases/get-engine-usecase.service'
 import { EngineMother } from '../../domain/engine.mother'
 import { GetEngineInputMother } from '../mothers/get-engine-input.mother'
 import { GetEngineOutputMother } from '../mothers/get-engine-output.mother'

@@ -1,5 +1,5 @@
-import { CompanyCreateProps, CompanyPrimitiveProps } from 'src/modules/companies/domain/company-types'
-import { Company } from 'src/modules/companies/domain/company'
+import { CompanyCreateProps, CompanyPrimitiveProps } from 'src/contexts/operations/modules/companies/domain/company-types'
+import { Company } from 'src/contexts/operations/modules/companies/domain/company'
 import { CompanyBuilder } from './company.builder'
 import { repeat } from '../../shared/utils/random-array'
 

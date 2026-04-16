@@ -1,4 +1,4 @@
-import { AddAircraftToFleetUsecase } from 'src/modules/fleets/application/use-cases/add-aircraft-to-fleet-usecase.service'
+import { AddAircraftToFleetUsecase } from 'src/contexts/operations/modules/fleets/application/use-cases/add-aircraft-to-fleet-usecase.service'
 import { AddAircraftToFleetInputMother } from '../mothers/add-aircraft-to-fleet-input.mother'
 import { AircraftRepositoryMock } from '../../../aircrafts/mocks/aircraft.repository.mock'
 import { FleetRepositoryMock } from '../../mocks/fleet.repository.mock'

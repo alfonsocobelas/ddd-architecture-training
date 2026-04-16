@@ -1,4 +1,4 @@
-import { TransactionManager } from 'src/modules/shared/domain/persistence/transaction-manager'
+import { TransactionManager } from 'src/contexts/shared/domain/persistence/transaction-manager'
 import { MockRepository } from './mock.repository'
 
 export class TransactionManagerMock

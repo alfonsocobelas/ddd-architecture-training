@@ -1,8 +1,8 @@
 import fc from 'fast-check'
-import { normalizeString } from 'src/modules/shared/utils/normalize'
-import { AircraftModel } from 'src/modules/aircraft-models/domain/aircraft-model'
-import { AircraftModelStatusEnum } from 'src/modules/aircraft-models/domain/aircraft-model-enums'
-import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from 'src/modules/aircraft-models/domain/aircraft-model-constants'
+import { normalizeString } from 'src/contexts/shared/utils/normalize'
+import { AircraftModel } from 'src/contexts/operations/modules/aircraft-models/domain/aircraft-model'
+import { AircraftModelStatusEnum } from 'src/contexts/operations/modules/aircraft-models/domain/aircraft-model-enums'
+import { AIRCRAFT_MODEL_CONSTRAINTS as LIMITS } from 'src/contexts/operations/modules/aircraft-models/domain/aircraft-model-constants'
 import { AircraftModelBuilder } from './aircraft-model.builder'
 import { AircraftModelMother } from './aircraft-model.mother'
 

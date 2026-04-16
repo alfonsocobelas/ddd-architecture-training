@@ -1,5 +1,5 @@
-import { withTailNumber } from 'src/modules/aircrafts/domain/specifications/aircraft-with-tail-number.specification'
-import { RegisterAircraftUseCase } from 'src/modules/aircrafts/application/use-cases/register-aircraft-usecase.service'
+import { withTailNumber } from 'src/contexts/operations/modules/aircrafts/domain/specifications/aircraft-with-tail-number.specification'
+import { RegisterAircraftUseCase } from 'src/contexts/operations/modules/aircrafts/application/use-cases/register-aircraft-usecase.service'
 import { RegisterAircraftInputMother } from '../mothers/register-aircraft-input.mother'
 import { AircraftModelBuilder } from '../../../aircraft-models/domain/aircraft-model.builder'
 import { AircraftMother } from '../../domain/aircraft.mother'

@@ -1,6 +1,6 @@
 import { v7 as uuidv7 } from 'uuid'
-import { RegisterCompanyInput } from 'src/modules/companies/application/dtos/register-company-input.dto'
-import { COMPANY_CONSTRAINTS as LIMITS } from 'src/modules/companies/domain/company-constants'
+import { RegisterCompanyInput } from 'src/contexts/operations/modules/companies/application/dtos/register-company-input.dto'
+import { COMPANY_CONSTRAINTS as LIMITS } from 'src/contexts/operations/modules/companies/domain/company-constants'
 import { randomString } from '../../../shared/utils/random-string'
 
 export class RegisterCompanyInputMother {

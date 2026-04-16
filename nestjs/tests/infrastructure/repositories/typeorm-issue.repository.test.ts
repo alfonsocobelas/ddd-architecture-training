@@ -1,4 +1,4 @@
-import { TypeOrmIssueRepository } from 'src/modules/issues/infrastructure/persistence/typeorm/typeorm-issue.repository'
+import { TypeOrmIssueRepository } from 'src/contexts/maintenace/modules/issues/infrastructure/persistence/typeorm/typeorm-issue.repository'
 import { IssueMother } from '../../modules/issues/domain/issue.mother'
 import { moduleFixture } from '../../jest.setup.integration'
 import { IssueIdMother } from '../../modules/issues/domain/value-objects/issue-id.mother'

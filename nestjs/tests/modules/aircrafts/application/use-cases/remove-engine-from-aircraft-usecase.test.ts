@@ -1,4 +1,4 @@
-import { RemoveEngineFromAircraftUsecase } from 'src/modules/aircrafts/application/use-cases/remove-engine-from-aircraft-usecase.service'
+import { RemoveEngineFromAircraftUsecase } from 'src/contexts/operations/modules/aircrafts/application/use-cases/remove-engine-from-aircraft-usecase.service'
 import { RemoveEngineFromAircraftInputMother } from '../mothers/remove-engine-from-aircraft-input.mother'
 import { EngineMother } from '../../../engines/domain/engine.mother'
 import { EngineBuilder } from '../../../engines/domain/engine.builder'
