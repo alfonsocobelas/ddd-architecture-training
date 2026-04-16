@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
-import { EventBus } from 'src/modules/shared/domain/event-bus/event-bus'
-import { CompanyId } from 'src/modules/shared/domain/value-objects/companies/company-id.vo'
-import { EntityNotFoundError } from 'src/modules/shared/errors'
+import { EventBus } from 'src/contexts/shared/domain/event-bus/event-bus'
+import { CompanyId } from 'src/contexts/shared/domain/value-objects/companies/company-id.vo'
+import { EntityNotFoundError } from 'src/contexts/shared/errors'
 import { RemoveCompanyInput } from '../dtos/remove-company-input.dto'
 import { CompanyRepository } from '../../domain/company.repository'
 

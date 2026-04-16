@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import { Criteria } from 'src/modules/shared/domain/query/criteria'
-import { Filter } from 'src/modules/shared/domain/query/filter'
-import { Filters } from 'src/modules/shared/domain/query/filters'
-import { Orders } from 'src/modules/shared/domain/query/orders'
-import { Operator } from 'src/modules/shared/domain/query/filter-operator'
+import { Criteria } from 'src/contexts/shared/domain/query/criteria'
+import { Filter } from 'src/contexts/shared/domain/query/filter'
+import { Filters } from 'src/contexts/shared/domain/query/filters'
+import { Orders } from 'src/contexts/shared/domain/query/orders'
+import { Operator } from 'src/contexts/shared/domain/query/filter-operator'
 
 type TypeOrmFilterValue = string | number | boolean
 type TypeOrmFilter = {
