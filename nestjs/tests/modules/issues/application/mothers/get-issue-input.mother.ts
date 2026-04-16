@@ -1,4 +1,4 @@
-import { GetIssueInput } from 'src/contexts/maintenace/modules/issues/application/dtos/get-issue-input.dto'
+import { GetIssueInput } from 'src/contexts/maintenance/modules/issues/application/dtos/get-issue-input.dto'
 import { v7 as uuidv7 } from 'uuid'
 
 export class GetIssueInputMother {

@@ -1,8 +1,8 @@
-import { Issue } from 'src/contexts/maintenace/modules/issues/domain/issue'
-import { IssueId } from 'src/contexts/maintenace/modules/issues/domain/value-objects/issue-id.vo'
+import { Issue } from 'src/contexts/maintenance/modules/issues/domain/issue'
+import { IssueId } from 'src/contexts/maintenance/modules/issues/domain/value-objects/issue-id.vo'
 import { Nullable } from 'src/contexts/shared/types'
 import { Criteria } from 'src/contexts/shared/domain/query/criteria'
-import { IssueRepository } from 'src/contexts/maintenace/modules/issues/domain/issue.repository'
+import { IssueRepository } from 'src/contexts/maintenance/modules/issues/domain/issue.repository'
 import { MockRepository } from '../../shared/mocks/mock.repository'
 
 export class IssueRepositoryMock

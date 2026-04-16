@@ -8,7 +8,7 @@ import { AircraftsModule } from './contexts/operations/modules/aircrafts/aircraf
 import { CompaniesModule } from './contexts/operations/modules/companies/companies.module'
 import { EnginesModule } from './contexts/operations/modules/engines/engines.module'
 import { FleetsModule } from './contexts/operations/modules/fleets/fleets.module'
-import { IssuesModule } from './contexts/maintenace/modules/issues/issues.module'
+import { IssuesModule } from './contexts/maintenance/modules/issues/issues.module'
 
 @Module({
   imports: [

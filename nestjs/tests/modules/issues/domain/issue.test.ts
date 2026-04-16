@@ -1,8 +1,8 @@
 import fc from 'fast-check'
 import { normalizeString } from 'src/contexts/shared/utils/normalize'
-import { IssuePartCategoryEnum, IssueSeverityLevelEnum } from 'src/contexts/maintenace/modules/issues/domain/issue-enums'
-import { ISSUE_CONSTRAINTS as LIMITS } from 'src/contexts/maintenace/modules/issues/domain/issue-constants'
-import { Issue } from 'src/contexts/maintenace/modules/issues/domain/issue'
+import { IssuePartCategoryEnum, IssueSeverityLevelEnum } from 'src/contexts/maintenance/modules/issues/domain/issue-enums'
+import { ISSUE_CONSTRAINTS as LIMITS } from 'src/contexts/maintenance/modules/issues/domain/issue-constants'
+import { Issue } from 'src/contexts/maintenance/modules/issues/domain/issue'
 import { IssueBuilder } from './issue.builder'
 import { IssueMother } from './issue.mother'
 

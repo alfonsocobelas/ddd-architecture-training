@@ -1,4 +1,4 @@
-import { GetIssueUseCase } from 'src/contexts/maintenace/modules/issues/application/use-cases/get-issue-usecase.service'
+import { GetIssueUseCase } from 'src/contexts/maintenance/modules/issues/application/use-cases/get-issue-usecase.service'
 import { GetIssueInputMother } from '../mothers/get-issue-input.mother'
 import { GetIssueOutputMother } from '../mothers/get-issue-output.mother'
 import { IssueMother } from '../../domain/issue.mother'

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { GetIssueUseCase } from 'src/contexts/maintenace/modules/issues/application/use-cases/get-issue-usecase.service'
+import { GetIssueUseCase } from 'src/contexts/maintenance/modules/issues/application/use-cases/get-issue-usecase.service'
 import { GetIssueResponse } from '../../infrastructure/entrypoints/dtos/get-issue.response'
 
 @Injectable()

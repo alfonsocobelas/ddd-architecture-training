@@ -4,7 +4,7 @@ import { AircraftEntity } from 'src/contexts/operations/modules/aircrafts/infras
 import { CompanyEntity } from 'src/contexts/operations/modules/companies/infrastructure/persistence/typeorm/typeorm-company.entity'
 import { EngineEntity } from 'src/contexts/operations/modules/engines/infrastructure/persistence/typeorm/typeorm-engine.entity'
 import { FleetEntity } from 'src/contexts/operations/modules/fleets/infrastructure/persistence/typeorm/typeorm-fleet.entity'
-import { IssueEntity } from 'src/contexts/maintenace/modules/issues/infrastructure/persistence/typeorm/typeorm-issue.entity'
+import { IssueEntity } from 'src/contexts/maintenance/modules/issues/infrastructure/persistence/typeorm/typeorm-issue.entity'
 
 type EntityConstructor = { new (): any }
 
