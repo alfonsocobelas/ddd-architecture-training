@@ -4,7 +4,8 @@ import { Criteria } from 'src/contexts/shared/domain/query/criteria'
 import { EngineId } from 'src/contexts/shared/domain/value-objects/engines/engine-id.vo'
 import { EngineRepository } from 'src/contexts/operations/modules/engines/domain/engine.repository'
 import { EngineSerialNumber } from 'src/contexts/operations/modules/engines/domain/value-objects/engine-serial-number.vo'
-import { MockRepository } from '../../shared/mocks/mock.repository'
+import { MockRepository } from '../../shared/mocks/mock-repository'
+import { EngineStatus } from 'src/contexts/operations/modules/engines/domain/value-objects/engine-status.vo'
 
 export class EngineRepositoryMock
   extends MockRepository<Engine>
@@ -34,6 +35,10 @@ export class EngineRepositoryMock
     return this.getMock('matching')(criteria)
   }
 
+  updateStatus(engineId: EngineId, status: EngineStatus): Promise<void> {
+    return this.getMock('updateStatus')(engineId, status)
+  }
+
   // Helpers
   givenFound(engine: Engine): void {
     this.setMockResult('get', engine)
@@ -55,6 +60,10 @@ export class EngineRepositoryMock
     this.setMockResult('exists', false)
   }
 
+  givenMatching(engines: Engine[]): void {
+    this.setMockResult('matching', engines)
+  }
+
   whenRegisterSuccess(): void {
     this.setMockResult('register', undefined)
   }
@@ -63,7 +72,7 @@ export class EngineRepositoryMock
     this.setMockResult('save', undefined)
   }
 
-  givenMatching(engines: Engine[]): void {
-    this.setMockResult('matching', engines)
+  whenUpdateStatusSuccess(): void {
+    this.setMockResult('updateStatus', undefined)
   }
 }

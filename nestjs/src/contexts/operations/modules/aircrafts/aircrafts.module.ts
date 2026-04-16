@@ -15,6 +15,7 @@ import { AircraftIssueCreatedSubscriber } from './application/subscribers/issue-
 import { InstallEngineInAircraftUsecase } from './application/use-cases/install-engine-in-aircraft-usecase.service'
 import { RemoveEngineFromAircraftUsecase } from './application/use-cases/remove-engine-from-aircraft-usecase.service'
 import { FindAircraftsInMaintenanceUseCase } from './application/use-cases/find-aircrafts-in-maintenance-usecase.service'
+import { UpdateAircraftToMaintenanceStatusUseCase } from './application/use-cases/update-aircraft-to-maintenance-status-usecase.service'
 import { AircraftRepository } from './domain/aircraft.repository'
 import { AircraftsController } from './infrastructure/entrypoints/aircrafts.controller'
 import { TypeOrmAircraftRepository } from './infrastructure/persistence/typeorm/typeorm-aircraft.repository'
@@ -45,6 +46,7 @@ import { AircraftModelsModule } from '../aircraft-models/aircraft-models.module'
     RemoveEngineFromAircraftUsecase,
     RemoveAircraftUseCase,
     SearchAircraftsUseCase,
+    UpdateAircraftToMaintenanceStatusUseCase,
     // Repositories
     {
       provide: AircraftRepository,

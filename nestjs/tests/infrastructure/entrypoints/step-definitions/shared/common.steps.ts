@@ -201,6 +201,14 @@ Then('the response should contain the following {string}:', function (this: MyWo
   })
 })
 
+Then('the engine with id {string} should have status {string}', async function (this: MyWorld, engineId: string, expectedStatus: string) {
+  await new Promise(res => setTimeout(res, 100))
+  const engine = await this.arranger!.findOneBy(EntityMapper['engines'], { id: engineId })
+
+  expect(engine?.id).to.equal(engineId)
+  expect(engine?.status).to.equal(expectedStatus)
+})
+
 // --- GESTIÓN DEL CURSOR ---
 
 Then('I save the {string} from the last response', function (this: MyWorld, path: string) {

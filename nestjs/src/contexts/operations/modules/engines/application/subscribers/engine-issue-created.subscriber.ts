@@ -4,10 +4,15 @@ import { DomainEventClass } from 'src/contexts/shared/domain/event-bus/domain-ev
 import { DomainEventSubscriber } from 'src/contexts/shared/domain/event-bus/domain-event-subscriber'
 import { IssuePartCategoryEnum } from 'src/contexts/maintenance/modules/issues/domain/issue-enums'
 import { IssueRegisteredDomainEvent } from 'src/contexts/maintenance/modules/issues/domain/events/issue-registered.event'
+import { UpdateEngineToMaintenanceStatusUseCase } from '../use-cases/update-engine-to-maintenance-status-usecase.service'
 
 @Injectable()
 @EventSubscriber()
 export class EngineIssueCreatedSubscriber implements DomainEventSubscriber<IssueRegisteredDomainEvent> {
+  constructor(
+    private readonly useCase: UpdateEngineToMaintenanceStatusUseCase
+  ) {}
+
   subscribedTo(): DomainEventClass[] {
     return [IssueRegisteredDomainEvent]
   }
@@ -16,8 +21,11 @@ export class EngineIssueCreatedSubscriber implements DomainEventSubscriber<Issue
     if (event.partCategory !== IssuePartCategoryEnum.ENGINE) {
       return
     }
-    // lógica específica para engine
-    // o llamar al caso de uso?
-    console.log('Issue de engine creada:', event.engineId)
+
+    if (!event.engineId) {
+      return
+    }
+
+    await this.useCase.invoke({ id: event.engineId })
   }
 }

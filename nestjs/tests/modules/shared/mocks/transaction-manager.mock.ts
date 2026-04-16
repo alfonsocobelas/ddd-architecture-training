@@ -1,5 +1,5 @@
 import { TransactionManager } from 'src/contexts/shared/domain/persistence/transaction-manager'
-import { MockRepository } from './mock.repository'
+import { MockRepository } from './mock-repository'
 
 export class TransactionManagerMock
   extends MockRepository<void>

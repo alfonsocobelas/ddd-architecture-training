@@ -10,6 +10,7 @@ import { AircraftEntity } from './typeorm-aircraft.entity'
 import { AircraftMapper } from './typeorm-aircraft.mapper'
 import { Aircraft } from '../../../domain/aircraft'
 import { AircraftRepository } from '../../../domain/aircraft.repository'
+import { AircraftStatus } from '../../../domain/value-objects/aircraft-status.vo'
 
 @Injectable()
 export class TypeOrmAircraftRepository
@@ -77,5 +78,10 @@ export class TypeOrmAircraftRepository
 
   async count(criteria: Criteria): Promise<number> {
     return this.countByCriteria(criteria)
+  }
+
+  async updateStatus(aircraftId: AircraftId, status: AircraftStatus): Promise<void> {
+    const repository = this.repository()
+    await repository.update({ id: aircraftId.value }, { status: status.value })
   }
 }

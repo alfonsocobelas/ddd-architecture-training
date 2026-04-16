@@ -3,7 +3,7 @@ import { FleetId } from 'src/contexts/operations/modules/fleets/domain/value-obj
 import { Nullable } from 'src/contexts/shared/types'
 import { Criteria } from 'src/contexts/shared/domain/query/criteria'
 import { FleetRepository } from 'src/contexts/operations/modules/fleets/domain/fleet.repository'
-import { MockRepository } from '../../shared/mocks/mock.repository'
+import { MockRepository } from '../../shared/mocks/mock-repository'
 
 export class FleetRepositoryMock
   extends MockRepository<Fleet>

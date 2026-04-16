@@ -4,7 +4,7 @@ import { Criteria } from 'src/contexts/shared/domain/query/criteria'
 import { CompanyId } from 'src/contexts/shared/domain/value-objects/companies/company-id.vo'
 import { CompanyName } from 'src/contexts/operations/modules/companies/domain/value-objects/company-name.vo'
 import { CompanyRepository } from 'src/contexts/operations/modules/companies/domain/company.repository'
-import { MockRepository } from '../../shared/mocks/mock.repository'
+import { MockRepository } from '../../shared/mocks/mock-repository'
 
 export class CompanyRepositoryMock
   extends MockRepository<Company>

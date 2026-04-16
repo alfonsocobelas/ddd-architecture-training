@@ -3,7 +3,7 @@ import { AircraftModel } from 'src/contexts/operations/modules/aircraft-models/d
 import { AircraftModelId } from 'src/contexts/operations/modules/aircraft-models/domain/value-objects/aircraft-model-id.vo'
 import { AircraftModelCode } from 'src/contexts/operations/modules/aircraft-models/domain/value-objects/aircraft-model-code.vo'
 import { AircraftModelRepository } from 'src/contexts/operations/modules/aircraft-models/domain/aircraft-model.repository'
-import { MockRepository } from '../../shared/mocks/mock.repository'
+import { MockRepository } from '../../shared/mocks/mock-repository'
 
 export class AircraftModelRepositoryMock
   extends MockRepository<AircraftModel>

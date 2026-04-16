@@ -17,6 +17,10 @@ export class EngineStatus extends EnumValueObject<EngineStatusEnum> {
     return new EngineStatus(EngineStatusEnum.OPERATIONAL)
   }
 
+  static maintenance(): EngineStatus {
+    return new EngineStatus(EngineStatusEnum.MAINTENANCE)
+  }
+
   isOperational(): boolean {
     return this.value === EngineStatusEnum.OPERATIONAL
   }

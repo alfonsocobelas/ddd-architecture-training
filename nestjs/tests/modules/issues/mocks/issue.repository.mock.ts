@@ -3,7 +3,7 @@ import { IssueId } from 'src/contexts/maintenance/modules/issues/domain/value-ob
 import { Nullable } from 'src/contexts/shared/types'
 import { Criteria } from 'src/contexts/shared/domain/query/criteria'
 import { IssueRepository } from 'src/contexts/maintenance/modules/issues/domain/issue.repository'
-import { MockRepository } from '../../shared/mocks/mock.repository'
+import { MockRepository } from '../../shared/mocks/mock-repository'
 
 export class IssueRepositoryMock
   extends MockRepository<Issue>

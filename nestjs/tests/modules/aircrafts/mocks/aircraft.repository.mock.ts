@@ -3,7 +3,8 @@ import { Nullable } from 'src/contexts/shared/types'
 import { Criteria } from 'src/contexts/shared/domain/query/criteria'
 import { AircraftId } from 'src/contexts/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { AircraftRepository } from 'src/contexts/operations/modules/aircrafts/domain/aircraft.repository'
-import { MockRepository } from '../../shared/mocks/mock.repository'
+import { MockRepository } from '../../shared/mocks/mock-repository'
+import { AircraftStatus } from 'src/contexts/operations/modules/aircrafts/domain/value-objects/aircraft-status.vo'
 
 export class AircraftRepositoryMock
   extends MockRepository<Aircraft>
@@ -39,6 +40,10 @@ export class AircraftRepositoryMock
 
   exists(criteria: Criteria): Promise<boolean> {
     return this.getMock('exists')(criteria)
+  }
+
+  updateStatus(aircraftId: AircraftId, status: AircraftStatus): Promise<void> {
+    return this.getMock('updateStatus')(aircraftId, status)
   }
 
   // helpers
@@ -84,5 +89,9 @@ export class AircraftRepositoryMock
 
   whenRemoveSuccess(): void {
     this.setMockResult('remove', undefined)
+  }
+
+  whenUpdateStatusSuccess(): void {
+    this.setMockResult('updateStatus', undefined)
   }
 }

@@ -1,6 +1,7 @@
 import { Nullable } from 'src/contexts/shared/types'
 import { Criteria } from 'src/contexts/shared/domain/query/criteria'
 import { AircraftId } from 'src/contexts/shared/domain/value-objects/aircrafts/aircraft-id.vo'
+import { AircraftStatus } from './value-objects/aircraft-status.vo'
 import { Aircraft } from './aircraft'
 
 export abstract class AircraftRepository {
@@ -12,4 +13,5 @@ export abstract class AircraftRepository {
   abstract matching(criteria: Criteria): Promise<Aircraft[]>
   abstract exists(criteria: Criteria): Promise<boolean>
   abstract count(criteria: Criteria): Promise<number>
+  abstract updateStatus(aircraftId: AircraftId, status: AircraftStatus): Promise<void>
 }

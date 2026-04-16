@@ -11,6 +11,7 @@ import { EngineMapper } from './typeorm-engine.mapper'
 import { EngineEntity } from './typeorm-engine.entity'
 import { EngineId } from 'src/contexts/shared/domain/value-objects/engines/engine-id.vo'
 import { EngineSerialNumber } from 'src/contexts/operations/modules/engines/domain/value-objects/engine-serial-number.vo'
+import { EngineStatus } from '../../../domain/value-objects/engine-status.vo'
 
 @Injectable()
 export class TypeOrmEngineRepository
@@ -76,5 +77,10 @@ export class TypeOrmEngineRepository
       .getExists()
 
     return existEntity
+  }
+
+  async updateStatus(engineId: EngineId, status: EngineStatus): Promise<void> {
+    const repository = this.repository()
+    await repository.update({ id: engineId.value }, { status: status.value })
   }
 }

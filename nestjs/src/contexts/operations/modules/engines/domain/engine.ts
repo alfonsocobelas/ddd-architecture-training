@@ -130,6 +130,14 @@ export class Engine extends AggregateRoot {
     }))
   }
 
+  updateStatusToMaintenance(): void {
+    if (!this.status.isOperational()) {
+      throw new EngineError('Only operational engines can be set to maintenance status')
+    }
+
+    this._status = EngineStatus.maintenance()
+  }
+
   private ensureCanBeInstalled(): void {
     if (this.isInstalled.isInstalled()) {
       throw new EngineError(`Engine ${this.id} is already installed on the other aircraft`)

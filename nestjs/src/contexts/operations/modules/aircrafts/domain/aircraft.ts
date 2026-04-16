@@ -182,6 +182,14 @@ export class Aircraft extends AggregateRoot {
     }))
   }
 
+  updateStatusToMaintenance(): void {
+    if (!this.status.isActive()) {
+      throw new AircraftError('Only active aircraft can be set to maintenance status.')
+    }
+
+    this._status = AircraftStatus.maintenance()
+  }
+
   private ensureEngineCanBeInstalled(engineId: EngineId, numEngines: AircraftModelNumEngines): void {
     if (!this.status.isActiveOrMaintenance()) {
       throw new AircraftError('Engines can only be installed on active or in-maintenance aircraft.')

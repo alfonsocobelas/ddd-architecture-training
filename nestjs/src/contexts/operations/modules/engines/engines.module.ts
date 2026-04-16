@@ -6,7 +6,8 @@ import { RegisterEngineHandler } from './application/handler/register-engine.han
 import { GetEngineUseCase } from './application/use-cases/get-engine-usecase.service'
 import { SearchEnginesUseCase } from './application/use-cases/search-engines-usecase.service'
 import { RegisterEngineUseCase } from './application/use-cases/register-engine-usecase.service'
-import { EngineIssueCreatedSubscriber } from './application/subscribers/issue-created.subscriber'
+import { UpdateEngineToMaintenanceStatusUseCase } from './application/use-cases/update-engine-to-maintenance-status-usecase.service'
+import { EngineIssueCreatedSubscriber } from './application/subscribers/engine-issue-created.subscriber'
 import { EngineRepository } from './domain/engine.repository'
 import { EnginesController } from './infrastructure/entrypoints/engines.controller'
 import { TypeOrmEngineRepository } from './infrastructure/persistence/typeorm/typeorm-engine.repository'
@@ -23,6 +24,7 @@ import { TypeOrmEngineRepository } from './infrastructure/persistence/typeorm/ty
     RegisterEngineUseCase,
     GetEngineUseCase,
     SearchEnginesUseCase,
+    UpdateEngineToMaintenanceStatusUseCase,
     // Repositories
     {
       provide: EngineRepository,
