@@ -18,6 +18,7 @@ import { AircraftAddedToFleetDomainEvent } from './events/aircraft-added-to-flee
 import { AircraftEngineRemovedDomainEvent } from './events/aircraft-engine-removed.event'
 import { AircraftEngineInstalledDomainEvent } from './events/aircraft-engine-installed.event'
 import { AircraftRetiredFromFleetDomainEvent } from './events/aircraft-retired-from-fleet.event'
+import { AircraftStatusUpdatedToMaintenanceDomainEvent } from './events/aircraft-status-updated-to-maintenance.event'
 
 export class Aircraft extends AggregateRoot {
   private constructor(
@@ -188,6 +189,10 @@ export class Aircraft extends AggregateRoot {
     }
 
     this._status = AircraftStatus.maintenance()
+
+    this.record(new AircraftStatusUpdatedToMaintenanceDomainEvent({
+      aggregateId: this.id.value
+    }))
   }
 
   private ensureEngineCanBeInstalled(engineId: EngineId, numEngines: AircraftModelNumEngines): void {

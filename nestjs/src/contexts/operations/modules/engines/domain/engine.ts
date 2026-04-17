@@ -1,3 +1,4 @@
+import { EngineId } from 'src/contexts/shared/domain/value-objects/engines/engine-id.vo'
 import { AircraftId } from 'src/contexts/shared/domain/value-objects/aircrafts/aircraft-id.vo'
 import { AggregateRoot } from 'src/contexts/shared/domain/aggregate-root'
 import { EngineError } from './engine-errors'
@@ -12,7 +13,7 @@ import { EngineCyclesSinceLastOverhaul } from './value-objects/engine-cycles-sin
 import { EngineRegisteredDomainEvent } from './events/engine-registered.event'
 import { EngineInstalledInAircraftDomainEvent } from './events/engine-installed-in-aircraft.event'
 import { EngineRemovedFromAircraftDomainEvent } from './events/engine-removed-from-aircraft.event'
-import { EngineId } from 'src/contexts/shared/domain/value-objects/engines/engine-id.vo'
+import { EngineStatusUpdatedToMaintenanceDomainEvent } from './events/engine-status-updated-to-maintenance.event'
 
 export class Engine extends AggregateRoot {
   private constructor(
@@ -136,6 +137,10 @@ export class Engine extends AggregateRoot {
     }
 
     this._status = EngineStatus.maintenance()
+
+    this.record(new EngineStatusUpdatedToMaintenanceDomainEvent({
+      aggregateId: this.id.value
+    }))
   }
 
   private ensureCanBeInstalled(): void {
