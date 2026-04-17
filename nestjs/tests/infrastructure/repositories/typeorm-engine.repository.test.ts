@@ -4,6 +4,7 @@ import { EngineBuilder } from '../../modules/engines/domain/engine.builder'
 import { EngineIdMother } from '../../modules/engines/domain/value-objects/engine-id.mother'
 import { EngineSerialNumberMother } from '../../modules/engines/domain/value-objects/engine-serial-number'
 import { moduleFixture } from '../../jest.setup.integration'
+import { EngineStatusMother } from '../../modules/engines/domain/value-objects/engine-status.mother'
 
 let repository: TypeOrmEngineRepository
 
@@ -104,6 +105,19 @@ describe('EngineRepository (integration tests)', () => {
 
       expect(foundEngine1).toEqual(updatedEngine1)
       expect(foundEngine2).toEqual(updatedEngine2)
+    })
+  })
+
+  describe('updateStatus method', () => {
+    it('should update the status of an existing engine', async () => {
+      const engine = EngineMother.random()
+      await repository.register(engine)
+
+      const updatedStatus = EngineStatusMother.random()
+      await repository.updateStatus(engine.id, updatedStatus)
+
+      const foundEngine = await repository.get(engine.id)
+      expect(foundEngine?.status).toEqual(updatedStatus)
     })
   })
 })

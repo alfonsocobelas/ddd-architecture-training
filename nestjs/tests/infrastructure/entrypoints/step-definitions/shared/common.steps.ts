@@ -201,12 +201,21 @@ Then('the response should contain the following {string}:', function (this: MyWo
   })
 })
 
+// --- SUBSCRIBERS ---
 Then('the engine with id {string} should have status {string}', async function (this: MyWorld, engineId: string, expectedStatus: string) {
   await new Promise(res => setTimeout(res, 100))
   const engine = await this.arranger!.findOneBy(EntityMapper['engines'], { id: engineId })
 
   expect(engine?.id).to.equal(engineId)
   expect(engine?.status).to.equal(expectedStatus)
+})
+
+Then('the aircraft with id {string} should have status {string}', async function (this: MyWorld, aircraftId: string, expectedStatus: string) {
+  await new Promise(res => setTimeout(res, 100))
+  const aircraft = await this.arranger!.findOneBy(EntityMapper['aircrafts'], { id: aircraftId })
+
+  expect(aircraft?.id).to.equal(aircraftId)
+  expect(aircraft?.status).to.equal(expectedStatus)
 })
 
 // --- GESTIÓN DEL CURSOR ---

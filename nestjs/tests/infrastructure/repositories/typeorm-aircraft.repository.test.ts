@@ -3,6 +3,7 @@ import { AircraftsOfModelSpecification } from 'src/contexts/operations/modules/a
 import { AircraftWithTailNumberSpecification } from 'src/contexts/operations/modules/aircrafts/domain/specifications/aircraft-with-tail-number.specification'
 import { AircraftBuilder } from '../../modules/aircrafts/domain/aircraft.builder'
 import { AircraftIdMother } from '../../modules/shared/domain/mothers/aircraftId.mother'
+import { AircraftStatusMother } from '../../modules/aircrafts/domain/value-objects/aircraft-status.mother'
 import { AircraftModelIdMother } from '../../modules/aircraft-models/domain/value-objects/aircraft-model-id.mother'
 import { AircraftTailNumberMother } from '../../modules/aircrafts/domain/value-objects/aircraft-tail-number.mother'
 import { setupAircraftModel } from './helpers/setup-aircraft-model'
@@ -172,6 +173,20 @@ describe('AircraftRepository (integration tests)', () => {
       const foundAircrafts = await repository.find([nonExistingId1, nonExistingId2])
 
       expect(foundAircrafts).toHaveLength(0)
+    })
+  })
+
+  describe('updateStatus method', () => {
+    it('should update the status of an existing aircraft', async () => {
+      const aircraft = AircraftBuilder.anAircraft().withModelId(modelId).build()
+      await repository.register(aircraft)
+
+      const updatedStatus = AircraftStatusMother.random()
+      await repository.updateStatus(aircraft.id, updatedStatus)
+
+      const foundAircraft = await repository.get(aircraft.id)
+
+      expect(foundAircraft?.status).toEqual(updatedStatus)
     })
   })
 })

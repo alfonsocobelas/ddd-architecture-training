@@ -86,3 +86,22 @@ Feature: Register a new maintenance issue
       | id                                   | code    | engineId                             | severity | requiresGrounding | partCategory |
       | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3c02 | ISS-002 | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3e01 | CRITICAL | true              | ENGINE       |
     And the engine with id "018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3e01" should have status "MAINTENANCE"
+
+  Scenario: Aircraft status is updated to MAINTENANCE when a critical aircraft issue is registered
+    When I send a POST request to "/api/v1/issues" with body:
+      """
+      {
+        "id": "018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3c03",
+        "code": "ISS-003",
+        "description": "Critical avionics failure",
+        "severity": "CRITICAL",
+        "requiresGrounding": true,
+        "partCategory": "AVIONICS",
+        "aircraftId": "018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f01"
+      }
+      """
+    Then the response status code should be 201
+    And the following "issues" should exist in the system:
+      | id                                   | code    | aircraftId                           | severity | requiresGrounding | partCategory |
+      | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3c03 | ISS-003 | 018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f01 | CRITICAL | true              | AVIONICS     |
+    And the aircraft with id "018e6e5a-7b32-7a5c-8d1f-3b3c3d3e3f01" should have status "MAINTENANCE"

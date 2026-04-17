@@ -26,7 +26,7 @@ export class IssueRegisteredDomainEventMother {
 
   static avionicIssue(props: Partial<IssueRegisteredDomainEvent> = {}): IssueRegisteredDomainEvent {
     return this.create({
-      partCategory: 'AVIONICS',
+      partCategory: IssuePartCategoryEnum.AVIONICS,
       aircraftId: UuidV7Mother.random(),
       ...props
     })
@@ -34,7 +34,7 @@ export class IssueRegisteredDomainEventMother {
 
   static engineIssue(props: Partial<IssueRegisteredDomainEvent> = {}): IssueRegisteredDomainEvent {
     return this.create({
-      partCategory: 'ENGINE',
+      partCategory: IssuePartCategoryEnum.ENGINE,
       engineId: UuidV7Mother.random(),
       ...props
     })
